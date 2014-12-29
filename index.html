@@ -1,0 +1,27 @@
+<!-- adapted from http://www.williammalone.com/articles/create-html5-canvas-javascript-drawing-app/#demo-simple -->
+<ul class="demoToolList">
+  <li>
+    Clear the canvas:
+    <button onclick="reset_canvas();" type="button">Clear</button>
+  </li>
+  <li>
+    Choose a color: <input id="color_picker" value="#cb3594" />
+  </li>
+  <li>
+    Choose a size: <input id="size_picker" value="5" />
+  </li>
+  <li style="display: none;">
+    Choose a tool:
+    <button id="chooseCrayonSimpleTools" type="button">Crayon</button>
+    <button id="chooseMarkerSimpleTools" type="button">Marker</button>
+    <button id="chooseEraserSimpleTools" type="button">Eraser</button>
+  </li>
+</ul>
+<canvas id="paint"></canvas>
+<script src="paint.js"></script>
+<style>
+  #paint {
+  border: 1px black solid;
+  cursor: crosshair;
+  }
+</style>
