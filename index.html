@@ -1,11 +1,20 @@
-<!-- adapted from http://www.williammalone.com/articles/create-html5-canvas-javascript-drawing-app/#demo-simple -->
+<html>
+<head>
+</head>
+<body>
 <ul class="demoToolList">
   <li>
     Clear the canvas:
     <button onclick="reset_canvas();" type="button">Clear</button>
   </li>
   <li>
-    Choose a color: <input id="color_picker" value="#cb3594" />
+    Choose a color: <input id="color_picker" value="#cb3594" type="color" />
+  </li>
+  <li>
+    Alpha:
+    <input id="alpha_picker" type="range" max="1" min="0" step="0.01" oninput="setAlpha();"
+           value="1" />
+    <span id="alpha_display"></span>
   </li>
   <li>
     Choose a size: <input id="size_picker" value="5" />
@@ -20,8 +29,10 @@
 <canvas id="paint"></canvas>
 <script src="paint.js"></script>
 <style>
-  #paint {
+  #paint,canvas {
   border: 1px black solid;
   cursor: crosshair;
   }
 </style>
+</body>
+</html>
