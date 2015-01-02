@@ -2,13 +2,12 @@
 <head>
 </head>
 <body>
-<ul class="demoToolList">
+<ul class="tools">
   <li>
-    Clear the canvas:
     <button onclick="reset_canvas();" type="button">Clear</button>
   </li>
   <li>
-    Choose a color: <input id="color_picker" value="#cb3594" type="color" />
+    <input id="color_picker" value="#cb3594" type="color" />
   </li>
   <li>
     Alpha:
@@ -17,21 +16,32 @@
     <span id="alpha_display"></span>
   </li>
   <li>
-    Choose a size: <input id="size_picker" value="5" />
+    <input id="size_picker" value="5" size="2" />
   </li>
-  <li style="display: none;">
+  <li>
     Choose a tool:
-    <button id="chooseCrayonSimpleTools" type="button">Crayon</button>
-    <button id="chooseMarkerSimpleTools" type="button">Marker</button>
-    <button id="chooseEraserSimpleTools" type="button">Eraser</button>
+    <button onclick="changeTool('brush');" type="button">Brush</button>
+    <button onclick="changeTool('crayon');" type="button">Crayon</button>
+    <button onclick="changeTool('eraser');" type="button">Eraser</button>
   </li>
 </ul>
-<canvas id="paint"></canvas>
+<div id="wrapper"><canvas id="paint"></canvas></div>
 <script src="paint.js"></script>
 <style>
-  #paint,canvas {
+  #paint {
   border: 1px black solid;
   cursor: crosshair;
+  }
+  #wrapper {
+  overflow: hidden;
+  position: relative;
+  }
+  .select {
+  border: black 1px dashed;
+  cursor: pointer;
+  margin: -1px;
+  outline: black 1px dashed;
+  position: absolute;
   }
 </style>
 </body>

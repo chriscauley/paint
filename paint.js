@@ -7,10 +7,81 @@ function reset_canvas() {
   redraw();
 }
 
+function load_image(url) {
+  var img = document.createElement("img");
+  img.src = url;
+  img.addEventListener("load",function() {
+    reset_canvas();
+    paste_image(img);
+  });
+}
+
+function selectionMouseMove(e) {
+  if (!mouse_down) { return }
+  div.style.left = current_action.old_x - (current_action.click_x - e.pageX) +"px";
+  div.style.top = current_action.old_y - (current_action.click_y - e.pageY) +"px";
+  current_action.x = current_action.old_x - (current_action.click_x - e.pageX);
+  current_action.y = current_action.old_y - (current_action.click_y - e.pageY);
+  redraw();
+}
+
+function selectionMouseDown(e) {
+  mouse_down = true;
+  current_action.click_x = e.pageX;
+  current_action.click_y = e.pageY;
+  current_action.old_x = current_action.x;
+  current_action.old_y = current_action.y;
+}
+
+function selectionMouseUp(e) {
+  mouse_down = false;
+}
+
+function createSelectionDiv(x,y,w,h) {
+  div = document.createElement("div")
+  div.className = "select";
+  div.style.width = w + "px";
+  div.style.height = h + "px";
+  div.style.top = y + "px";
+  div.style.left = x + "px";
+  div.addEventListener("mousedown",selectionMouseDown)
+  div.addEventListener("mouseup",selectionMouseUp)
+  document.addEventListener("mousemove",selectionMouseMove);
+  wrapper.appendChild(div);
+  return div;
+}
+
+function changeTool(tool_name) {
+  if (current_action && current_action.destroy) { current_action.destroy(); }
+  current_tool = tool_name;
+}
+
+function paste_image(img,x,y) {
+  x = x || 0;
+  y = y || 0;
+  changeTool("select");
+  current_action = {
+    x: 0,
+    y: 0,
+    type: "paste",
+    canvas: img,
+    alpha: 1,
+    selection: createSelectionDiv(x,y,img.width,img.height),
+    destroy: function() {
+      console.log("destroyed");
+      document.removeEventListener("mousemove",selectionMouseMove);
+      this.selection.parentNode.removeChild(this.selection);
+    }
+  };
+  actions.push(current_action);
+  redraw();
+}
+
 var mouse_down = false;
 
 var active_color, active_size, alpha, current_action;
 var background_color = "white";
+var current_tool = "brush";
 
 var color_picker = document.getElementById("color_picker");
 function setColor() { active_color = color_picker.value; }
@@ -28,14 +99,30 @@ function setAlpha() { alpha = alpha_picker.value; alpha_display.innerHTML = alph
 setAlpha();
 //alpha_picker.addEventListener("change",setAlpha.bind(alpha_picker));
 
-var canvas = document.getElementById('paint');
-canvas.setAttribute('width', WIDTH);
-canvas.setAttribute('height', HEIGHT);
-context = canvas.getContext("2d");
+var canvas = document.getElementById('paint'),context;
+var wrapper = document.getElementById("wrapper");
+
+function init() {
+  canvas.setAttribute('width', WIDTH);
+  canvas.setAttribute('height', HEIGHT);
+  wrapper.style.width = 2+WIDTH+"px";
+  wrapper.style.height = 2+HEIGHT+"px";
+  context = canvas.getContext("2d");
+}
+
+init();
 
 function canvas_click(e) {
   mouse_down = true;
-  current_action = { coords: [], color: active_color, size: active_size, alpha: alpha };
+  current_action = {
+    coords: [],
+    color: active_color,
+    size: active_size,
+    alpha: alpha,
+    tool: current_tool,
+    x: 0,
+    y: 0
+  };
   actions.push(current_action);
   current_action.canvas = document.createElement("canvas");
   current_action.canvas.setAttribute('width', WIDTH);
@@ -85,6 +172,6 @@ function redraw() {
     var action = actions[i];
     context.setAlpha(action.alpha);
     if (action.tool == "eraser") { context.setAlpha(1); }
-    context.drawImage(action.canvas,0,0);
+    context.drawImage(action.canvas,action.x,action.y);
   }
 }
