@@ -1,0 +1,75 @@
+html,body { margin: 0; }
+#paint {
+  border: 1px black solid;
+  cursor: crosshair;
+}
+#wrapper {
+  overflow: hidden;
+  padding-left: 100px;
+  position: relative;
+}
+.select {
+  border: black 1px dashed;
+  cursor: pointer;
+  margin: -1px;
+  outline: black 1px dashed;
+  position: absolute;
+}
+#tools {
+  left: 0;
+  padding: 10px;
+  position:absolute;
+  top: 0;
+  width: 80px;
+  z-index: 1;
+}
+#tools button {
+  height: 30px;
+  margin: 5px;
+  padding: 0;
+  text-align: center;
+  vertical-align: middle;
+  width: 30px;
+}
+#tools .select-button:before {
+  border: 2px dashed;
+  content: "";
+  display: inline-block;
+  height: 15px;
+  width: 15px;
+}
+#tools [type=range] {
+  width: 100%;
+}
+.alpha-container {
+  left: 80px;
+  position: absolute;
+  top: 20px;
+}
+.fg_alpha {
+  display: block;
+}
+.fg_alpha:before {
+  content: "Alpha: ";
+}
+
+#tools_bot {
+  bottom: 0;
+  height: 100px;
+  position: absolute;
+  width: 100%;
+}
+
+.color-picker {
+  padding: 0;
+  border: 0;
+  background: none;
+  width: 50px;
+  height: 50px;
+}
+
+.fg.color-picker {
+  left: 10px;
+  position: absolute;
+  top: 10px;
+}
