@@ -6,7 +6,7 @@ var wrapper = document.getElementById("wrapper");
 var actions = new Array();
 var mouse_down = false;
 
-var fg_color, bg_color, active_size, alpha, current_action, select_div,mouseX,mouseY;
+var fg_color, bg_color, active_size, alpha, current_action, select_div,mouseX, mouseY, mouse_target;
 var current_tool = "brush";
 
 function getMouseXY(e) {
@@ -41,22 +41,24 @@ function openImage(url) {
 
 function selectDown(e) {
   mouse_down = true;
-  current_action.click_x = e.pageX;
-  current_action.click_y = e.pageY;
-  current_action.old_x = current_action.x;
-  current_action.old_y = current_action.y;
+  getMouseXY(e);
+  mouse_target = select_div;
+  current_action.click_x = mouseX;
+  current_action.click_y = mouseY;
+  current_action.old_x = current_action.x1;
+  current_action.old_y = current_action.y1;
 }
 
-function selectUp(e) { mouse_down = false; }
+function selectUp(e) { mouse_down = false; mouse_target = null; }
 
 function selectMove(e) {
   if (!mouse_down) { return }
   getMouseXY(e);
   if (mouse_target == select_div) {
-    select_div.style.left = current_action.old_x - (current_action.click_x - e.pageX) +"px";
-    select_div.style.top = current_action.old_y - (current_action.click_y - e.pageY) +"px";
-    current_action.x = current_action.old_x - (current_action.click_x - e.pageX);
-    current_action.y = current_action.old_y - (current_action.click_y - e.pageY);
+    select_div.style.left = current_action.old_x - (current_action.click_x - mouseX) +"px";
+    select_div.style.top = current_action.old_y - (current_action.click_y - mouseY) +"px";
+    current_action.x1 = current_action.old_x - (current_action.click_x - mouseX);
+    current_action.y1 = current_action.old_y - (current_action.click_y - mouseY);
     redraw();
   } else {
     alterSelectionDiv(current_action.x1,current_action.y1,null,null,mouseX,mouseY);
@@ -86,7 +88,6 @@ function alterSelectionDiv(x,y,w,h,x2,y2) {
   }
   h = Math.min(h,HEIGHT-y);
   h = Math.max(h,-y+2);
-  console.log(h);
   if (h < 0) {
     y = y + h;
     h = -h;
@@ -170,9 +171,11 @@ function brushMove(e) {
   }
   for (var i=0;i<coords.length;i++) {
     window._id = image_data;
-    context.putImageData(image_data,
-                         Math.round(coords[i][0]-action.size/2),
-                         Math.round(coords[i][1]-action.size/2));
+    context.putImageData(
+      image_data,
+      Math.round(coords[i][0]-action.size/2),
+      Math.round(coords[i][1]-action.size/2)
+    );
   }
 
   redraw();
@@ -195,14 +198,15 @@ function CanvasAction(e) {
   } else if (current_tool == "select") {
     action.move = selectMove;
     select_div.style.display = "block";
-    mouse_target = "arst";
     action.x1 = action.x2 = x;
     action.y1 = action.y2 = y;
     document.addEventListener("mousemove",selectMove);
     canvas.removeEventListener("mouseout",canvasOut);
+    action.keep = true;
     action.destroy = function() {
       canvas.addEventListener("mouseout",canvasOut);
       document.removeEventListener("mousemove",selectMove);
+      if (!action.keep) { actions.pop(); }
     }
   }
   action.canvas = document.createElement("canvas");
