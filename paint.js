@@ -6,7 +6,7 @@ var wrapper = document.getElementById("wrapper");
 var actions = new Array();
 var mouse_down = false;
 
-var fg_color, bg_color, active_size, alpha, current_action, select_div,mouseX, mouseY, mouse_target;
+var fg_color, bg_color, active_size, alpha, current_action, select_div, mouseX, mouseY, mouse_target;
 var current_tool = "brush";
 
 function getMouseXY(e) {
@@ -46,33 +46,47 @@ function selectDown(e) { // select box was clicked
   mouse_target = select_div;
   current_action.click_x = mouseX;
   current_action.click_y = mouseY;
-  current_action.old_x = current_action.x1;
-  current_action.old_y = current_action.y1;
-  var sx = dx = current_action.x1;
-  var sy = dy = current_action.y1;
-  var sw = dw = current_action.x1-current_action.x2;
-  var sh = dh = current_action.y1-current_action.y2;
-  current_action.context.drawImage(canvas,sx,sy,sw,sh,dx,dy,dw,dh);
-  select_div.style.backgroundImage = "url("+canvas.toDataURL()+")";
-  select_div.style.backgroundPosition = -sx + "px " + -sy + "px";
-  console.log(-sx + "px " + -sy + "px");
+  selectMove(e);
+  document.body.appendChild(current_action.canvas);
 }
-
-function selectUp(e) { mouse_down = false; mouse_target = null; }
 
 function selectMove(e) {
   if (!mouse_down) { return }
   getMouseXY(e);
   if (mouse_target == select_div) { // select area is being moved
-    select_div.style.left = current_action.old_x - (current_action.click_x - mouseX) +"px";
-    select_div.style.top = current_action.old_y - (current_action.click_y - mouseY) +"px";
-    current_action.x1 = current_action.old_x - (current_action.click_x - mouseX);
-    current_action.y1 = current_action.old_y - (current_action.click_y - mouseY);
-    current_action.context.clearRect(0,0,WIDTH,HEIGHT);
+    current_action.move_x = mouseX;
+    current_action.move_y = mouseY;
+    current_action.delta_x = current_action.move_x - current_action.click_x;
+    current_action.delta_y = current_action.move_y - current_action.click_y;
+    select_div.style.left = current_action.dx + current_action.delta_x +"px";
+    select_div.style.top = current_action.dy + current_action.delta_y +"px";
     redraw();
   } else { // select area is being created
     alterSelectionDiv(current_action.x1,current_action.y1,null,null,mouseX,mouseY);
   }
+}
+
+function selectDraw() {
+  current_action.context.clearRect(0,0,WIDTH,HEIGHT);  
+  var sx = current_action.sx;
+  var sy = current_action.sy;
+  var sw = dw = current_action.dw;
+  var sh = dh = current_action.dh;
+  var dx = current_action.dx+current_action.delta_x;
+  var dy = current_action.dy+current_action.delta_y;
+  current_action.context.fillStyle = bg_color;
+  current_action.context.beginPath();
+  current_action.context.rect(sx,sy,sw,sh);
+  current_action.context.fill();
+  current_action.context.closePath();
+  current_action.context.drawImage(canvas,sx,sy,sw,sh,dx,dy,dw,dh);
+}
+function selectUp(e) {
+  mouse_down = false;
+  mouse_target = null;
+  current_action.dx = current_action.dx + current_action.delta_x;
+  current_action.dy = current_action.dy + current_action.delta_y;
+  current_action.delta_x = current_action.delta_y = 0;
 }
 
 function createSelectionDiv() {
@@ -88,6 +102,7 @@ function createSelectionDiv() {
 }
 
 function alterSelectionDiv(x,y,w,h,x2,y2) {
+  // modifies selection div and updates action attributes to match
   if (x2) { w = x2-x; }
   if (y2) { h = y2-y; }
   w = Math.min(w,WIDTH-x);
@@ -101,6 +116,16 @@ function alterSelectionDiv(x,y,w,h,x2,y2) {
   if (h < 0) {
     y = y + h;
     h = -h;
+  }
+  current_action.dx = x;
+  current_action.dy = y;
+  current_action.dw = w;
+  current_action.dh = h;
+  if (!current_action.keep) {
+    current_action.sx = x;
+    current_action.sy = y;
+    current_action.sw = w;
+    current_action.sh = h;
   }
   select_div.style.width = w + "px";
   select_div.style.height = h + "px";
@@ -208,13 +233,14 @@ function CanvasAction(e) {
   } else if (current_tool == "select") {
     action.move = selectMove;
     select_div.style.display = "block";
-    select_div.style.backgroundImage = "";
     action.x1 = action.x2 = x;
     action.y1 = action.y2 = y;
     document.addEventListener("mousemove",selectMove);
     canvas.removeEventListener("mouseout",canvasOut);
     action.keep = false;
+    action.delta_x = action.delta_y = 0;
     action.destroy = function() {
+      select_div.style.display = "none";
       canvas.addEventListener("mouseout",canvasOut);
       document.removeEventListener("mousemove",selectMove);
       if (!current_action.keep) { actions.pop(); }
@@ -260,6 +286,10 @@ function redraw() {
   context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
   for (var i=0; i < actions.length; i++) {
     var action = actions[i];
+    if (i == actions.length-1 && current_tool == "select") {
+      // select has to be drawn inbetween frames 
+      selectDraw();
+    }
     context.setAlpha(action.alpha);
     if (action.tool == "eraser") { context.setAlpha(1); }
     context.drawImage(action.canvas,action.x,action.y);
