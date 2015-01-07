@@ -47,7 +47,6 @@ function selectDown(e) { // select box was clicked
   current_action.click_x = mouseX;
   current_action.click_y = mouseY;
   selectMove(e);
-  document.body.appendChild(current_action.canvas);
 }
 
 function selectMove(e) {
@@ -223,6 +222,12 @@ function CanvasAction(e) {
     y: 0
   }
   if (current_action && current_action.destroy) { current_action.destroy(); }
+  if (current_action) {
+    var box = document.getElementById("action_list");
+    var img = document.createElement("img");
+    img.src = current_action.canvas.toDataURL();
+    box.insertBefore(img,box.firstChild);
+  }
   getMouseXY(e);
   var x = mouseX, y = mouseY;
   if (current_tool == "brush") {
@@ -243,7 +248,11 @@ function CanvasAction(e) {
       select_div.style.display = "none";
       canvas.addEventListener("mouseout",canvasOut);
       document.removeEventListener("mousemove",selectMove);
-      if (!current_action.keep) { actions.pop(); }
+      if (!current_action.keep) {
+        actions.pop();
+        delete current_action;
+        current_action = undefined;
+      }
     }
   }
   action.canvas = document.createElement("canvas");
