@@ -174,6 +174,57 @@ function init() {
 }
 init();
 
+function rectMove(e) {
+  if(!mouse_down){ return; }
+  var action = current_action;
+  getMouseXY(e);
+  action.x2 = mouseX;
+  action.y2 = mouseY;
+  var w = action.x2-action.x1;
+  var h = action.y2-action.y1;
+  current_action.context.clearRect(0,0,WIDTH,HEIGHT);
+  current_action.context.fillStyle = action.color;
+  current_action.context.beginPath();
+  current_action.context.rect(action.x1,action.y1,w,h);
+  current_action.context.fill();
+  current_action.context.closePath();
+  redraw();
+}
+
+function drawEllipse(ctx, x, y, w, h) {
+  // from http://stackoverflow.com/questions/2172798/how-to-draw-an-oval-in-html5-canvas
+  var kappa = .5522848,
+      ox = (w / 2) * kappa, // control point offset horizontal
+      oy = (h / 2) * kappa, // control point offset vertical
+      xe = x + w,           // x-end
+      ye = y + h,           // y-end
+      xm = x + w / 2,       // x-middle
+      ym = y + h / 2;       // y-middle
+
+  ctx.beginPath();
+  ctx.moveTo(x, ym);
+  ctx.bezierCurveTo(x, ym - oy, xm - ox, y, xm, y);
+  ctx.bezierCurveTo(xm + ox, y, xe, ym - oy, xe, ym);
+  ctx.bezierCurveTo(xe, ym + oy, xm + ox, ye, xm, ye);
+  ctx.bezierCurveTo(xm - ox, ye, x, ym + oy, x, ym);
+  //ctx.closePath(); // not used correctly, see comments (use to close off open path)
+  ctx.fill();
+}
+
+function circleMove(e) {
+  if(!mouse_down){ return; }
+  var action = current_action;
+  getMouseXY(e);
+  action.x2 = mouseX;
+  action.y2 = mouseY;
+  var w = action.x2-action.x1;
+  var h = action.y2-action.y1;
+  current_action.context.fillStyle = action.color;
+  current_action.context.clearRect(0,0,WIDTH,HEIGHT);
+  drawEllipse(current_action.context,current_action.x1,current_action.y1,w,h)
+  redraw();
+}
+
 function brushMove(e) {
   if(!mouse_down){ return; }
   var action = current_action;
@@ -216,11 +267,23 @@ function brushMove(e) {
 }
 
 function CanvasAction(e) {
+  getMouseXY(e);
   action = {
     tool: current_tool,
     x: 0,
     y: 0
   }
+
+  // these three are currently used for brush, rect and circle
+  action.color = (e.button==0)?fg_color:bg_color;
+  action.size = active_size;
+  action.alpha = alpha;
+
+
+  // these two are used for select, rect, and circle
+  action.x1 = action.x2 = mouseX;
+  action.y1 = action.y2 = mouseY;
+
   if (current_action && current_action.destroy) { current_action.destroy(); }
   if (current_action) {
     var box = document.getElementById("action_list");
@@ -228,18 +291,15 @@ function CanvasAction(e) {
     img.src = current_action.canvas.toDataURL();
     box.insertBefore(img,box.firstChild);
   }
-  getMouseXY(e);
-  var x = mouseX, y = mouseY;
   if (current_tool == "brush") {
-    action.color = (e.button==0)?fg_color:bg_color
-    action.size = active_size
-    action.alpha = alpha
     action.move = brushMove;
+  } else if (current_tool == "rect") {
+    action.move = rectMove;
+  } else if (current_tool == "circle") {
+    action.move = circleMove;
   } else if (current_tool == "select") {
     action.move = selectMove;
     select_div.style.display = "block";
-    action.x1 = action.x2 = x;
-    action.y1 = action.y2 = y;
     document.addEventListener("mousemove",selectMove);
     canvas.removeEventListener("mouseout",canvasOut);
     action.keep = false;

@@ -22,6 +22,22 @@ function createButtons() {
   select.addEventListener("click",function() {changeTool("select")});
   tools.appendChild(select);
 
+  var rect = createElement("button", {
+    title: "rect",
+    className: "rect-button",
+    name: "rect",
+  });
+  rect.addEventListener("click",function() {changeTool("rect")});
+  tools.appendChild(rect);
+
+  var circle = createElement("button", {
+    title: "circle",
+    className: "circle-button",
+    name: "circle",
+  });
+  circle.addEventListener("click",function() {changeTool("circle")});
+  tools.appendChild(circle);
+
   var tools_bot = document.getElementById("tools_bot");
   var fg_picker = createElement("input",{
     value: "#cb3594",
@@ -68,4 +84,5 @@ function createButtons() {
   setAlpha();
   alpha_picker.addEventListener("input",setAlpha.bind(alpha_picker));
   tools_bot.appendChild(container);
+
 }
