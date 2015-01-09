@@ -1,3 +1,5 @@
+@gray: #ccc;
+@blue: #2196F3;
 html,body { margin: 0; }
 #paint {
   border: 1px black solid;
@@ -17,7 +19,7 @@ html,body { margin: 0; }
 }
 
 #tools,#tools_bot {
-  background-color: #ccc;
+  background-color: @gray;
 }
 #action_list {
   padding-left: 70px;
@@ -36,6 +38,7 @@ html,body { margin: 0; }
   z-index: 1;
 }
 #tools button {
+  cursor: pointer;
   height: 30px;
   margin: 5px;
   padding: 0;
@@ -75,11 +78,10 @@ html,body { margin: 0; }
 }
 .fg_alpha {
   display: block;
+  &:before {
+    content: "Alpha: ";
+  }
 }
-.fg_alpha:before {
-  content: "Alpha: ";
-}
-
 #tools_bot {
   bottom: 0;
   height: 100px;
@@ -95,16 +97,70 @@ html,body { margin: 0; }
   height: 50px;
   position: absolute;
   width: 50px;
+  &.fg {
+    left: 10px;
+    top: 10px;
+    z-index: 1;
+  }
+  &.bg {
+    left: 0;
+    top: 0;
+    z-index: 0;
+  }
 }
 
-.fg.color-picker {
-  left: 10px;
-  top: 10px;
-  z-index: 1;
+/* storage.js styles*/
+#tools button.save-as-new {
+  position: relative;
+  &:after {
+    background: black;
+    border-radius: 100%;
+    bottom: 0px;
+    color: white;
+    content: "+";
+    height: 11px;
+    line-height: 11px;
+    position: absolute;
+    right: 0px;
+    text-align: center;
+    width: 11px;
+  }
 }
 
-.bg.color-picker {
-  left: 0;
+#file_window {
+  background: @gray;
+  border: darken(@gray,10%) 2px solid;
+  display: none;
+  padding-bottom: 40px;
+  position: absolute;
+  left: 100%;
   top: 0;
-  z-index: 0;
+  width: 500px;
+  .title-bar {
+    background-color: @blue;
+    box-sizing: border-box;
+    color: white;
+    font-weight: bold;
+    padding: 10px 20px;
+    width: 100%;
+  }
+  .file-list {
+    background: white;
+    height: 300px;
+    width: 100%;
+  }
+  [name=file-name] {
+    bottom: 10px;
+    position: absolute;
+    left: 10px;
+  }
+  [name=save-as-button] {
+    bottom: 10px;
+    margin: 0;
+    width: auto;
+    height: auto;
+    padding: initial;
+    position: absolute;
+    right: 10px;
+  }
 }
