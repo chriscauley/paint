@@ -7,6 +7,8 @@ var actions = new Array();
 var mouse_down = false;
 
 var fg_color, bg_color, active_size, alpha, current_action, select_div, current_image;
+var destroyCurrentAction;
+var canvases, contexts;
 var mouseX, mouseY, mouse_target;
 var current_tool = "brush";
 
@@ -67,19 +69,19 @@ function selectMove(e) {
 }
 
 function selectDraw() {
-  current_action.context.clearRect(0,0,WIDTH,HEIGHT);  
+  contexts[contexts.length-1].clearRect(0,0,WIDTH,HEIGHT);  
   var sx = current_action.sx;
   var sy = current_action.sy;
   var sw = dw = current_action.dw;
   var sh = dh = current_action.dh;
   var dx = current_action.dx+current_action.delta_x;
   var dy = current_action.dy+current_action.delta_y;
-  current_action.context.fillStyle = bg_color;
-  current_action.context.beginPath();
-  current_action.context.rect(sx,sy,sw,sh);
-  current_action.context.fill();
-  current_action.context.closePath();
-  current_action.context.drawImage(canvas,sx,sy,sw,sh,dx,dy,dw,dh);
+  contexts[contexts.length-1].fillStyle = bg_color;
+  contexts[contexts.length-1].beginPath();
+  contexts[contexts.length-1].rect(sx,sy,sw,sh);
+  contexts[contexts.length-1].fill();
+  contexts[contexts.length-1].closePath();
+  contexts[contexts.length-1].drawImage(canvas,sx,sy,sw,sh,dx,dy,dw,dh);
 }
 function selectUp(e) {
   mouse_down = false;
@@ -136,7 +138,7 @@ function alterSelectionDiv(x,y,w,h,x2,y2) {
 createSelectionDiv();
 
 function changeTool(tool_name) {
-  if (current_action && current_action.destroy) { current_action.destroy(); }
+  if (current_action && destroyCurrentAction) { destroyCurrentAction(); }
   current_tool = tool_name;
   if (document.querySelector("#tools .active") != null) {
     document.querySelector("#tools .active").classList.remove("active");
@@ -175,6 +177,8 @@ function init() {
   current_image = {
     actions: actions,
   }
+  canvases = [];
+  contexts = [];
 }
 init();
 
@@ -186,12 +190,12 @@ function rectMove(e) {
   action.y2 = mouseY;
   var w = action.x2-action.x1;
   var h = action.y2-action.y1;
-  current_action.context.clearRect(0,0,WIDTH,HEIGHT);
-  current_action.context.fillStyle = action.color;
-  current_action.context.beginPath();
-  current_action.context.rect(action.x1,action.y1,w,h);
-  current_action.context.fill();
-  current_action.context.closePath();
+  contexts[contexts.length-1].clearRect(0,0,WIDTH,HEIGHT);
+  contexts[contexts.length-1].fillStyle = action.color;
+  contexts[contexts.length-1].beginPath();
+  contexts[contexts.length-1].rect(action.x1,action.y1,w,h);
+  contexts[contexts.length-1].fill();
+  contexts[contexts.length-1].closePath();
   redraw();
 }
 
@@ -203,16 +207,16 @@ function circleMove(e) {
   action.y2 = mouseY;
   var w = action.x2-action.x1;
   var h = action.y2-action.y1;
-  current_action.context.fillStyle = action.color;
-  current_action.context.clearRect(0,0,WIDTH,HEIGHT);
-  drawEllipse(current_action.context,current_action.x1,current_action.y1,w,h)
+  contexts[contexts.length-1].fillStyle = action.color;
+  contexts[contexts.length-1].clearRect(0,0,WIDTH,HEIGHT);
+  drawEllipse(contexts[contexts.length-1],current_action.x1,current_action.y1,w,h)
   redraw();
 }
 
 function brushMove(e) {
   if(!mouse_down){ return; }
   var action = current_action;
-  var context = action.context;
+  var context = contexts[contexts.length-1];
   var coords = [];
   getMouseXY(e);
   var x = mouseX,y = mouseY;
@@ -251,59 +255,61 @@ function brushMove(e) {
 }
 
 function CanvasAction(e) {
-  getMouseXY(e);
-  action = {
-    tool: current_tool,
-    x: 0,
-    y: 0
+  var action;
+  if ('tool' in e) { // restoring action from saved action JSON
+    action = e;
+  } else { // building new action from event
+    getMouseXY(e);
+    action = {
+      tool: current_tool,
+      x: 0,
+      y: 0
+    }
+    // these two are used for select, rect, and circle
+    action.x1 = action.x2 = mouseX;
+    action.y1 = action.y2 = mouseY;
+    // these three are currently used for brush, rect and circle
+    action.color = (e.button==0)?fg_color:bg_color;
+    action.size = active_size;
+    action.alpha = alpha;
   }
 
-  // these three are currently used for brush, rect and circle
-  action.color = (e.button==0)?fg_color:bg_color;
-  action.size = active_size;
-  action.alpha = alpha;
-
-
-  // these two are used for select, rect, and circle
-  action.x1 = action.x2 = mouseX;
-  action.y1 = action.y2 = mouseY;
-
-  if (current_action && current_action.destroy) { current_action.destroy(); }
+  if (current_action && destroyCurrentAction) { destroyCurrentAction(); }
   if (current_action) {
     var box = document.getElementById("action_list");
     var img = document.createElement("img");
-    img.src = current_action.canvas.toDataURL();
+    img.src = canvases[canvases.length-1].toDataURL();
     box.insertBefore(img,box.firstChild);
   }
-  if (current_tool == "brush") {
-    action.move = brushMove;
-  } else if (current_tool == "rect") {
-    action.move = rectMove;
-  } else if (current_tool == "circle") {
-    action.move = circleMove;
-  } else if (current_tool == "select") {
-    action.move = selectMove;
+  destroyCurrentAction = undefined;
+
+  var _c = document.createElement("canvas");
+  _c.setAttribute('width', WIDTH);
+  _c.setAttribute('height', HEIGHT);
+  var _ctx = _c.getContext("2d");
+  _ctx.imageSmoothingEnabled = false;
+  canvases.push(_c);
+  contexts.push(_ctx);
+
+  if (current_tool == "select") {
     select_div.style.display = "block";
     document.addEventListener("mousemove",selectMove);
     canvas.removeEventListener("mouseout",canvasOut);
     action.keep = false;
     action.delta_x = action.delta_y = 0;
-    action.destroy = function() {
+    destroyCurrentAction = function() {
       select_div.style.display = "none";
       canvas.addEventListener("mouseout",canvasOut);
       document.removeEventListener("mousemove",selectMove);
       if (!current_action.keep) {
         actions.pop();
+        delete contexts.pop();
+        delete canvases.pop();
         delete current_action;
         current_action = undefined;
       }
     }
   }
-  action.canvas = document.createElement("canvas");
-  action.canvas.setAttribute('width', WIDTH);
-  action.canvas.setAttribute('height', HEIGHT);
-  action.context = action.canvas.getContext("2d");
-  action.context.imageSmoothingEnabled = false;
   return action;
 }
 
@@ -312,11 +318,20 @@ function canvasClick(e) {
   mouse_down = true;
   current_action = new CanvasAction(e);
   actions.push(current_action);
-  current_action.move(e);
+  canvasMove(e);
 }
 
 function canvasMove(e) {
-  if (!!current_action) { current_action.move(e); }
+  if (!current_action) { return; }
+  if (current_tool == "brush") {
+    brushMove(e);
+  } else if (current_tool == "rect") {
+    rectMove(e);
+  } else if (current_tool == "circle") {
+    circleMove(e);
+  } else if (current_tool == "select") {
+    selectMove(e)
+  }
 }
 
 canvas.addEventListener("mousedown",canvasClick.bind(canvas));
@@ -345,6 +360,6 @@ function redraw() {
     }
     context.setAlpha(action.alpha);
     if (action.tool == "eraser") { context.setAlpha(1); }
-    context.drawImage(action.canvas,action.x,action.y);
+    context.drawImage(canvases[i],action.x,action.y);
   }
 }
