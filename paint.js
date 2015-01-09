@@ -168,14 +168,20 @@ function pasteImage(img,x,y) {
 
 function init() {
   createButtons();
+  resetCanvas()
+}
+function resetCanvas() {
   canvas.setAttribute('width', WIDTH);
   canvas.setAttribute('height', HEIGHT);
   wrapper.style.width = 2+WIDTH+"px";
   wrapper.style.height = 2+HEIGHT+"px";
   context = canvas.getContext("2d");
   context.imageSmoothingEnabled = false;
+  current_action = undefined;
   current_image = {
     actions: actions,
+    width: WIDTH,
+    height: HEIGHT
   }
   canvases = [];
   contexts = [];
@@ -289,7 +295,13 @@ function CanvasAction(e) {
   var _ctx = _c.getContext("2d");
   _ctx.imageSmoothingEnabled = false;
   canvases.push(_c);
+  document.body.appendChild(_c);
   contexts.push(_ctx);
+  if (action.dataURL) { // creating action from memory, draw to canvas
+    var imageObj = new Image();
+    imageObj.onload = function() { context.drawImage(this, 0, 0); };
+    imageObj.src = action.dataURL;    
+  }
 
   if (current_tool == "select") {
     select_div.style.display = "block";
@@ -362,4 +374,7 @@ function redraw() {
     if (action.tool == "eraser") { context.setAlpha(1); }
     context.drawImage(canvases[i],action.x,action.y);
   }
+
+  // Save last actions canvas for future load
+  current_action.dataURL = canvases[canvases.length-1].toDataURL();
 }

@@ -56,7 +56,16 @@ var local_store = (function (){
     gallery[current_image.name] = current_image;
     save();
   }
-  function loadImage(name) { return gallery[name]; }
+  function loadImage(name) {
+    var image = gallery[name];
+    WIDTH = image.width;
+    HEIGHT = image.height;
+    resetCanvas();
+    for (var i=0;i<image.actions.length;i++) {
+      actions.push(new CanvasAction(image.actions[i]));
+    }
+    file_window.style.display = "none";
+  }
 
   function resetFileList() {
     var images = [];
@@ -71,6 +80,7 @@ var local_store = (function (){
         name: image_name,
         parent: file_list,
       });
+      a.addEventListener('click',(function() { loadImage(this.name)}).bind(a));
     }
   }
 
