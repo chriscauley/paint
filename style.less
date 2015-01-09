@@ -144,11 +144,6 @@ html,body { margin: 0; }
     padding: 10px 20px;
     width: 100%;
   }
-  .file-list {
-    background: white;
-    height: 300px;
-    width: 100%;
-  }
   [name=file-name] {
     bottom: 10px;
     position: absolute;
@@ -162,5 +157,29 @@ html,body { margin: 0; }
     padding: initial;
     position: absolute;
     right: 10px;
+  }
+}
+
+#file_window .file-list {
+  background: white;
+  height: 300px;
+  width: 100%;
+  .file {
+    background-size: contain;
+    box-shadow: 0 0 2px black;
+    display: block;
+    cursor: pointer;
+    height: 100px;
+    position: relative;
+    width: 100px;
+    &:after {
+      content: attr(name);
+      display: block;
+      left: 0;
+      position: absolute;
+      text-align: center;
+      top: 100%;
+      width: 100%;
+    }
   }
 }

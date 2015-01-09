@@ -65,8 +65,8 @@ var local_store = (function (){
     for (var i=0;i<images.length;i++) {
       image_name = images[i];
       image = gallery[image_name];
-      document.createElement("a",{
-        style: 'background-image: url('+image.dataURL+')',
+      var a = createElement("a",{
+        style: {backgroundImage: 'url('+image.dataURL+')'},
         className: 'file',
         name: image_name,
         parent: file_list,

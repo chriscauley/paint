@@ -8,6 +8,9 @@ function createElement(type,options) {
       options[key].appendChild(element);
     } else if (key == "innerHTML") {
       element.innerHTML = options[key]
+    } else if (key == "style") {
+      for (prop in options[key]) { element.style[prop] = options[key][prop];       console.log(options[prop]);
+}
     } else {
       element[key] = options[key]
     }
