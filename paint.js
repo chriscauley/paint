@@ -18,11 +18,6 @@ function getMouseXY(e) {
   mouseY = e.pageY - _cr.top;
 }
 
-function resetCanvas() {
-  actions = new Array();
-  redraw();
-}
-
 function fetchImage(url) {
   var img = document.createElement("img");
   img.src = url;
@@ -295,12 +290,13 @@ function CanvasAction(e) {
   var _ctx = _c.getContext("2d");
   _ctx.imageSmoothingEnabled = false;
   canvases.push(_c);
-  document.body.appendChild(_c);
   contexts.push(_ctx);
+  document.body.appendChild(_c);
   if (action.dataURL) { // creating action from memory, draw to canvas
     var imageObj = new Image();
-    imageObj.onload = function() { context.drawImage(this, 0, 0); };
-    imageObj.src = action.dataURL;    
+    _ctx.setAlpha(action.alpha);
+    imageObj.src = action.dataURL;
+    imageObj.onload = function() { _ctx.drawImage(imageObj, 0, 0); redraw(); };
   }
 
   if (current_tool == "select") {
@@ -376,5 +372,5 @@ function redraw() {
   }
 
   // Save last actions canvas for future load
-  current_action.dataURL = canvases[canvases.length-1].toDataURL();
+  if (current_action) { current_action.dataURL = canvases[canvases.length-1].toDataURL(); }
 }

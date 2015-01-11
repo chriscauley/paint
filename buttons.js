@@ -1,9 +1,3 @@
-function createElement(type,options) {
-  var element = document.createElement(type);
-  for (key in options) { element[key] = options[key] }
-  return element;
-}
-
 function createButtons() {
   var tools = document.getElementById("tools");
   var brush = createElement("button",{

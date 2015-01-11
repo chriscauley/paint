@@ -1,5 +1,6 @@
 @gray: #ccc;
 @blue: #2196F3;
+@green: #4CAF50;
 html,body { margin: 0; }
 #paint {
   border: 1px black solid;
@@ -150,36 +151,67 @@ html,body { margin: 0; }
     left: 10px;
   }
   [name=save-as-button] {
+    right: 10px;
+  }
+  [name=cancel-button] {
+    right: 100px;
+  }
+  [name=cancel-button],[name=save-as-button] {
     bottom: 10px;
     margin: 0;
     width: auto;
     height: auto;
-    padding: initial;
+    padding: 0 5px;
     position: absolute;
-    right: 10px;
   }
 }
 
 #file_window .file-list {
   background: white;
+  box-sizing: border-box;
   height: 300px;
+  padding: 10px;
   width: 100%;
   .file {
+    background-repeat: no-repeat;
     background-size: contain;
     box-shadow: 0 0 2px black;
-    display: block;
+    display: inline-block;
     cursor: pointer;
     height: 100px;
+    margin: 5px 5px 25px;
     position: relative;
     width: 100px;
     &:after {
       content: attr(name);
       display: block;
       left: 0;
+      overflow: hidden;
       position: absolute;
       text-align: center;
-      top: 100%;
+      text-overflow: ellipsis;
+      top: 102%;
+      white-space: nowrap;
       width: 100%;
     }
+    &:hover {
+      box-shadow: 0 0 5px black;
+      &:after {
+        background: white;
+        overflow: visible;
+        white-space: normal
+      }
+    }
   }
+}
+
+#wrapper .msg {
+  background: @green;
+  color: white;
+  padding: 5px 10px;
+  position: absolute;
+  top: 0;
+  transition: margin 1s;
+  width: 100%;
+  z-index: 10;
 }

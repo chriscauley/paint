@@ -1,15 +1,33 @@
 var local_store = (function (){
-  var gallery;
+  var gallery,file_action;
+
   // create buttons for local storage interface
   var tools = document.getElementById("tools");
+
+  var new_button = createElement("button",{
+    className: "fa fa-file-o",
+    title: 'New Image',
+    name: 'new',
+    parent: tools
+  });
+  new_button.addEventListener("click",function(){newImage();});
+
+  var open_button = createElement("button",{
+    className: "fa fa-folder-open-o",
+    title: 'Open Image',
+    name: 'open',
+    parent: tools
+  });
+  open_button.addEventListener("click",function(){startOpenImage();});
+
   var save_button = createElement("button",{
     className: "fa fa-floppy-o",
     title: 'save',
     name: 'save',
     parent: tools
   });
-  save_button.addEventListener("click",function(){saveImage(current_image)});
-  
+  save_button.addEventListener("click",function(){saveImage()});
+
   var save_as_button = createElement("button",{
     className: "fa fa-floppy-o save-as-new",
     title: 'Save as New',
@@ -18,8 +36,26 @@ var local_store = (function (){
   });
   save_as_button.addEventListener("click",function(){startSaveAs();});
 
-  function startSaveAs() {
+  tools.appendChild(createElement("hr",{}));
+
+  function openFileWindow() {
+    resetFileList();
     file_window.style.display = "block";
+  }
+
+  function startOpenImage() {
+    openFileWindow();
+    file_action = "load";
+    title_bar.innerHTML = "Open Image";
+  }
+
+  function newImage() {
+    alert("Not Implimented");
+  }
+
+  function startSaveAs() {
+    openFileWindow();
+    file_action = "save";
     title_bar.innerHTML = "Save File As";
   }
 
@@ -34,6 +70,12 @@ var local_store = (function (){
     name: "file-name",
     parent: file_window
   });
+  var cancel_button = createElement("button", {
+    name: "cancel-button",
+    innerHTML: "Cancel",
+    parent: file_window
+  });
+  cancel_button.addEventListener('click',function() { file_window.style.display = "none"; });
   var file_button = createElement("button", {
     name: "save-as-button",
     innerHTML: "Save File",
@@ -45,12 +87,21 @@ var local_store = (function (){
   });
 
   // functions!
+  function addMessage(msg) {
+    var e = createElement("div", {
+      className: 'msg',
+      innerHTML: msg,
+      parent: document.getElementById("wrapper"),
+    });
+    setTimeout(function(){ e.style.marginTop="-50px"; },5000)
+  }
   function save() {
     localStorage.setItem("gallery",JSON.stringify(gallery));
-    resetFileList();
+    addMessage("image saved!")
     file_window.style.display = "none";
   }
-  function saveImage() {
+  function saveImage(name) {
+    if (name) { current_image.name = name; }
     if (!current_image.name) { startSaveAs(); return; }
     current_image.dataURL = canvas.toDataURL();
     gallery[current_image.name] = current_image;
@@ -64,10 +115,12 @@ var local_store = (function (){
     for (var i=0;i<image.actions.length;i++) {
       actions.push(new CanvasAction(image.actions[i]));
     }
-    file_window.style.display = "none";
+    current_image.name = name;
+    addMessage("image loaded!")
   }
 
   function resetFileList() {
+    file_list.innerHTML = '';
     var images = [];
     for (image_name in gallery) { images.push(image_name); }
     images = images.sort();
@@ -80,14 +133,19 @@ var local_store = (function (){
         name: image_name,
         parent: file_list,
       });
-      a.addEventListener('click',(function() { loadImage(this.name)}).bind(a));
+      a.addEventListener('click',(function() { clickImage(this.name)}).bind(a));
     }
+  }
+  function clickImage(name) {
+    if (file_action == "save") { saveImage(name); }
+    else if (file_action == "load") { loadImage(name); }
+    file_window.style.display = "none";
+    current_image.name = undefined;
   }
 
   function init() {
     gallery = JSON.parse(localStorage.getItem("gallery") || "{}");
     window.gallery = gallery;
-    resetFileList();
   }
   init();
 })();
