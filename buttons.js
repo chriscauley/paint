@@ -8,6 +8,14 @@ function createButtons() {
   });
   brush.addEventListener("click",function() {changeTool("brush")});
 
+  var fill = createElement("button", {
+    title: "fill",
+    className: "fill-button",
+    name: 'fill',
+    parent: tools,
+  });
+  fill.addEventListener("click",function() {changeTool("fill")});
+
   var select = createElement("button",{
     title: "select",
     className: "select-button",
@@ -40,6 +48,14 @@ function createButtons() {
   });
   resize.addEventListener("click",function() { openResizeDialog(); });
 
+  var eye_dropper = createElement("button", {
+    title: "eye_dropper",
+    className: "fa fa-eyedropper",
+    name: 'eye_dropper',
+    parent: tools,
+  });
+  eye_dropper.addEventListener("click",function() {changeTool("eye_dropper")});
+
   var tools_bot = document.getElementById("tools_bot");
   var fg_picker = createElement("input",{
     value: "#cb3594",
@@ -55,7 +71,7 @@ function createButtons() {
     value: "#FFFFFF",
     type: "color",
     className: "color-picker bg",
-    parent: bg_picker,
+    parent: tools_bot,
   });
   function setBG() { bg_color = bg_picker.value; }
   setBG();
@@ -65,12 +81,11 @@ function createButtons() {
     id: "size_picker",
     size: 2,
     value: 4,
-    parent: size_picker,
+    parent: tools,
   });
   function setSize() { active_size = size_picker.value; }
   setSize();
   size_picker.addEventListener("change",setSize.bind(size_picker));
-
 
   var container = createElement("div",{className: "alpha-container"});
   var alpha_picker = createElement("input",{
@@ -86,5 +101,4 @@ function createButtons() {
   setAlpha();
   alpha_picker.addEventListener("input",setAlpha.bind(alpha_picker));
   tools_bot.appendChild(container);
-
 }

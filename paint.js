@@ -6,7 +6,7 @@ var wrapper = document.getElementById("wrapper");
 var actions = new Array();
 var mouse_down = false;
 
-var fg_color, bg_color, active_size, alpha, current_action, select_div, current_image;
+var fg_color, bg_color, active_size, alpha, current_action, select_div, current_image,last_tool;
 var destroyCurrentAction;
 var canvases, contexts;
 var mouseX, mouseY, mouse_target;
@@ -134,6 +134,7 @@ createSelectionDiv();
 
 function changeTool(tool_name) {
   if (current_action && destroyCurrentAction) { destroyCurrentAction(); }
+  last_tool = current_tool; // used for eye dropper
   current_tool = tool_name;
   if (document.querySelector("#tools .active") != null) {
     document.querySelector("#tools .active").classList.remove("active");
@@ -174,6 +175,11 @@ function resizeCanvas() {
 function resetCanvas() {
   resizeCanvas();
   context = canvas.getContext("2d");
+  context.beginPath();
+  context.fillStyle = "white";
+  context.rect(0,0,WIDTH,HEIGHT);
+  context.fill();
+  context.closePath();
   context.imageSmoothingEnabled = false;
   current_action = undefined;
   current_image = {
@@ -328,10 +334,12 @@ function CanvasAction(e) {
 
 function canvasClick(e) {
   e.preventDefault();
+  if (current_tool == "eye_dropper") { eyeDropperClick(e); return; }
   mouse_down = true;
   current_action = new CanvasAction(e);
   actions.push(current_action);
-  canvasMove(e);
+  if (current_tool == "fill") { fillClick(e) }
+  else { canvasMove(e); }
 }
 
 function canvasMove(e) {
@@ -384,4 +392,10 @@ function redraw() {
 
   // Save last actions canvas for future load
   if (current_action) { current_action.dataURL = canvases[canvases.length-1].toDataURL(); }
+}
+
+function finishAction() {
+  contexts[contexts.length-1].drawImage(canvas,0,0);
+  actions.push(current_action);
+  redraw();
 }
