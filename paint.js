@@ -165,11 +165,14 @@ function init() {
   createButtons();
   resetCanvas()
 }
-function resetCanvas() {
+function resizeCanvas() {
   canvas.setAttribute('width', WIDTH);
   canvas.setAttribute('height', HEIGHT);
   wrapper.style.width = 2+WIDTH+"px";
   wrapper.style.height = 2+HEIGHT+"px";
+}
+function resetCanvas() {
+  resizeCanvas();
   context = canvas.getContext("2d");
   context.imageSmoothingEnabled = false;
   current_action = undefined;
@@ -264,7 +267,9 @@ function CanvasAction(e) {
     action = {
       tool: current_tool,
       x: 0,
-      y: 0
+      y: 0,
+      WIDTH: WIDTH,
+      HEIGHT: HEIGHT
     }
     // these two are used for select, rect, and circle
     action.x1 = action.x2 = mouseX;
@@ -291,7 +296,7 @@ function CanvasAction(e) {
   _ctx.imageSmoothingEnabled = false;
   canvases.push(_c);
   contexts.push(_ctx);
-  document.body.appendChild(_c);
+  //document.body.appendChild(_c);
   if (action.dataURL) { // creating action from memory, draw to canvas
     var imageObj = new Image();
     _ctx.setAlpha(action.alpha);
@@ -365,6 +370,12 @@ function redraw() {
     if (i == actions.length-1 && current_tool == "select") {
       // select has to be drawn inbetween frames 
       selectDraw();
+    }
+    if (action.WIDTH != WIDTH || action.HEIGHT != HEIGHT) {
+      // it's a resize
+      WIDTH = action.WIDTH;
+      HEIGHT = action.HEIGHT;
+      resizeCanvas();
     }
     context.setAlpha(action.alpha);
     if (action.tool == "eraser") { context.setAlpha(1); }

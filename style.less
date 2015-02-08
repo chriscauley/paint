@@ -215,3 +215,27 @@ html,body { margin: 0; }
   width: 100%;
   z-index: 10;
 }
+.dialog-mask {
+  background: rgba(0,0,0,0.5);
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 999;
+}
+.dialog {
+  background: @gray;
+  height: 500px;
+  left: 50%;
+  margin: -250px 0 0 -250px;
+  position: absolute;
+  top: 50%;
+  width: 500px;
+  z-index: 1000;
+  .form-row {
+    padding: 5px 10px;
+    label { display: inline-block; width: 100px; }
+    [type=number] { width: 60px; }
+  }
+}
