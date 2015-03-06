@@ -20,6 +20,13 @@ var local_store = (function (){
   });
   open_button.addEventListener("click",function(){startOpenImage();});
 
+  var upload_button = createElement("button",{
+    className: "fa fa-upload",
+    title: 'Upload Image',
+    name: 'upload',
+    parent: tools,
+  });
+
   var save_button = createElement("button",{
     className: "fa fa-floppy-o",
     title: 'save',
@@ -84,6 +91,30 @@ var local_store = (function (){
   file_button.addEventListener('click',function() {
     current_image.name = file_name.value;
     saveImage();
+  });
+  upload_button = createElement("input", {
+    name: 'upload-file',
+    type: 'file',
+    parent: file_window,
+    id: 'upload-file',
+    style: { 'display': 'none' },
+  });
+  upload_button.addEventListener("change", function() {
+    if (!this.files) { console.log("no files"); return }
+    var file = this.files[0];
+    var fr = new FileReader();
+    function pasteDataURL(src) {
+      var img = document.createElement("img");
+      img.src = src;
+      file_window.appendChild(img);
+    }
+    fr.onload = function() { pasteDataURL(fr.result) }
+    fr.readAsDataURL(file);
+  });
+  upload_label = createElement("label", {
+    htmlFor: 'upload-file',
+    parent: file_window,
+    innerHTML: 'upload from computer'
   });
 
   // functions!

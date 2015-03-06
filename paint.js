@@ -18,14 +18,6 @@ function getMouseXY(e) {
   mouseY = e.pageY - _cr.top;
 }
 
-function fetchImage(url) {
-  var img = document.createElement("img");
-  img.src = url;
-  img.addEventListener("load",function() {
-    pasteImage(img);
-  });
-}
-
 function openImage(url) {
   var img = document.createElement("img");
   img.src = url;
@@ -33,7 +25,9 @@ function openImage(url) {
     canvas.width = img.width;
     canvas.height = img.height;
     resetCanvas();
-    pasteImage(img);
+    var img2 = document.createElement("img");
+    img2.src = img.toDataURL();
+    pasteImage(img2);
   });
 }
 
@@ -139,26 +133,17 @@ function changeTool(tool_name) {
   if (document.querySelector("#tools .active") != null) {
     document.querySelector("#tools .active").classList.remove("active");
   }
-  document.querySelector("#tools [name="+tool_name+"]").classList.add("active");
+  var e = document.querySelector("#tools [name="+tool_name+"]");
 }
 
 function pasteImage(img,x,y) {
   x = x || 0;
   y = y || 0;
   changeTool("select");
-  current_action = {
-    x: 0,
-    y: 0,
-    type: "paste",
-    canvas: img,
-    alpha: 1,
-    selection: createSelectionDiv(x,y,img.width,img.height),
-    destroy: function() {
-      document.removeEventListener("mousemove",selectMove);
-      this.selection.parentNode.removeChild(this.selection);
-    }
-  };
+  current_action = new CanvasAction({});
   actions.push(current_action);
+  context = contexts[contexts.length-1];
+  contexts[0].drawImage(img,x,y);
   redraw();
 }
 
@@ -282,6 +267,7 @@ function CanvasAction(e) {
     action.y1 = action.y2 = mouseY;
     // these three are currently used for brush, rect and circle
     action.color = (e.button==0)?fg_color:bg_color;
+    action.color2 = (e.button==0)?bg_color:fg_color;
     action.size = active_size;
     action.alpha = alpha;
   }
@@ -299,6 +285,7 @@ function CanvasAction(e) {
   _c.setAttribute('width', WIDTH);
   _c.setAttribute('height', HEIGHT);
   var _ctx = _c.getContext("2d");
+
   _ctx.imageSmoothingEnabled = false;
   canvases.push(_c);
   contexts.push(_ctx);
@@ -396,6 +383,5 @@ function redraw() {
 
 function finishAction() {
   contexts[contexts.length-1].drawImage(canvas,0,0);
-  actions.push(current_action);
   redraw();
 }

@@ -98,7 +98,7 @@ function fillClick(e) {
       pixel_position += WIDTH * 4;
     }
   }
-  context.putImageData(color_layer, 0, 0);
-  finishAction();
+  contexts[contexts.length-1].putImageData(color_layer, 0, 0);
+  redraw()
 }
   
