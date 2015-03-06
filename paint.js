@@ -385,7 +385,7 @@ function redraw() {
       HEIGHT = action.HEIGHT;
       resizeCanvas();
     }
-    context.setAlpha(action.alpha);
+    context.globalAlpha = action.alpha;
     if (action.tool == "eraser") { context.setAlpha(1); }
     context.drawImage(canvases[i],action.x,action.y);
   }
