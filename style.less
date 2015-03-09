@@ -29,8 +29,10 @@ html,body { margin: 0; }
 #action_list img {
   width: 50px;
 }
-#tools {
+.border-box {
   box-sizing: border-box;
+}
+#tools {
   height: 100%;
   left: 0;
   padding: 10px;
@@ -149,7 +151,6 @@ html,body { margin: 0; }
   width: 500px;
   .title-bar {
     background-color: @blue;
-    box-sizing: border-box;
     color: white;
     font-weight: bold;
     padding: 10px 20px;
@@ -178,7 +179,6 @@ html,body { margin: 0; }
 
 #file_window .file-list {
   background: white;
-  box-sizing: border-box;
   height: 300px;
   padding: 10px;
   width: 100%;
@@ -243,9 +243,52 @@ html,body { margin: 0; }
   top: 50%;
   width: 500px;
   z-index: 1000;
+  .title-bar {
+    background-color: @blue;
+    color: white;
+    font-weight: bold;
+    padding: 10px 20px;
+    width: 100%;
+  }
+  .buttons {
+    bottom: 0;
+    left: 0;
+    padding: 20px;
+    position: absolute;
+    text-align: right;
+    width: 100%;
+    button { margin-right: 10px; }
+  }
   .form-row {
     padding: 5px 10px;
     label { display: inline-block; width: 100px; }
     [type=number] { width: 60px; }
+  }
+}
+
+.pure-button {
+  &.button-success,
+  &.button-error,
+  &.button-warning,
+  &.button-secondary {
+    color: white;
+    border-radius: 4px;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  }
+
+  &.button-success {
+    background-color: rgb(28, 184, 65); /* this is a green */
+  }
+
+  &.button-error {
+    background-color: rgb(202, 60, 60); /* this is a maroon */
+  }
+
+  &.button-warning {
+    background-color: rgb(223, 117, 20); /* this is an orange */
+  }
+
+  &.button-secondary {
+    background-color: rgb(66, 184, 221); /* this is a light blue */
   }
 }

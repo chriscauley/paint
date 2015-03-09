@@ -70,7 +70,7 @@ var local_store = (function (){
 
   var file_window = createElement("div",{ "id": "file_window",parent: tools});
   var title_bar = createElement("div",{className: "title-bar",parent: file_window});
-  var file_list = createElement("div",{className: "file-list",parent: file_window});
+  var file_list = createElement("div",{className: "file-list border-box",parent: file_window});
   var file_name = createElement("input", {
     type: "text",
     placeholder: "File Name",

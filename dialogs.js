@@ -19,6 +19,31 @@ function FormRow(name,options) {
 }
 
 function openResizeDialog() {
+  new Dialog({
+    createBody: function() {
+      var div = document.createElement("div");
+      var width_input = new FormRow('width',{type: 'number', value: canvas.width});
+      var height_input = new FormRow('height',{type: 'number', value: canvas.height});
+      div.appendChild(width_input);
+      div.appendChild(height_input);
+      return div;
+    },
+    onClose: function setSize() {
+      width = parseInt(document.getElementById('id_width').value);
+      height = parseInt(document.getElementById('id_height').value);
+      if (WIDTH == width && HEIGHT == height) { return; }
+      current_action = new CanvasAction({});
+      current_action.WIDTH = width;
+      current_action.HEIGHT = height;
+      actions.push(current_action);
+      finishAction();
+    },
+    title: "Resize Image",
+  })
+}
+
+function Dialog(options) {
+  options.onClose = options.onClose || function() {};
   var mask = createElement("div", {
     className: "dialog-mask",
     parent: document.body,
@@ -27,33 +52,31 @@ function openResizeDialog() {
     className: "dialog",
     parent: document.body,
   });
-  var width_input = new FormRow('width',{type: 'number', value: canvas.width});
-  var height_input = new FormRow('height',{type: 'number', value: canvas.height});
-  dialog.appendChild(width_input);
-  dialog.appendChild(height_input);
-  function closeDialog() {
+  var title = createElement("div", {
+    className: "title-bar border-box",
+    parent: dialog,
+    innerHTML: options.title,
+  });
+  function closeDialog(success) {
+    if (success) { options.onClose(); }
     dialog.parentNode.removeChild(dialog);
     mask.parentNode.removeChild(mask);
   }
-  function setSize() {
-    width = parseInt(document.getElementById('id_width').value);
-    height = parseInt(document.getElementById('id_height').value);
-    if (WIDTH == width && HEIGHT == height) { return; }
-    current_action = new CanvasAction({});
-    current_action.WIDTH = width;
-    current_action.HEIGHT = height;
-    finishAction();
-  }
+  var buttons = createElement("div", {
+    className: "buttons border-box",
+    parent: dialog,
+  })
   var close = createElement('button', {
     innerHTML: 'Cancel',
-    parent: dialog,
-    className: 'closebutton',
+    parent: buttons,
+    className: 'pure-button button-error',
   });
-  close.addEventListener("click",closeDialog);
+  close.addEventListener("click",function() { closeDialog(false) });
   var accept = createElement('button', {
     innerHTML: 'Okay',
-    parent: dialog,
-    className: 'okaybutton',
+    parent: buttons,
+    className: 'pure-button button-success',
   });
-  accept.addEventListener("click",function() { setSize(); closeDialog(); });
+  accept.addEventListener("click",function() { closeDialog(true); });
+  dialog.appendChild(options.createBody());
 }
