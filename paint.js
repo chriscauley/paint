@@ -7,7 +7,6 @@ var actions = new Array();
 var mouse_down = false;
 
 var fg_color, bg_color, active_size, alpha, current_action, select_div, current_image,last_tool;
-var destroyCurrentAction;
 var canvases, contexts;
 var mouseX, mouseY, mouse_target;
 var current_tool = "brush";
@@ -127,7 +126,14 @@ function alterSelectionDiv(x,y,w,h,x2,y2) {
 createSelectionDiv();
 
 function changeTool(tool_name) {
-  if (current_action && destroyCurrentAction) { destroyCurrentAction(); }
+  if (tool_name == "resize") { openResizeDialog(); return; }
+  if (tool_name == "new") { newImage(); return; }
+  if (tool_name == "open") { startOpenImage(); return; }
+  if (tool_name == "save") { saveImage(); return; }
+  if (tool_name == "saveAs") { saveStartAs(); return; }
+  if (tool_name == "upload") { upload(); return; }
+
+  if (current_action) { current_action.destroy() }
   last_tool = current_tool; // used for eye dropper
   current_tool = tool_name;
   if (document.querySelector("#tools .active") != null) {
@@ -260,7 +266,8 @@ function CanvasAction(e) {
       x: 0,
       y: 0,
       WIDTH: WIDTH,
-      HEIGHT: HEIGHT
+      HEIGHT: HEIGHT,
+      destroy: function()
     }
     // these two are used for select, rect, and circle
     action.x1 = action.x2 = mouseX;
@@ -272,14 +279,13 @@ function CanvasAction(e) {
     action.alpha = alpha;
   }
 
-  if (current_action && destroyCurrentAction) { destroyCurrentAction(); }
+  if (current_action) { current_action.destroy() }
   if (current_action) {
     var box = document.getElementById("action_list");
     var img = document.createElement("img");
     img.src = canvases[canvases.length-1].toDataURL();
     box.insertBefore(img,box.firstChild);
   }
-  destroyCurrentAction = undefined;
 
   var _c = document.createElement("canvas");
   _c.setAttribute('width', WIDTH);
@@ -303,7 +309,7 @@ function CanvasAction(e) {
     canvas.removeEventListener("mouseout",canvasOut);
     action.keep = false;
     action.delta_x = action.delta_y = 0;
-    destroyCurrentAction = function() {
+    current_action.destroy() = function() {
       select_div.style.display = "none";
       canvas.addEventListener("mouseout",canvasOut);
       document.removeEventListener("mousemove",selectMove);

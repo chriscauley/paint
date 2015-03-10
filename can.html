@@ -12,6 +12,10 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.js"></script>
 <script src="//canjs.com/release/latest/can.jquery.js"></script>
 <script>
+var image = {
+  h: 100,
+  w: 100
+}
 var data = new can.Map({
   left_tools: new can.List([
     [{name: 'new', title: 'New Image', icon: 'file-o', className: ''},
@@ -34,11 +38,31 @@ var data = new can.Map({
     bg: "#ffffff",
   },
 });
-console.log(data.attr('fg'));
+can.Component.extend({
+  tag: 'winder',
+  template: can.view("dialog.html"),
+});
 var template = can.view("app.html", data);
 $("#app").html(template);
-function buttonClick() {
-  changeTool(this.name);
+var d_data = new can.Map({
+  title: "yeah!",
+  form: [
+    {name: 'width', title: 'Width', value: image.w, type: 'number'},
+    {name: 'height', title: 'Height', value: image.h, type: 'number'}
+  ],
+  accept: function() {
+    $("winder").remove();
+  },
+  cancel: function() {
+    $("winder").remove();
+  }
+})
+var dlog = can.mustache("<winder></winder>")
+$("body").append(dlog(d_data));
+function buttonClick() { changeTool(this.name); }
+function changeTool(name) {
+  $("#tools .active").removeClass("active")
+  $("[name="+name+"]").addClass("active");
 }
 $("#tools button").click(buttonClick);
 </script>

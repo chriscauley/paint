@@ -4,47 +4,6 @@ var local_store = (function (){
   // create buttons for local storage interface
   var tools = document.getElementById("tools");
 
-  var new_button = createElement("button",{
-    className: "fa fa-file-o",
-    title: 'New Image',
-    name: 'new',
-    parent: tools
-  });
-  new_button.addEventListener("click",function(){newImage();});
-
-  var open_button = createElement("button",{
-    className: "fa fa-folder-open-o",
-    title: 'Open Image',
-    name: 'open',
-    parent: tools
-  });
-  open_button.addEventListener("click",function(){startOpenImage();});
-
-  var upload_button = createElement("button",{
-    className: "fa fa-upload",
-    title: 'Upload Image',
-    name: 'upload',
-    parent: tools,
-  });
-
-  var save_button = createElement("button",{
-    className: "fa fa-floppy-o",
-    title: 'save',
-    name: 'save',
-    parent: tools
-  });
-  save_button.addEventListener("click",function(){saveImage()});
-
-  var save_as_button = createElement("button",{
-    className: "fa fa-floppy-o save-as-new",
-    title: 'Save as New',
-    name: 'saveAs',
-    parent: tools
-  });
-  save_as_button.addEventListener("click",function(){startSaveAs();});
-
-  tools.appendChild(createElement("hr",{}));
-
   function openFileWindow() {
     resetFileList();
     file_window.style.display = "block";
