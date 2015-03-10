@@ -1,6 +1,6 @@
 function FormRow(name,options) {
   var row = createElement('div', {
-    className: 'form-row'
+    className: 'pure-control-group'
   });
   var label = createElement('label', {
     name: name,
@@ -16,30 +16,6 @@ function FormRow(name,options) {
   if (options.value) { input.value = options.value; }
   row.appendChild(input);
   return row;
-}
-
-function openResizeDialog() {
-  new Dialog({
-    createBody: function() {
-      var div = document.createElement("div");
-      var width_input = new FormRow('width',{type: 'number', value: canvas.width});
-      var height_input = new FormRow('height',{type: 'number', value: canvas.height});
-      div.appendChild(width_input);
-      div.appendChild(height_input);
-      return div;
-    },
-    onClose: function setSize() {
-      width = parseInt(document.getElementById('id_width').value);
-      height = parseInt(document.getElementById('id_height').value);
-      if (WIDTH == width && HEIGHT == height) { return; }
-      current_action = new CanvasAction({});
-      current_action.WIDTH = width;
-      current_action.HEIGHT = height;
-      actions.push(current_action);
-      finishAction();
-    },
-    title: "Resize Image",
-  })
 }
 
 function Dialog(options) {
@@ -79,4 +55,40 @@ function Dialog(options) {
   });
   accept.addEventListener("click",function() { closeDialog(true); });
   dialog.appendChild(options.createBody());
+}
+
+function openResizeDialog() {
+  new Dialog({
+    createBody: function() {
+      var div = createElement("div",{className: "pure-form pure-form-aligned"});
+      var width_input = new FormRow('width',{type: 'number', value: canvas.width});
+      var height_input = new FormRow('height',{type: 'number', value: canvas.height});
+      div.appendChild(width_input);
+      div.appendChild(height_input);
+      return div;
+    },
+    onClose: function setSize() {
+      width = parseInt(document.getElementById('id_width').value);
+      height = parseInt(document.getElementById('id_height').value);
+      if (WIDTH == width && HEIGHT == height) { return; }
+      current_action = new CanvasAction({});
+      current_action.WIDTH = width;
+      current_action.HEIGHT = height;
+      actions.push(current_action);
+      finishAction();
+    },
+    title: "Resize Image",
+  })
+}
+
+function openFilesDialog() {
+  new Dialog({
+    createBody: function() {
+
+    },
+    onClose: function setSize() {
+      
+    },
+    title: "Load File",
+  });
 }

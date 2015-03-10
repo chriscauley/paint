@@ -1,0 +1,46 @@
+<html>
+<head>
+</head>
+<body>
+<div id="app"></div>
+<link rel="stylesheet/less" type="text/less" href="style.less" />
+<link rel="stylesheet" href="//yui.yahooapis.com/pure/0.6.0/pure-min.css">
+<script>less = { env: 'development' };</script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.2.0/less.min.js"></script>
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
+      rel="stylesheet">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.js"></script>
+<script src="//canjs.com/release/latest/can.jquery.js"></script>
+<script>
+var data = new can.Map({
+  left_tools: new can.List([
+    [{name: 'new', title: 'New Image', icon: 'file-o', className: ''},
+     {name: 'open', title: 'Open Image', icon: 'folder-open-o', className: ''},
+     {name: 'upload', title: 'Upload Image', icon: 'upload', className: ''},
+     {name: 'save', title: 'Save Image', icon: 'floppy-o', className: ''},
+     {name: 'saveAs', title: 'Save Image As', icon: 'floppy-o', className: 'save-as-new'},
+    ],
+    [{name: 'brush', title: 'brush', icon: 'paint-brush', className: ''},
+     {name: 'fill', title: 'fill', icon: '', className: 'fill-button'},
+     {name: 'select', title: 'select', icon: '', className: 'select-button'},
+     {name: 'rect', title: 'rectangle', icon: '', className: 'rect-button'},
+     {name: 'circle', title: 'circle', icon: '', className: 'circle-button'},
+     {name: 'resize', title: 'resize', icon: 'arrows', className: ''},
+     {name: 'eye_dropper', title: 'select color', icon: 'eyedropper', className: ''},
+    ]
+  ]),
+  colors: {
+    fg: "#cb3594",
+    bg: "#ffffff",
+  },
+});
+console.log(data.attr('fg'));
+var template = can.view("app.html", data);
+$("#app").html(template);
+function buttonClick() {
+  changeTool(this.name);
+}
+$("#tools button").click(buttonClick);
+</script>
+</body>
+</html>
