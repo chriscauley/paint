@@ -26,9 +26,9 @@ var tools_data = new can.Map({
 });
 can.Component.extend({
   tag: 'winder',
-  template: can.view("mustache/dialog.html"),
+  template: can.view("/static/mustache/dialog.html"),
 });
-var template = can.view("mustache/app.html", tools_data);
+var template = can.view("/static/mustache/app.html", tools_data);
 $("#app").html(template);
 var d_data = new can.Map({
   title: "yeah!",
@@ -52,4 +52,10 @@ function changeTool(name) {
 }
 $("#tools button").click(buttonClick);
 
-var PaintImage = can.Model.LocalStorage.extend({}, {});
+var PaintImage = can.Model.LocalStorage.extend({
+  findAll: 'GET /image/',
+  findOne: 'GET /image/{id}/',
+  update: 'POST /image/{id}/',
+  destroy: 'POST /image/delete/{id}/',
+  create: 'POST /image/new/',
+}, {});
