@@ -1,22 +1,8 @@
-<html>
-<head>
-</head>
-<body>
-<div id="app"></div>
-<link rel="stylesheet/less" type="text/less" href="style.less" />
-<link rel="stylesheet" href="//yui.yahooapis.com/pure/0.6.0/pure-min.css">
-<script>less = { env: 'development' };</script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.2.0/less.min.js"></script>
-<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
-      rel="stylesheet">
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.js"></script>
-<script src="//canjs.com/release/latest/can.jquery.js"></script>
-<script>
 var image = {
   h: 100,
   w: 100
 }
-var data = new can.Map({
+var tools_data = new can.Map({
   left_tools: new can.List([
     [{name: 'new', title: 'New Image', icon: 'file-o', className: ''},
      {name: 'open', title: 'Open Image', icon: 'folder-open-o', className: ''},
@@ -40,9 +26,9 @@ var data = new can.Map({
 });
 can.Component.extend({
   tag: 'winder',
-  template: can.view("dialog.html"),
+  template: can.view("mustache/dialog.html"),
 });
-var template = can.view("app.html", data);
+var template = can.view("mustache/app.html", tools_data);
 $("#app").html(template);
 var d_data = new can.Map({
   title: "yeah!",
@@ -56,15 +42,14 @@ var d_data = new can.Map({
   cancel: function() {
     $("winder").remove();
   }
-})
-var dlog = can.mustache("<winder></winder>")
-$("body").append(dlog(d_data));
+});
+//var dlog = can.mustache("<winder></winder>")
+//$("body").append(dlog(d_data));
 function buttonClick() { changeTool(this.name); }
 function changeTool(name) {
   $("#tools .active").removeClass("active")
   $("[name="+name+"]").addClass("active");
 }
 $("#tools button").click(buttonClick);
-</script>
-</body>
-</html>
+
+var PaintImage = can.Model.LocalStorage.extend({}, {});

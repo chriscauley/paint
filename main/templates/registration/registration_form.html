@@ -1,0 +1,9 @@
+{% extends "registration/base.html" %}
+
+{% block auth-content %}
+<form method="POST" class="jvFloatForm">
+  {% csrf_token %}
+  {% include "_form.html" %}
+  <input class="btn btn-success" type="submit" />
+</form>
+{% endblock %}

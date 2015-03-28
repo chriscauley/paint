@@ -1,0 +1,25 @@
+.fWeight(Bold) { font-weight: bold; }
+.fWeight(Light) { font-weight: 100; }
+.fWeight('') { font-weight: normal; }
+.fStyle(Italic) { font-style: italic; }
+.fStyle('') { font-style: normal; }
+
+.subFont(@name,@weight,@style) {
+  @fname: "@{name}@{weight}@{style}";
+  @font-face {
+    font-family: "@{name}";
+    src: url('{{ STATIC_URL }}fonts/@{fname}.eot');
+    src: url('{{ STATIC_URL }}fonts/@{fname}.eot?#iefix') format('embedded-opentype'), url('{{ STATIC_URL }}fonts/@{fname}.woff') format('woff'), url('{{ STATIC_URL }}fonts/@{fname}.ttf') format('truetype'), url('{{ STATIC_URL }}fonts/@{fname}.svg#@{fname}') format('svg');
+    .fWeight(@weight);
+    .fStyle(@style);
+  }
+}
+
+.makeFont(@name) {
+  .subFont(@name,'','');
+  .subFont(@name,'',Italic);
+  .subFont(@name,Bold,'');
+  .subFont(@name,Bold,Italic);
+  .subFont(@name,Light,'');
+  .subFont(@name,Light,Italic);
+}

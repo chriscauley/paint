@@ -267,7 +267,7 @@ function CanvasAction(e) {
       y: 0,
       WIDTH: WIDTH,
       HEIGHT: HEIGHT,
-      destroy: function()
+      destroy: function() {},
     }
     // these two are used for select, rect, and circle
     action.x1 = action.x2 = mouseX;

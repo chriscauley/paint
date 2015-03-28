@@ -1,0 +1,18 @@
+<div class="dialog-mask"></div>
+<div class="dialog">
+  <div class="title-bar border-box">{{title}}</div>
+  {{#if form}}
+  <div class="pure-form pure-form-aligned">
+    {{#each form}}
+    <div class="pure-control-group">
+      <label>{{title}}</label>
+      <input name="{{name}}" type="{{type}}" id="id_{{name}}" can-value="value">
+    </div>
+    {{/each}}
+  </div>
+  {{/if}}
+  <div class="buttons border-box">
+    <button class="pure-button button-error" can-click="cancel">Cancel</button>
+    <button class="pure-button button-success" can-click="accept">Okay</button>
+  </div>
+</div>

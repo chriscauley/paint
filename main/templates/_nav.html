@@ -1,0 +1,10 @@
+<nav>
+  <a class="logo" href="/"></a>
+  <a class="nav-trigger mobile" href="javascript:;"
+     onclick="$('nav').toggleClass('expanded');"></a>
+  {% for n in nav %}
+  <a href="{{ n.url }}" class="{% if n.current %}current{% endif %} {{ n.class }}">
+    {{ n.name }}</a>
+  {% endfor %}
+  <div class="close-tray mobile" onclick="$('nav').toggleClass('expanded');"></div>
+</nav>
