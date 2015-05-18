@@ -1,18 +1,29 @@
 @gray: #ccc;
 @blue: #2196F3;
 @green: #4CAF50;
-html,body { margin: 0; }
-#paint {
-  border: 1px black solid;
-  cursor: crosshair;
+html,body {
+  margin: 0;
 }
-#wrapper {
-  margin-left: 100px;
-  padding-top: 25px;
-  overflow: hidden;
-  position: relative;
+
+body {
+  background: #eee;
 }
-.select {
+
+paint {
+  .canvas-wrapper {
+    margin-left: 100px;
+    padding-top: 25px;
+    overflow: hidden;
+    position: relative;
+  }
+  canvas {
+    border: 1px black solid;
+    cursor: crosshair;
+  }
+}
+
+paint .select {
+  // the select box used to cut, copy, paste, and move selections
   border: black 1px dashed;
   cursor: pointer;
   margin: -1px;
@@ -20,6 +31,17 @@ html,body { margin: 0; }
   position: absolute;
 }
 
+paint .msg {
+  // notifications notifying the user of things such when a file is saved
+  background: @green;
+  color: white;
+  padding: 5px 10px;
+  position: absolute;
+  top: 0;
+  transition: margin 1s;
+  width: 100%;
+  z-index: 10;
+}
 #tools,#tools_bot {
   background-color: @gray;
 }
@@ -62,7 +84,7 @@ html,body { margin: 0; }
     width: 17px;
   }
   button.fill-button:before {
-    background-image: url(img/fill.png);
+    background-image: url(/static/img/fill.png);
     background-position: center;
     background-repeat: no-repeat;
     background-size: auto 100%;
@@ -211,16 +233,6 @@ html,body { margin: 0; }
   }
 }
 
-#wrapper .msg {
-  background: @green;
-  color: white;
-  padding: 5px 10px;
-  position: absolute;
-  top: 0;
-  transition: margin 1s;
-  width: 100%;
-  z-index: 10;
-}
 .dialog-mask {
   background: rgba(0,0,0,0.5);
   height: 100%;

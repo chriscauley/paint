@@ -2,16 +2,15 @@
 <html>
 <head>
 {% compress css %}
-<link rel="stylesheet/less" type="text/less" href="{{ STATIC_URL }}less/style.less" />
+<link rel="stylesheet" type="text/less" href="{{ STATIC_URL }}less/style.less" />
 {% endcompress %}
 <link rel="stylesheet" href="//yui.yahooapis.com/pure/0.6.0/pure-min.css">
 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 </head>
 <body>
-<div id="app">
-  <tools></tools>
-  <div id="wrapper"><canvas id="paint"></canvas></div>
-</div>
+<paint></paint>
+<script src="{{ STATIC_URL }}tags/tools.tag" type="riot/tag"></script>
+<script src="{{ STATIC_URL }}tags/paint.tag" type="riot/tag"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.js"></script>
 <script src="https://cdn.jsdelivr.net/g/riot@2.0.14(riot.min.js+compiler.min.js)"></script>
 <script src="{{ STATIC_URL }}js/app.js"></script>

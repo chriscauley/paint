@@ -44,3 +44,5 @@ SUIT_CONFIG = {
   # misc
   # 'LIST_PER_PAGE': 15
 }
+
+COMPRESS_PRECOMPILERS = (('text/less', 'lessc {infile} {outfile}'),)
