@@ -2,8 +2,8 @@ var image = {
   h: 100,
   w: 100
 }
-var tools_data = new can.Map({
-  left_tools: new can.List([
+var tools_data = {
+  left_tools: [
     [{name: 'new', title: 'New Image', icon: 'file-o', className: ''},
      {name: 'open', title: 'Open Image', icon: 'folder-open-o', className: ''},
      {name: 'upload', title: 'Upload Image', icon: 'upload', className: ''},
@@ -18,44 +18,24 @@ var tools_data = new can.Map({
      {name: 'resize', title: 'resize', icon: 'arrows', className: ''},
      {name: 'eye_dropper', title: 'select color', icon: 'eyedropper', className: ''},
     ]
-  ]),
+  ],
   colors: {
     fg: "#cb3594",
     bg: "#ffffff",
   },
-});
-can.Component.extend({
-  tag: 'winder',
-  template: can.view("/static/mustache/dialog.html"),
-});
-var template = can.view("/static/mustache/app.html", tools_data);
-$("#app").html(template);
-var d_data = new can.Map({
+}
+riot.mount("tools",tools_data);
+var d_data = {// testing dialog
   title: "yeah!",
   form: [
     {name: 'width', title: 'Width', value: image.w, type: 'number'},
     {name: 'height', title: 'Height', value: image.h, type: 'number'}
   ],
-  accept: function() {
-    $("winder").remove();
-  },
-  cancel: function() {
-    $("winder").remove();
-  }
-});
-//var dlog = can.mustache("<winder></winder>")
-//$("body").append(dlog(d_data));
+  accept: function() {alert("accepted")},
+};
 function buttonClick() { changeTool(this.name); }
 function changeTool(name) {
   $("#tools .active").removeClass("active")
   $("[name="+name+"]").addClass("active");
 }
 $("#tools button").click(buttonClick);
-
-var PaintImage = can.Model.LocalStorage.extend({
-  findAll: 'GET /image/',
-  findOne: 'GET /image/{id}/',
-  update: 'POST /image/{id}/',
-  destroy: 'POST /image/delete/{id}/',
-  create: 'POST /image/new/',
-}, {});

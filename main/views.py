@@ -6,7 +6,7 @@ from .models import Image
 
 import json
 
-@login_required
+#@login_required
 def home(request):
   return TemplateResponse(request,"index.html",{})
 
