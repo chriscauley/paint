@@ -1,0 +1,150 @@
+window, window .mask {
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 999;
+}
+
+window .mask {
+  background: rgba(0,0,0,0.5);
+}
+window .content {
+  background: @gray;
+  left: 50%;
+  margin: -250px 0 0 -250px;
+  padding: 75px 0;
+  position: absolute;
+  top: 50%;
+  width: 500px;
+  z-index: 1000;
+  .title-bar {
+    background-color: @blue;
+    color: white;
+    font-weight: bold;
+    left: 0;
+    padding: 10px 20px;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+  .buttons {
+    bottom: 0;
+    left: 0;
+    padding: 20px;
+    position: absolute;
+    text-align: right;
+    width: 100%;
+    button { margin-right: 10px; }
+  }
+  .form-row {
+    padding: 5px 10px;
+    label { display: inline-block; width: 100px; }
+    [type=number] { width: 60px; }
+  }
+}
+
+.pure-button {
+  &.button-success,
+  &.button-error,
+  &.button-warning,
+  &.button-secondary {
+    color: white;
+    border-radius: 4px;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  }
+
+  &.button-success {
+    background-color: rgb(28, 184, 65); /* this is a green */
+  }
+
+  &.button-error {
+    background-color: rgb(202, 60, 60); /* this is a maroon */
+  }
+
+  &.button-warning {
+    background-color: rgb(223, 117, 20); /* this is an orange */
+  }
+
+  &.button-secondary {
+    background-color: rgb(66, 184, 221); /* this is a light blue */
+  }
+}
+
+//These were used previously but need to be reintegrated
+
+#file_window {
+  background: @gray;
+  border: darken(@gray,10%) 2px solid;
+  display: none;
+  padding-bottom: 40px;
+  position: absolute;
+  left: 100%;
+  top: 0;
+  width: 500px;
+  .title-bar {
+    background-color: @blue;
+    color: white;
+    font-weight: bold;
+    padding: 10px 20px;
+    width: 100%;
+  }
+  [name=file-name] {
+    bottom: 10px;
+    position: absolute;
+    left: 10px;
+  }
+  [name=save-as-button] {
+    right: 10px;
+  }
+  [name=cancel-button] {
+    right: 100px;
+  }
+  [name=cancel-button],[name=save-as-button] {
+    bottom: 10px;
+    margin: 0;
+    width: auto;
+    height: auto;
+    padding: 0 5px;
+    position: absolute;
+  }
+}
+
+#file_window .file-list {
+  background: white;
+  height: 300px;
+  padding: 10px;
+  width: 100%;
+  .file {
+    background-repeat: no-repeat;
+    background-size: contain;
+    box-shadow: 0 0 2px black;
+    display: inline-block;
+    cursor: pointer;
+    height: 100px;
+    margin: 5px 5px 25px;
+    position: relative;
+    width: 100px;
+    &:after {
+      content: attr(name);
+      display: block;
+      left: 0;
+      overflow: hidden;
+      position: absolute;
+      text-align: center;
+      text-overflow: ellipsis;
+      top: 102%;
+      white-space: nowrap;
+      width: 100%;
+    }
+    &:hover {
+      box-shadow: 0 0 5px black;
+      &:after {
+        background: white;
+        overflow: visible;
+        white-space: normal
+      }
+    }
+  }
+}

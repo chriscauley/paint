@@ -1,0 +1,33 @@
+paint {
+  .canvas-wrapper {
+    margin-left: 100px;
+    padding-top: 25px;
+    overflow: hidden;
+    position: relative;
+  }
+  canvas {
+    border: 1px black solid;
+    cursor: crosshair;
+  }
+}
+
+paint .select {
+  // the select box used to cut, copy, paste, and move selections
+  border: black 1px dashed;
+  cursor: pointer;
+  margin: -1px;
+  outline: black 1px dashed;
+  position: absolute;
+}
+
+paint .msg {
+  // notifications notifying the user of things such when a file is saved
+  background: @green;
+  color: white;
+  padding: 5px 10px;
+  position: absolute;
+  top: 0;
+  transition: margin 1s;
+  width: 100%;
+  z-index: 10;
+}

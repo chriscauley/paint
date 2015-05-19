@@ -1,22 +1,6 @@
 // Misc functions used in all files. Mostly shortcuts using browser functions.
 // All should stand alone with no global variables.
 
-function createElement(type,options) {
-  var element = document.createElement(type);
-  for (key in options) {
-    if (key == "parent") {
-      options[key].appendChild(element);
-    } else if (key == "innerHTML") {
-      element.innerHTML = options[key]
-    } else if (key == "style") {
-      for (prop in options[key]) { element.style[prop] = options[key][prop]; }
-    } else {
-      element[key] = options[key]
-    }
-  }
-  return element;
-}
-
 function drawEllipse(ctx, x, y, w, h) {
   // from http://stackoverflow.com/questions/2172798/how-to-draw-an-oval-in-html5-canvas
   var kappa = .5522848,

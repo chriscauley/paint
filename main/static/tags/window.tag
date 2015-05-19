@@ -1,9 +1,9 @@
-<dialog>
+<window>
   <div class="mask" onclick={ cancel }></div>
   <div class="content">
     <div class="title-bar border-box">{ title }</div>
-    <div class="pure-form pure-form-aligned" if={ form }>
-      <div class="pure-control-group" each={ forms }>
+    <div class="pure-form pure-form-aligned" if={ opts.form }>
+      <div class="pure-control-group" each={ opts.form }>
         <label>{ title }</label>
         <input name="{ name }" type="{ type }" id="id_{ name }" can-value="value">
       </div>
@@ -19,4 +19,4 @@
   accept(e) {
     this.accept()
   }
-</dialog>
+</window>
