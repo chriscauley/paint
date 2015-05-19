@@ -1,3 +1,25 @@
+function PaintImage(options) {
+  this.w = options.width || 100;
+  this.h = options.height || 100;
+  this.canvas = options.canvas;
+  this.actions = options.actions || [];
+  this.colors = options.colors || {};
+  this.colors.fg = this.colors.fg || "#000";
+  this.colors.bg = this.colors.bg || "#000";
+  this.colors.fga = 1;
+  this.colors.bga = 1;
+
+  this.getMouseXY = function(e) {
+    var _cr = canvas.getBoundingClientRect();
+    this.mouse.x = e.pageX - _cr.left;
+    this.mouse.y = e.pageY - _cr.top;
+  }
+
+  this.selectTool = function(name) {
+    this.activeTool = this.tools[name];
+  }
+}
+
 var WIDTH = 500;
 var HEIGHT = 400;
 var canvas = document.getElementById('paint'),context;
@@ -10,12 +32,6 @@ var fg_color, bg_color, active_size, alpha, current_action, select_div, current_
 var canvases, contexts;
 var mouseX, mouseY, mouse_target;
 var current_tool = "brush";
-
-function getMouseXY(e) {
-  var _cr = canvas.getBoundingClientRect();
-  mouseX = e.pageX - _cr.left;
-  mouseY = e.pageY - _cr.top;
-}
 
 function openImage(url) {
   var img = document.createElement("img");
