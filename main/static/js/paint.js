@@ -2,10 +2,11 @@ function PaintImage(options) {
   this.w = options.width || 100;
   this.h = options.height || 100;
   this.canvas = options.canvas;
+  this.context = this.canvas.getContext("2d");
   this.actions = options.actions || [];
   this.colors = options.colors || {};
   this.colors.fg = this.colors.fg || "#000";
-  this.colors.bg = this.colors.bg || "#000";
+  this.colors.bg = this.colors.bg || "#FFF";
   this.colors.fga = 1;
   this.colors.bga = 1;
 
@@ -18,6 +19,7 @@ function PaintImage(options) {
   this.selectTool = function(name) {
     this.activeTool = this.tools[name];
   }
+
 }
 
 var WIDTH = 500;
