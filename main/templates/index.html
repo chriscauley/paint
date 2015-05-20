@@ -11,13 +11,14 @@
 <tools></tools>
 <paint></paint>
 <window></window>
+{% compress js %}
+<script src="{{ STATIC_URL }}js/tools/tools.js" type="text/babel"></script>
+{% endcompress %}
 <script src="{{ STATIC_URL }}tags/tools.tag" type="riot/tag"></script>
 <script src="{{ STATIC_URL }}tags/paint.tag" type="riot/tag"></script>
 <script src="{{ STATIC_URL }}tags/window.tag" type="riot/tag"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.js"></script>
 <script src="https://cdn.jsdelivr.net/g/riot@2.0.14(riot.min.js+compiler.min.js)"></script>
 <script src="{{ STATIC_URL }}js/app.js"></script>
-<script src="{{ STATIC_URL }}js/browser.js"></script>
-<script src="{{ STATIC_URL }}js/tools/tools.js" type="text/babel"></script>
 </body>
 </html>

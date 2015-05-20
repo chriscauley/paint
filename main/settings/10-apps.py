@@ -45,4 +45,7 @@ SUIT_CONFIG = {
   # 'LIST_PER_PAGE': 15
 }
 
-COMPRESS_PRECOMPILERS = (('text/less', 'lessc {infile} {outfile}'),)
+COMPRESS_PRECOMPILERS = (
+  ('text/less', 'lessc {infile} {outfile}'),
+  ('text/babel', 'babel'),
+)

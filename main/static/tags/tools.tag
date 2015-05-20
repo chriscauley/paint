@@ -14,21 +14,7 @@
       <input type="range" max="1" min="0" step="0.01"><span class="fg_alpha">1</span>
     </div>
   </div>
-  this.left_tools = [
-    {name: 'new', title: 'New Image', icon: 'file-o', className: ''},
-    {name: 'open', title: 'Open Image', icon: 'folder-open-o', className: ''},
-    {name: 'upload', title: 'Upload Image', icon: 'upload', className: ''},
-    {name: 'save', title: 'Save Image', icon: 'floppy-o', className: ''},
-    {name: 'saveAs', title: 'Save Image As', icon: 'floppy-o', className: 'save-as-new'},
-    {},
-    {name: 'brush', title: 'brush', icon: 'paint-brush', className: ''},
-    {name: 'fill', title: 'fill', icon: '', className: 'fill-button'},
-    {name: 'select', title: 'select', icon: '', className: 'select-button'},
-    {name: 'rect', title: 'rectangle', icon: '', className: 'rect-button'},
-    {name: 'circle', title: 'circle', icon: '', className: 'circle-button'},
-    {name: 'resize', title: 'resize', icon: 'arrows', className: ''},
-    {name: 'eye_dropper', title: 'select color', icon: 'eyedropper', className: ''},
-  ]
+  this.left_tools = window.PAINT.TOOL_LIST;
   this.colors = {
     fg: "#cb3594",
     bg: "#ffffff",
