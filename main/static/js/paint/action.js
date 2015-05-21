@@ -25,6 +25,8 @@ window.PAINT = window.PAINT || {};
       this.context = this.canvas.getContext('2d');
       $(".canvas-wrapper").append(this.canvas);
     }
+    destroy(e) {
+    }
   }
   PAINT.Action = Action;
 })()

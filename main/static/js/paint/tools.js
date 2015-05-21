@@ -23,6 +23,9 @@ window.PAINT = window.PAINT || {};
     up(e) {
       this.mouse_down = false;
     }
+    out(e) {
+      this.mouse_down = false;
+    }
     down(e) {
       this.mouse_down = true;
       var action = new PAINT.Action(e);
@@ -72,6 +75,7 @@ window.PAINT = window.PAINT || {};
       super.down(e);
       PAINT.current_action.coords = [];
       PAINT.current_action.size = 1; //#!TODO eventually use size selector
+      this.last = false
     }
     move(e) {
       if (!this.mouse_down) { return; }
@@ -79,7 +83,7 @@ window.PAINT = window.PAINT || {};
       var context = action.context;
       var _m = PAINT.getMouseXY(e);
       var [x,y] = [_m.x,_m.y];
-      if (this.last_x && this.last_y) {
+      if (this.last) {
         var dx = x - this.last_x;
         var dy = y - this.last_y;
         var distance = Math.sqrt(dx*dx+dy*dy);
@@ -91,8 +95,7 @@ window.PAINT = window.PAINT || {};
         }
       }
       action.coords.push([x,y]);
-      this.last_x = x;
-      this.last_y = y;
+      [this.last_x,this.last_y,this.last] = [x,y,true];
 
       var image_data = context.createImageData(action.size,action.size);
       var rgb = hexToRgb(action.color);
