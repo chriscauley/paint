@@ -14,16 +14,14 @@
       <input type="range" max="1" min="0" step="0.01"><span class="fg_alpha">1</span>
     </div>
   </div>
-  this.left_tools = window.PAINT.TOOL_LIST;
+  var PAINT = window.PAINT
+  this.left_tools = PAINT.TOOL_LIST;
   this.colors = {
     fg: "#cb3594",
     bg: "#ffffff",
   }
 
   click(e) {
-    var name = e.item.name
-    $("#tools .active").removeClass("active")
-    $("[name="+name+"]").addClass("active")
-    changeTool(name)
+    PAINT.changeTool(e.item.name)
   }
 </tools>

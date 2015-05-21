@@ -7,4 +7,5 @@ var d_data = {// testing dialog
   accept: function() {alert("accepted")},
 };
 riot.mount("paint,tools",{w:200});
-riot.mount("window",d_data);
+//riot.mount("window",d_data);
+$(function() { PAINT.current_image = new PAINT.Image({}) })

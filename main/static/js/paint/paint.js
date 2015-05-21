@@ -1,3 +1,5 @@
+//depracated file, moving into es6 files in same dir
+
 function PaintImage(options) {
   this.w = options.width || 100;
   this.h = options.height || 100;

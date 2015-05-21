@@ -1,6 +1,18 @@
 <paint>
-  <div class="canvas-wrapper"><canvas width={ opts.w } height={ opts.h }></canvas></div>
+  <div class="canvas-wrapper">
+    <canvas width={ w } height={ h } onmousedown={ down } onmouseup={ up } onmousemove={ move } name=canvas></canvas>
+  </div>
 
-opts.h = opts.h || 100
-opts.w = opts.w || 100
+  this.h = opts.h || 100;
+  this.w = opts.w || 100;
+  move(e) {
+    PAINT.current_tool.move(e);
+  }
+  down(e) {
+    PAINT.current_tool.down(e);
+  }
+  up(e) {
+    PAINT.current_tool.up(e);
+  }
+  this.on('mount',function(){PAINT.current_image.init(this)})
 </paint>
