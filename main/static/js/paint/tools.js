@@ -18,16 +18,19 @@ window.PAINT = window.PAINT || {};
       for (var key in options) { this[key] = options[key] }
     }
     move(e) {
+      console.log('move');
       if (this.mouse_down) { console.log(this.name) }
     }
     up(e) {
-      this.mouse_down = false;
+      console.log('up');
+      window.MOUSE_DOWN = this.mouse_down = false;
     }
-    out(e) {
-      this.mouse_down = false;
+    over(e) {
+      console.log(window.MOUSE_DOWN);
+      this.mouse_down = window.MOUSE_DOWN;
     }
     down(e) {
-      this.mouse_down = true;
+      window.MOUSE_DOWN = this.mouse_down = true;
       var action = new PAINT.Action(e);
       if (PAINT.current_action) {
         PAINT.current_action.destroy();
@@ -174,4 +177,5 @@ window.PAINT = window.PAINT || {};
     if (!t) { continue }
     PAINT.TOOLS[t.name] = t;
   }
+  document.body.addEventListener('mouseup',function(){window.MOUSE_DOWN = false;});
 })()

@@ -1,6 +1,6 @@
 <paint>
   <div class="canvas-wrapper">
-    <canvas width={ w } height={ h } onmousedown={ down } onmouseup={ up } onmousemove={ move } onmouseout={ out }
+    <canvas width={ w } height={ h } onmousedown={ down } onmouseup={ up } onmousemove={ move } onmouseover={ over }
             name="canvas"></canvas>
   </div>
 
@@ -15,8 +15,8 @@
   up(e) {
     PAINT.current_tool.up(e);
   }
-  out(e) {
-    PAINT.current_tool.out(e);
+  over(e) {
+    PAINT.current_tool.over(e);
   }
   this.on('mount',function(){PAINT.current_image.init(this)})
 </paint>
