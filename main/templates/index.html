@@ -10,6 +10,7 @@
 <body>
 <tools></tools>
 <paint></paint>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.js"></script>
 {% compress js %}
 <script src="{{ STATIC_URL }}js/paint/tools.js" type="text/babel"></script>
 <script src="{{ STATIC_URL }}js/paint/image.js" type="text/babel"></script>
@@ -18,7 +19,6 @@
 <script src="{{ STATIC_URL }}tags/tools.tag" type="riot/tag"></script>
 <script src="{{ STATIC_URL }}tags/paint.tag" type="riot/tag"></script>
 <script src="{{ STATIC_URL }}tags/window.tag" type="riot/tag"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.js"></script>
 <script src="https://cdn.jsdelivr.net/g/riot@2.0.14(riot.min.js+compiler.min.js)"></script>
 <script src="{{ STATIC_URL }}js/app.js"></script>
 </body>

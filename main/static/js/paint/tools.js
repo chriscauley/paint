@@ -22,11 +22,9 @@ window.PAINT = window.PAINT || {};
       if (this.mouse_down) { console.log(this.name) }
     }
     up(e) {
-      console.log('up');
       window.MOUSE_DOWN = this.mouse_down = false;
     }
     over(e) {
-      console.log(window.MOUSE_DOWN);
       this.mouse_down = window.MOUSE_DOWN;
     }
     down(e) {
@@ -177,5 +175,5 @@ window.PAINT = window.PAINT || {};
     if (!t) { continue }
     PAINT.TOOLS[t.name] = t;
   }
-  document.body.addEventListener('mouseup',function(){window.MOUSE_DOWN = false;});
+  $(window).mouseup(function(){window.MOUSE_DOWN = false;});
 })()
