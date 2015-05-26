@@ -1,11 +1,11 @@
 <window>
   <div class="mask" onclick={ cancel }></div>
-  <div class="content">
+  <div class="content" onkeyup={ press }>
     <div class="title-bar border-box">{ opts.title }</div>
     <div class="pure-form pure-form-aligned" if={ opts.form }>
       <div class="pure-control-group" each={ opts.form }>
         <label>{ title }</label>
-        <input name={ name } type={ type } id=id_{ name } value={ value }>
+        <input id="id_{ _name }" type={ type } value={ value }>
       </div>
     </div>
     <div class="buttons border-box">
@@ -13,10 +13,21 @@
       <button class="pure-button button-success" onclick={ accept }>Okay</button>
     </div>
   </div>
+  function setLastTool() {
+    PAINT.changeTool(PAINT.last_tool);
+  }
+  press(event) {
+    if (event.which == 13) {
+      PAINT.current_tool.accept(this);
+      return false;
+    }
+    if (event.which == 27) { this.unmount(); setLastTool(); }
+    return true;
+  }
   cancel(e) {
-    this.unmount()
+    this.unmount(); setLastTool();
   }
   accept(e) {
-    this.accept()
+    PAINT.current_tool.accept(this);
   }
 </window>

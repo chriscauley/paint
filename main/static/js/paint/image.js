@@ -3,12 +3,16 @@ window.PAINT = window.PAINT || {};
 (function () {
   class Image {
     constructor(options) {
+      PAINT.current_image = this;
       this.actions = options.actions || [];
-      this.WIDTH = options.w || 100;
-      this.HEIGHT = options.h || 100;
+      this.WIDTH = options.w;
+      this.HEIGHT = options.h;
+      $("body").append("<paint></paint>");
+      riot.mount("paint");
     }
-    init(options) {// called after riot renders templates
-      this.canvas = PAINT.canvas = options.canvas
+    init(tag) {// called after riot renders templates
+      this.tag = tag;
+      this.canvas = PAINT.canvas = tag.canvas;
       this.context = this.canvas.getContext('2d');
       this.canvas.width = this.WIDTH;
       this.canvas.height = this.HEIGHT;

@@ -4,8 +4,8 @@
             name="canvas"></canvas>
   </div>
 
-  this.h = opts.h || 100;
-  this.w = opts.w || 100;
+  this.h = opts.h;
+  this.w = opts.w;
   move(e) {
     PAINT.current_tool.move(e);
   }

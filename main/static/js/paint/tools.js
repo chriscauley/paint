@@ -3,7 +3,9 @@ window.PAINT = window.PAINT || {};
   PAINT.changeTool = function(name) {
     $("#tools .active").removeClass("active");
     $("[name="+name+"]").addClass("active");
+    if (PAINT.current_tool) { PAINT.last_tool = this.current_tool.name; }
     PAINT.current_tool = PAINT.TOOLS[name];
+    PAINT.current_tool.select();
   }
   function hexToRgb(hex) {
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -36,11 +38,31 @@ window.PAINT = window.PAINT || {};
       PAINT.current_image.actions.push(action);
       PAINT.current_action = action;
     }
+    select() {
+      
+    }
   }
 
   class NewTool extends Tool {
     constructor() {
       super({name: 'new', title: 'New Image', icon: 'file-o'})
+    }
+    select() {
+      $("body").append("<window></window>");
+      var window_data = {
+        title: "New Window",
+        form: [
+          {_name: 'width', title: 'Width', value: 100, type: 'number'},
+          {_name: 'height', title: 'Height', value: 100, type: 'number'}
+        ],
+        accept: function() {alert("accepted")},
+      };
+      riot.mount("window",window_data);
+    }
+    accept(tag) {
+      PAINT.current_image.tag.unmount();
+      new PAINT.Image({w:parseInt($("#id_width").val()),h:parseInt($("#id_height").val())});
+      tag.unmount();
     }
   }
 
@@ -175,5 +197,5 @@ window.PAINT = window.PAINT || {};
     if (!t) { continue }
     PAINT.TOOLS[t.name] = t;
   }
-  $(window).mouseup(function(){window.MOUSE_DOWN = false;});
+  window.addEventListener('mouseup',function(){window.MOUSE_DOWN = false;});
 })()
