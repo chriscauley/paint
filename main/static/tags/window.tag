@@ -5,7 +5,7 @@
     <div class="pure-form pure-form-aligned" if={ opts.form }>
       <div class="pure-control-group" each={ opts.form }>
         <label>{ title }</label>
-        <input id="id_{ _name }" type={ type } value={ value }>
+        <input id="id_{ _name }" type={ type } value={ value } placeholder={ placeholder }>
       </div>
     </div>
     <div class="buttons border-box">

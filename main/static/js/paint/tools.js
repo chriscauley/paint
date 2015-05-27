@@ -43,21 +43,25 @@ window.PAINT = window.PAINT || {};
     }
   }
 
-  class NewTool extends Tool {
-    constructor() {
-      super({name: 'new', title: 'New Image', icon: 'file-o'})
-    }
+  class DialogTool extends Tool {
     select() {
       $("body").append("<window></window>");
-      var window_data = {
-        title: "New Window",
+      riot.mount("window",this.getWindowData());
+    }
+  }
+
+  class New extends DialogTool {
+    constructor() {
+      super({name: 'new', title: 'New Image', icon: 'file-o'});
+    }
+    getWindowData() {
+      return {
+        title: "Create New Image",
         form: [
-          {_name: 'width', title: 'Width', value: 100, type: 'number'},
-          {_name: 'height', title: 'Height', value: 100, type: 'number'}
-        ],
-        accept: function() {alert("accepted")},
-      };
-      riot.mount("window",window_data);
+          {_name: 'width', title: 'Width', value: PAINT.current_image.WIDTH, type: 'number'},
+          {_name: 'height', title: 'Height', value: PAINT.current_image.HEIGHT, type: 'number'}
+        ]
+      }
     }
     accept(tag) {
       PAINT.current_image.tag.unmount();
@@ -66,27 +70,40 @@ window.PAINT = window.PAINT || {};
     }
   }
 
-  class OpenTool extends Tool {
+  class Open extends DialogTool {
     constructor() {
       super({name: 'open', title: 'Open Image', icon: 'folder-open-o'})
     }
+    getWindowData() {
+      return {
+        title: "Open Image",
+      }
+    }
   }
 
-  class UploadTool extends Tool {
+  class Upload extends DialogTool {
     constructor() {
       super({name: 'upload', title: 'Upload Image', icon: 'upload'})
     }
   }
 
-  class SaveTool extends Tool {
+  class Save extends DialogTool {
     constructor() {
       super({name: 'save', title: 'Save Image', icon: 'floppy-o'})
     }
   }
 
-  class SaveAsTool extends Tool {
+  class SaveAs extends DialogTool {
     constructor() {
       super({name: 'saveAs', title: 'Save Image As', icon: 'floppy-o', className: 'save-as-new'})
+    }
+    getWindowData() {
+      return {
+        title: "Save Image As",
+        form: [
+          {_name: 'filename', title: 'Enter A Name', value: "", placeholder: 'Enter a name', type: 'text'},
+        ]
+      }
     }
   }
 
@@ -177,11 +194,11 @@ window.PAINT = window.PAINT || {};
   }
 
   PAINT.TOOL_LIST = [
-    new NewTool(),
-    new OpenTool(),
-    new UploadTool(),
-    new SaveTool(),
-    new SaveAsTool(),
+    new New(),
+    new Open(),
+    new Save(),
+    new SaveAs(),
+    new Upload(),
     {},
     new BrushTool(),
     new FillTool(),
