@@ -38,6 +38,12 @@ window.PAINT = window.PAINT || {};
       // Save last actions canvas for future load
       /*if (current_action) { current_action.dataURL = canvases[canvases.length-1].toDataURL(); }*/
     }
+    toJSON() {
+      return {
+        'name': this.name,
+        'dataURL': this.canvas.toDataURL(),
+      }
+    }
   }
   PAINT.Image = Image;
 })()

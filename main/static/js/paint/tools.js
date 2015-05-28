@@ -48,6 +48,9 @@ window.PAINT = window.PAINT || {};
       $("body").append("<window></window>");
       riot.mount("window",this.getWindowData());
     }
+    accept(tag) {
+      tag.unmount()
+    }
   }
 
   class New extends DialogTool {
@@ -104,6 +107,10 @@ window.PAINT = window.PAINT || {};
           {_name: 'filename', title: 'Enter A Name', value: "", placeholder: 'Enter a name', type: 'text'},
         ]
       }
+    }
+    apply(tag) {
+      PAINT.storage.saveImage();
+      super.apply(tag);
     }
   }
 
