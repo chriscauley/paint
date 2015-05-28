@@ -23,7 +23,7 @@ window.PAINT = window.PAINT || {};
       this.canvas.width = PAINT.current_image.WIDTH;
       this.canvas.height = PAINT.current_image.HEIGHT;
       this.context = this.canvas.getContext('2d');
-      $(".canvas-wrapper").append(this.canvas);
+      //$(".canvas-wrapper").append(this.canvas);
     }
     destroy(e) {
     }

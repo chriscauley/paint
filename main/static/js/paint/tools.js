@@ -108,9 +108,9 @@ window.PAINT = window.PAINT || {};
         ]
       }
     }
-    apply(tag) {
-      PAINT.storage.saveImage();
-      super.apply(tag);
+    accept(tag) {
+      PAINT.storage.saveImage($("#id_filename").val());
+      super.accept(tag);
     }
   }
 

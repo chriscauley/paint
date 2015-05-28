@@ -1,24 +1,23 @@
 window.PAINT = window.PAINT || {};
-(function (){
-  var gallery,file_action;
+window.PAINT.storage = (function (){
   // functions!
   PAINT.addMessage = function(text) {
     $(".canvas-wrapper").append("<msg></msg>");
     riot.mount("msg",{text:text});
     setTimeout(function(){ e.style.marginTop="-50px"; },5000)
   }
-  function startSaveAs() { alert("Not Implimented!"); }
+  function startSaveAs() { alert("startSaveAs Not Implimented!"); }
   function saveImage(name) {
+    console.log('saving'+name);
     if (name) { PAINT.current_image.name = name; }
     if (!PAINT.current_image.name) { startSaveAs(); return; }
-    PAINT.current_image.dataURL = canvas.toDataURL();
-    gallery[PAINT.current_image.name] = PAINT.current_image.toJSON();
+    PAINT.gallery[PAINT.current_image.name] = PAINT.current_image.toJSON();
     localStorage.setItem("gallery",JSON.stringify(PAINT.gallery));
     PAINT.addMessage("image saved!")
   }
   function loadImage(name) {
     new PAINT.Image(gallery[name]);
-    addMessage("Image loaded!")
+    addMessage("Image loaded!");
   }
 
   function resetFileList() {
@@ -46,8 +45,11 @@ window.PAINT = window.PAINT || {};
   }
 
   function init() {
-    gallery = JSON.parse(localStorage.getItem("gallery") || "{}");
-    window.gallery = gallery;
+    PAINT.gallery = JSON.parse(localStorage.getItem("gallery") || "{}");
   }
   init();
+  return {
+    saveImage: saveImage,
+    loadImage: loadImage
+  }
 })();
