@@ -7,7 +7,6 @@ window.PAINT.storage = (function (){
   }
   function startSaveAs() { alert("startSaveAs Not Implimented!"); }
   function saveImage(name) {
-    console.log('saving'+name);
     if (name) { PAINT.current_image.name = name; }
     if (!PAINT.current_image.name) { startSaveAs(); return; }
     PAINT.gallery[PAINT.current_image.name] = PAINT.current_image.toJSON();
@@ -15,7 +14,7 @@ window.PAINT.storage = (function (){
     PAINT.addMessage("image saved!")
   }
   function loadImage(name) {
-    new PAINT.Image(gallery[name]);
+    new PAINT.Image(PAINT.gallery[name]);
     addMessage("Image loaded!");
   }
 

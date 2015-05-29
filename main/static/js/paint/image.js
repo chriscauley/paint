@@ -3,7 +3,9 @@ window.PAINT = window.PAINT || {};
 (function () {
   class Image {
     constructor(options) {
+      if (PAINT.current_image) { PAINT.current_image.tag.unmount(); }
       PAINT.current_image = this;
+      this.dataURL = options.dataURL;
       this.actions = options.actions || [];
       this.WIDTH = options.w;
       this.HEIGHT = options.h;
@@ -18,14 +20,25 @@ window.PAINT = window.PAINT || {};
       this.canvas.height = this.HEIGHT;
       PAINT.changeTool('brush');
       this._redraw_proxy = this._redraw.bind(this)
+      if (this.dataURL) {
+        // load image from data url
+        this.imageObj = document.createElement("img");
+        this.imageObj.onload = function() {
+          var i = PAINT.current_image;
+          i.canvas.width = i.WIDTH = this.width;
+          i.canvas.height = i.HEIGHT = this.height;
+          i.context.drawImage(this, 0, 0);
+        };
+        this.imageObj.src = this.dataURL;
+      }
     }
     redraw() {
       cancelAnimationFrame(this.active_frame);
       this.active_frame = requestAnimationFrame(this._redraw_proxy);
     }
     _redraw() {
-      console.log('drawn')
       this.context.clearRect(0, 0, this.WIDTH, this.HEIGHT);
+      if (this.imageObj) { this.context.drawImage(this.imageObj,0,0); }
       for (var i=0; i < this.actions.length; i++) {
         var action = this.actions[i];
         /*if (i == this.actions.length-1 && current_tool == "select") {

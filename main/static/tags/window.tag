@@ -3,9 +3,11 @@
   <div class="content" onkeyup={ press }>
     <div class="title-bar border-box">{ opts.title }</div>
     <div class="file-list" if={ opts.items }>
-      <div class="file" each={ opts.items }>
-        <img src="{ dataURL }" />
-        <span>{ name }</span>
+      <div class="file" each={ opts.items } onclick={ parent.click }>
+        <div>
+          <img src="{ dataURL }" />
+          <span>{ name }</span>
+        </div>
       </div>
     </div>
     <div class="pure-form pure-form-aligned" if={ opts.form }>
@@ -19,7 +21,12 @@
       <button class="pure-button button-success" onclick={ accept }>Okay</button>
     </div>
   </div>
-  console.log(opts.items)
+  // this may need to be moved to the tool eventually
+
+  click(e) {
+    new PAINT.Image(e.item);
+    this.unmount();
+  }
   function setLastTool() {
     PAINT.changeTool(PAINT.last_tool);
   }

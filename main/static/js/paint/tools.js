@@ -67,7 +67,6 @@ window.PAINT = window.PAINT || {};
       }
     }
     accept(tag) {
-      PAINT.current_image.tag.unmount();
       new PAINT.Image({w:parseInt($("#id_width").val()),h:parseInt($("#id_height").val())});
       tag.unmount();
     }
