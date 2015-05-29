@@ -17,7 +17,7 @@ window .content {
   padding: 75px 0;
   position: absolute;
   top: 50%;
-  width: 500px;
+  width: 535px;
   z-index: 1000;
   .title-bar {
     background-color: @blue;
@@ -74,48 +74,14 @@ window .content {
 
 //These were used previously but need to be reintegrated
 
-#file_window {
-  background: @gray;
-  border: darken(@gray,10%) 2px solid;
-  display: none;
-  padding-bottom: 40px;
-  position: absolute;
-  left: 100%;
-  top: 0;
-  width: 500px;
-  .title-bar {
-    background-color: @blue;
-    color: white;
-    font-weight: bold;
-    padding: 10px 20px;
-    width: 100%;
-  }
-  [name=file-name] {
-    bottom: 10px;
-    position: absolute;
-    left: 10px;
-  }
-  [name=save-as-button] {
-    right: 10px;
-  }
-  [name=cancel-button] {
-    right: 100px;
-  }
-  [name=cancel-button],[name=save-as-button] {
-    bottom: 10px;
-    margin: 0;
-    width: auto;
-    height: auto;
-    padding: 0 5px;
-    position: absolute;
-  }
-}
-
-#file_window .file-list {
+window .file-list {
   background: white;
-  height: 300px;
-  padding: 10px;
-  width: 100%;
+  box-sizing: border-box;
+  height: 340px;
+  margin: 0 auto;
+  padding: 10px 10px 50px;
+  overflow-y: scroll;
+  width: 90%;
   .file {
     background-repeat: no-repeat;
     background-size: contain;
@@ -126,7 +92,10 @@ window .content {
     margin: 5px 5px 25px;
     position: relative;
     width: 100px;
-    &:after {
+    img {
+      max-width: 100%;
+    }
+    span {
       content: attr(name);
       display: block;
       left: 0;
@@ -140,7 +109,7 @@ window .content {
     }
     &:hover {
       box-shadow: 0 0 5px black;
-      &:after {
+      span {
         background: white;
         overflow: visible;
         white-space: normal

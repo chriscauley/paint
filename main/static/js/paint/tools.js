@@ -78,8 +78,14 @@ window.PAINT = window.PAINT || {};
       super({name: 'open', title: 'Open Image', icon: 'folder-open-o'})
     }
     getWindowData() {
+      var names = [];
+      var items = [];
+      for (var n in PAINT.gallery) { names.push(n) }
+      names.sort()
+      for (var i=0;i<names.length;i++) { items.push(PAINT.gallery[names[i]]) }
       return {
         title: "Open Image",
+        items: items,
       }
     }
   }

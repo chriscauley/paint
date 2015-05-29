@@ -4,7 +4,6 @@ window.PAINT.storage = (function (){
   PAINT.addMessage = function(text) {
     $(".canvas-wrapper").append("<msg></msg>");
     riot.mount("msg",{text:text});
-    setTimeout(function(){ e.style.marginTop="-50px"; },5000)
   }
   function startSaveAs() { alert("startSaveAs Not Implimented!"); }
   function saveImage(name) {

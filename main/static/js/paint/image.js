@@ -17,8 +17,14 @@ window.PAINT = window.PAINT || {};
       this.canvas.width = this.WIDTH;
       this.canvas.height = this.HEIGHT;
       PAINT.changeTool('brush');
+      this._redraw_proxy = this._redraw.bind(this)
     }
     redraw() {
+      cancelAnimationFrame(this.active_frame);
+      this.active_frame = requestAnimationFrame(this._redraw_proxy);
+    }
+    _redraw() {
+      console.log('drawn')
       this.context.clearRect(0, 0, this.WIDTH, this.HEIGHT);
       for (var i=0; i < this.actions.length; i++) {
         var action = this.actions[i];
