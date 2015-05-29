@@ -20,6 +20,14 @@ window.PAINT = window.PAINT || {};
       this.canvas.height = this.HEIGHT;
       PAINT.changeTool('brush');
       this._redraw_proxy = this._redraw.bind(this)
+      if (!this.dataURL) {
+        this.context.fillStyle = "#fff"; // should get from form
+        this.context.beginPath();
+        this.context.rect(0,0,this.WIDTH,this.HEIGHT);
+        this.context.fill();
+        this.context.closePath();
+        this.dataURL = this.canvas.toDataURL();
+      }
       if (this.dataURL) {
         // load image from data url
         this.imageObj = document.createElement("img");
