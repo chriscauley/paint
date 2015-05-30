@@ -3,7 +3,8 @@ window.PAINT = window.PAINT || {};
   PAINT.changeTool = function(name) {
     $("#tools .active").removeClass("active");
     $("[name="+name+"]").addClass("active");
-    if (PAINT.current_tool) { PAINT.last_tool = this.current_tool.name; }
+    var _t = ['saveAs','save','new','open'];
+    if (PAINT.current_tool && _t.indexOf(this.current_tool.name) == -1) { PAINT.last_tool = this.current_tool.name; }
     PAINT.current_tool = PAINT.TOOLS[name];
     PAINT.current_tool.select();
   }
@@ -95,9 +96,17 @@ window.PAINT = window.PAINT || {};
     }
   }
 
-  class Save extends DialogTool {
+  class Save extends Tool {
     constructor() {
       super({name: 'save', title: 'Save Image', icon: 'floppy-o'})
+    }
+    select() {
+      if (PAINT.current_image.name) {
+        PAINT.storage.saveImage(PAINT.current_image.name);
+        super.accept(tag);
+      } else {
+        $("[name=saveAs]").click();
+      }
     }
   }
 
