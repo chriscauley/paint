@@ -184,26 +184,30 @@ window.PAINT = window.PAINT || {};
       var [x,y] = [_m.x,_m.y];
       var pixel_stack = [[x,y]];
       var fill_color = hexToRgb(PAINT.current_action.color);
+      var alphas = [];
       pixel_position = 4*(y*WIDTH + x);
       var start_color = {
         r: color_layer.data[pixel_position + 0],
         g: color_layer.data[pixel_position + 1],
-        b: color_layer.data[pixel_position + 2]
+        b: color_layer.data[pixel_position + 2],
+        a: color_layer.data[pixel_position + 3]
       }
 
       function matchStartColor(pixel_position) {
         var r = color_layer.data[pixel_position];
         var g = color_layer.data[pixel_position+1];
         var b = color_layer.data[pixel_position+2];
+        var a = color_layer.data[pixel_position+3];
 
-        return (r == start_color.r && g == start_color.g && b == start_color.b);
+        return (a == start_color.a && r == start_color.r && g == start_color.g && b == start_color.b);
       }
 
       function colorPixel(pixel_position) {
         color_layer.data[pixel_position] = fill_color.r;
         color_layer.data[pixel_position+1] = fill_color.g;
         color_layer.data[pixel_position+2] = fill_color.b;
-        color_layer.data[pixel_position+3] = 255; //#! TODO make this alpha
+        color_layer.data[pixel_position+3] = 'a'; // this is so there's no way we can hit the same pixel twice
+        alphas.push(pixel_position+3);
       }
       while (pixel_stack.length) {
         current_pixel = pixel_stack.pop();
@@ -236,12 +240,15 @@ window.PAINT = window.PAINT || {};
               }
             } else if (reach_right) { reach_right = false; }
           }
-
+          
           pixel_position += WIDTH * 4;
         }
       }
+      for (var i=0;i<alphas.length;i++) {
+        color_layer.data[alphas[i]] = 255; //#! TODO make this alpha
+      }
       PAINT.current_action.context.putImageData(color_layer, 0, 0);
-      PAINT.current_image.redraw()
+      PAINT.current_image.redraw();
     }
   }
 
