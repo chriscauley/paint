@@ -171,7 +171,77 @@ window.PAINT = window.PAINT || {};
 
   class FillTool extends Tool {
     constructor() {
-      super({name: 'fill', title: 'Fill Bucket (replace color)', className: 'fill-button'})
+      super({name: 'fill', title: 'Fill (replace color)', className: 'fill-button'});
+    }
+    move(e) {
+
+    }
+    down(e) {
+      var WIDTH = PAINT.current_image.WIDTH, HEIGHT = PAINT.current_image.HEIGHT;
+      var current_pixel, pixel_position, reach_left, reach_right;
+      var color_layer = PAINT.current_action.context.getImageData(0,0,WIDTH,HEIGHT);
+      var _m = PAINT.getMouseXY(e);
+      var [x,y] = [_m.x,_m.y];
+      var pixel_stack = [[x,y]];
+      var fill_color = hexToRgb(PAINT.current_action.color);
+      pixel_position = 4*(y*WIDTH + x);
+      var start_color = {
+        r: color_layer.data[pixel_position + 0],
+        g: color_layer.data[pixel_position + 1],
+        b: color_layer.data[pixel_position + 2]
+      }
+
+      function matchStartColor(pixel_position) {
+        var r = color_layer.data[pixel_position];
+        var g = color_layer.data[pixel_position+1];
+        var b = color_layer.data[pixel_position+2];
+
+        return (r == start_color.r && g == start_color.g && b == start_color.b);
+      }
+
+      function colorPixel(pixel_position) {
+        color_layer.data[pixel_position] = fill_color.r;
+        color_layer.data[pixel_position+1] = fill_color.g;
+        color_layer.data[pixel_position+2] = fill_color.b;
+        color_layer.data[pixel_position+3] = 255; //#! TODO make this alpha
+      }
+      while (pixel_stack.length) {
+        current_pixel = pixel_stack.pop();
+        x = current_pixel[0], y = current_pixel[1];
+        pixel_position = 4*(y*WIDTH + x);
+        while (y-- >= 0 && matchStartColor(pixel_position)) {
+          pixel_position -= 4*WIDTH;
+        }
+        pixel_position += 4*WIDTH;
+        y++;
+        reach_left = false;
+        reach_right = false;
+        while (y++ < HEIGHT-1 && matchStartColor(pixel_position)) {
+          colorPixel(pixel_position);
+
+          if (x > 0) {
+            if (matchStartColor(pixel_position - 4)) {
+              if (!reach_left) {
+                pixel_stack.push([x - 1, y]);
+                reach_left = true;
+              }
+            } else if (reach_left) { reach_left = false; }
+          }
+
+          if (x < WIDTH-1) {
+            if (matchStartColor(pixel_position + 4)) {
+              if (!reach_right) {
+                pixel_stack.push([x + 1, y]);
+                reach_right = true;
+              }
+            } else if (reach_right) { reach_right = false; }
+          }
+
+          pixel_position += WIDTH * 4;
+        }
+      }
+      PAINT.current_action.context.putImageData(color_layer, 0, 0);
+      PAINT.current_image.redraw()
     }
   }
 
