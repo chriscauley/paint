@@ -3,7 +3,7 @@ window.PAINT = window.PAINT || {};
   PAINT.changeTool = function(name) {
     $("#tools .active").removeClass("active");
     $("[name="+name+"]").addClass("active");
-    var _t = ['saveAs','save','new','open'];
+    var _t = ['saveAs','save','new','open','upload','download'];
     if (PAINT.current_tool && _t.indexOf(this.current_tool.name) == -1) { PAINT.last_tool = this.current_tool.name; }
     PAINT.current_tool = PAINT.TOOLS[name];
     PAINT.current_tool.select();
@@ -86,6 +86,7 @@ window.PAINT = window.PAINT || {};
       return {
         title: "Open Image",
         items: items,
+        hide_okay: true
       }
     }
   }
@@ -93,6 +94,25 @@ window.PAINT = window.PAINT || {};
   class Upload extends DialogTool {
     constructor() {
       super({name: 'upload', title: 'Upload Image', icon: 'upload'})
+    }
+    getWindowData() {
+      return {
+        title: "Upload Image",
+        hide_cancel: true
+      }
+    }
+  }
+
+  class Download extends DialogTool {
+    constructor() {
+      super({name: 'download', title: 'Download Image', icon: 'download'})
+    }
+    getWindowData() {
+      return {
+        title: "Download Image",
+        src: PAINT.current_image.canvas.toDataURL(),
+        hide_cancel: true
+      }
     }
   }
 
@@ -186,9 +206,10 @@ window.PAINT = window.PAINT || {};
 
     }
     down(e) {
+      super.down(e)
       var WIDTH = PAINT.current_image.WIDTH, HEIGHT = PAINT.current_image.HEIGHT;
       var current_pixel, pixel_position, reach_left, reach_right;
-      var color_layer = PAINT.current_action.context.getImageData(0,0,WIDTH,HEIGHT);
+      var color_layer = PAINT.current_image.context.getImageData(0,0,WIDTH,HEIGHT);
       var _m = PAINT.getMouseXY(e);
       var [x,y] = [_m.x,_m.y];
       var pixel_stack = [[x,y]];
@@ -297,6 +318,7 @@ window.PAINT = window.PAINT || {};
     new Save(),
     new SaveAs(),
     new Upload(),
+    new Download(),
     {},
     new BrushTool(),
     new FillTool(),

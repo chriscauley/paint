@@ -2,6 +2,12 @@
   <div class="mask" onclick={ cancel }></div>
   <div class="content" onkeyup={ press }>
     <div class="title-bar border-box">{ opts.title }</div>
+    <div class="download-image" if={ opts.src }>
+      <img src="{ opts.src }" />
+      <div>Right click the above image and...</div>
+      <li>To save to disc, select "Save Image As..."</li>
+      <li>To embed in a website, select "Copy Image URL"</li>
+    </div>
     <div class="file-list" if={ opts.items }>
       <div class="file" each={ opts.items } onclick={ parent.click }>
         <div>
@@ -17,8 +23,8 @@
       </div>
     </div>
     <div class="buttons border-box">
-      <button class="pure-button button-error" onclick={ cancel }>Cancel</button>
-      <button class="pure-button button-success" onclick={ accept }>Okay</button>
+      <button class="pure-button button-error" if={ !opts.hide_cancel } onclick={ cancel }>Cancel</button>
+      <button class="pure-button button-success" if={ !opts.hide_okay } onclick={ accept }>Okay</button>
     </div>
   </div>
   // this may need to be moved to the tool eventually
@@ -43,5 +49,6 @@
   }
   accept(e) {
     PAINT.current_tool.accept(this);
+    setLastTool();
   }
 </window>
