@@ -16,6 +16,24 @@ window.PAINT = window.PAINT || {};
       b: parseInt(result[3], 16)
     } : null;
   }
+  function rgbToHex(o) {return toHex(o.r)+toHex(o.g)+toHex(o.b)}
+  function toHex(n) {
+    n = parseInt(n,10);
+    if (isNaN(n)) return "00";
+    n = Math.max(0,Math.min(n,255));
+    return "0123456789ABCDEF".charAt((n-n%16)/16)
+      + "0123456789ABCDEF".charAt(n%16);
+  }
+  function getPixelColor(x,y) {
+    var data = PAINT.current_image.context.getImageData(x,y,1,1).data;
+    console.log(data);
+    return {
+      r: data[0],
+      g: data[1],
+      b: data[2],
+      a: data[3]
+    }
+  }
   class Tool {
     constructor(options) {
       for (var key in options) { this[key] = options[key] }
@@ -316,8 +334,22 @@ window.PAINT = window.PAINT || {};
   }
 
   class EyeDropperTool extends Tool {
+    //#! TODO: with mouse depressed as you move it should select different colors until you release
     constructor() {
       super({name: 'eyeDropper', title: 'select color', icon: 'eyedropper'})
+    }
+    move(e) {
+
+    }
+    down(e) {
+      super.down(e);
+      var _m = PAINT.getMouseXY(e);
+      var [x,y] = [_m.x,_m.y];
+      var pixel_position = 4*(y*PAINT.current_image.WIDTH + x);
+      var hex_color = "#"+rgbToHex(getPixelColor(x,y));
+      var input = document.querySelector("[name="+((e.button==0)?"fg]":"bg]"));
+      input.value=hex_color;
+      PAINT.changeTool(PAINT.last_tool);
     }
   }
 
