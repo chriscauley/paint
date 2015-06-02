@@ -12,6 +12,9 @@
     document.addEventListener(PAINT.current_tool.move(e));
     PAINT.current_tool.down(e);
   }
+  move(e) {
+    PAINT.current_tool.move(e)
+  }
   up(e) {
     PAINT.current_tool.up(e);
   }
@@ -19,4 +22,5 @@
     PAINT.current_tool.over(e);
   }
   this.on('mount',function(){PAINT.current_image.init(this)})
+  this.root.oncontextmenu = function() { return false; }
 </paint>

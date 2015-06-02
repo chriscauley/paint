@@ -7,7 +7,7 @@
     </div>
   </div>
   <div id="tools_bot">
-    <div id="action_list"></div>
+    <div id="logs"></div>
     <input type="color" class="color-picker" name="fg" value={ colors.fg }>
     <input type="color" class="color-picker" name="bg" value={ colors.bg }>
     <div class="alpha-container">

@@ -2,8 +2,8 @@ window.PAINT = window.PAINT || {};
 window.PAINT.storage = (function (){
   // functions!
   PAINT.addMessage = function(text) {
-    $(".canvas-wrapper").append("<msg></msg>");
-    riot.mount("msg",{text:text});
+    $("#logs").append($("<li>"+text+"</li>"));
+    $("#logs").scrollTop($("#logs")[0].scrollHeight);
   }
   function startSaveAs() { alert("startSaveAs Not Implimented!"); }
   function saveImage(name) {

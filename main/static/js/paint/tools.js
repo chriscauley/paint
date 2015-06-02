@@ -87,6 +87,7 @@ window.PAINT = window.PAINT || {};
     }
     accept(tag) {
       new PAINT.Image({w:parseInt($("#id_width").val()),h:parseInt($("#id_height").val())});
+      PAINT.addMessage("A new image has been created.")
       tag.unmount();
     }
   }

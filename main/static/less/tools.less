@@ -1,12 +1,6 @@
 #tools,#tools_bot {
   background-color: @gray;
 }
-#action_list {
-  padding-left: 70px;
-}
-#action_list img {
-  width: 50px;
-}
 .border-box {
   box-sizing: border-box;
 }
@@ -111,5 +105,25 @@
     right: 0px;
     text-align: center;
     width: 11px;
+  }
+}
+#logs {
+  background-color: white;
+  bottom: 5px;
+  overflow-y: hidden;
+  padding: 3px;
+  position: absolute;
+  right: 5;
+  top: 5px;
+  width: 300px;
+  &:hover { overflow-y: scroll; }
+  > li {
+    border-bottom: 1px lightgrey solid;
+    list-style: none;
+    margin-bottom: 4px;
+    &:last-child {
+      margin-bottom:0;
+      border-bottom: 0;
+    }
   }
 }
