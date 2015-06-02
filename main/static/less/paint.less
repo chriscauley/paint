@@ -5,14 +5,19 @@
   }
 }
 paint {
+  bottom: 110px;
+  position: absolute;
+  left: 100px;
+  overflow: scroll;
+  right: 0;
+  top: 0;
   .canvas-wrapper {
-    margin-left: 100px;
     padding-top: 25px;
     position: relative;
     .canvas-inner {
       display: inline-block;
+      margin: 5px;
       position: relative;
-      &.active { margin: 5px; }
       resize {
         bottom: 0;
         left: 0;

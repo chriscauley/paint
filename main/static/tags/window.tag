@@ -29,8 +29,10 @@
   </div>
   // this may need to be moved to the tool eventually
 
-  for (var i=0;i<opts.form.length;i++) {
-    opts.form[i]._id = "id_"+opts.form[i].name;
+  if (opts.form) {
+    for (var i=0;i<opts.form.length;i++) {
+      opts.form[i]._id = "id_"+opts.form[i].name;
+    }
   }
   click(e) {
     new PAINT.Image(e.item);
