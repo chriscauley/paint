@@ -1,9 +1,63 @@
+.makeResize(@position) {
+  .@{position} {
+    border-@{position}-style: solid;
+    @{position}: -5px;
+  }
+}
 paint {
   .canvas-wrapper {
     margin-left: 100px;
     padding-top: 25px;
-    overflow: hidden;
     position: relative;
+    .canvas-inner {
+      display: inline-block;
+      position: relative;
+      &.active { margin: 5px; }
+      resize {
+        bottom: 0;
+        left: 0;
+        outline: 1px dotted red;
+        position: absolute;
+        right: 0;
+        top: 0;
+        &[data-size]:before {
+          background: #FCFFDE;
+          content: attr(data-size);
+          display: block;
+          margin: -15px 0 0 -60px;
+          height: 30px;
+          left: 50%;
+          line-height: 25px;
+          position: absolute;
+          text-align: center;
+          top: 50%;
+          width: 120px;
+        }
+        .spot {
+          box-sizing: border-box;
+          border: 5px black;
+          cursor: pointer;
+          height: 20px;
+          max-height: 45%;
+          position: absolute;
+          width: 20px;
+          max-width: 30%;
+          &:hover { border-color: red; }
+        }
+        .center-h {
+          left: 50%;
+          margin-left: -10px;
+        }
+        .center-v {
+          top: 50%;
+          margin-top: -10px;
+        }
+        .makeResize(left);
+        .makeResize(right);
+        .makeResize(top);
+        .makeResize(bottom);
+      }
+    }
   }
   canvas {
     border: 1px black solid;

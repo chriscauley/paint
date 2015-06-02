@@ -1,15 +1,15 @@
 <paint>
   <div class="canvas-wrapper">
-    <canvas width={ w } height={ h } onmousedown={ down } onmouseup={ up } onmousemove={ move } onmouseover={ over }
-            name="canvas"></canvas>
+    <div class="canvas-inner active">
+      <canvas width={ w } height={ h } onmousedown={ down } onmouseup={ up } onmousemove={ move } onmouseover={ over }
+              name="canvas"></canvas>
+      <!--<resize></resize>-->
+    </div>
   </div>
 
-  this.h = opts.h;
-  this.w = opts.w;
-  move(e) {
-    PAINT.current_tool.move(e);
-  }
+  riot.mount("resize",{})
   down(e) {
+    document.addEventListener(PAINT.current_tool.move(e));
     PAINT.current_tool.down(e);
   }
   up(e) {

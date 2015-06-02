@@ -19,7 +19,7 @@
     <div class="pure-form pure-form-aligned" if={ opts.form }>
       <div class="pure-control-group" each={ opts.form }>
         <label>{ title }</label>
-        <input id="id_{ _name }" type={ type } value={ value } placeholder={ placeholder }>
+        <input id={ _id } type={ type } value={ value } placeholder={ placeholder }>
       </div>
     </div>
     <div class="buttons border-box">
@@ -29,6 +29,9 @@
   </div>
   // this may need to be moved to the tool eventually
 
+  for (var i=0;i<opts.form.length;i++) {
+    opts.form[i]._id = "id_"+opts.form[i].name;
+  }
   click(e) {
     new PAINT.Image(e.item);
     this.unmount();
