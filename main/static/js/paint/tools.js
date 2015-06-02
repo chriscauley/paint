@@ -62,8 +62,8 @@ window.PAINT = window.PAINT || {};
       return {
         title: "Create New Image",
         form: [
-          {_name: 'width', title: 'Width', value: PAINT.current_image.WIDTH, type: 'number'},
-          {_name: 'height', title: 'Height', value: PAINT.current_image.HEIGHT, type: 'number'}
+          {name: 'width', title: 'Width', value: PAINT.current_image.WIDTH, type: 'number'},
+          {name: 'height', title: 'Height', value: PAINT.current_image.HEIGHT, type: 'number'}
         ]
       }
     }
@@ -95,10 +95,19 @@ window.PAINT = window.PAINT || {};
     constructor() {
       super({name: 'upload', title: 'Upload Image', icon: 'upload'})
     }
+    accept(tag) {
+      var fr = new FileReader();
+      var file = $("#id_file")[0].files[0];
+      fr.onload = function() { new PAINT.Image({dataURL:fr.result}); }
+      fr.readAsDataURL(file);
+      super.accept(tag)
+    }
     getWindowData() {
       return {
         title: "Upload Image",
-        hide_cancel: true
+        form: [
+          {name: 'file', title: 'File', type: 'file'},
+        ],
       }
     }
   }
@@ -138,7 +147,7 @@ window.PAINT = window.PAINT || {};
       return {
         title: "Save Image As",
         form: [
-          {_name: 'filename', title: 'Enter A Name', value: "", placeholder: 'Enter a name', type: 'text'},
+          {name: 'filename', title: 'Enter A Name', value: "", placeholder: 'Enter a name', type: 'text'},
         ]
       }
     }
