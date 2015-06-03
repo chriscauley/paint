@@ -39,8 +39,9 @@ window.PAINT = window.PAINT || {};
       for (var key in options) { this[key] = options[key] }
     }
     move(e) {
-      console.log('move');
-      if (this.mouse_down) { console.log(this.name) }
+      var _m = PAINT.getMouseXY(e);
+      var action = PAINT.current_action;
+      [action.x2,action.y2] = [_m.x,_m.y];
     }
     up(e) {
       window.MOUSE_DOWN = this.mouse_down = false;
@@ -51,6 +52,8 @@ window.PAINT = window.PAINT || {};
     down(e) {
       window.MOUSE_DOWN = this.mouse_down = true;
       var action = new PAINT.Action(e);
+      var _m = PAINT.getMouseXY(e);
+      [action.x1,action.y1] = [_m.x,_m.y];
       if (PAINT.current_action) {
         PAINT.current_action.destroy();
       }
@@ -237,6 +240,28 @@ window.PAINT = window.PAINT || {};
     }
   }
 
+  class RectTool extends Tool {
+    constructor() {
+      super({name: 'rect', title: 'Rectangle', className: 'rect-button'})
+    }
+    move(e) {
+      if(!this.mouse_down){ return; }
+      super.move(e);
+      var action = PAINT.current_action;
+      var image = PAINT.current_image;
+      var context = action.context
+      var w = action.x2-action.x1;
+      var h = action.y2-action.y1;
+      context.clearRect(0,0,image.WIDTH,image.HEIGHT);
+      context.fillStyle = action.color;
+      context.beginPath();
+      context.rect(action.x1,action.y1,w,h);
+      context.fill();
+      context.closePath();
+      PAINT.current_image.redraw();
+    }
+  }
+
   class FillTool extends Tool {
     constructor() {
       super({name: 'fill', title: 'Fill (replace color)', className: 'fill-button'});
@@ -324,12 +349,6 @@ window.PAINT = window.PAINT || {};
   class SelectTool extends Tool {
     constructor() {
       super({name: 'select', title: 'Select', className: 'select-button'})
-    }
-  }
-
-  class RectTool extends Tool {
-    constructor() {
-      super({name: 'rect', title: 'Rectangle', className: 'rect-button'})
     }
   }
 
