@@ -34,6 +34,26 @@ window.PAINT = window.PAINT || {};
       a: data[3]
     }
   }
+
+  function drawEllipse(ctx, x, y, w, h) {
+    // from http://stackoverflow.com/questions/2172798/how-to-draw-an-oval-in-html5-canvas
+    var kappa = .5522848,
+    ox = (w / 2) * kappa, // control point offset horizontal
+    oy = (h / 2) * kappa, // control point offset vertical
+    xe = x + w,           // x-end
+    ye = y + h,           // y-end
+    xm = x + w / 2,       // x-middle
+    ym = y + h / 2;       // y-middle
+
+    ctx.beginPath();
+    ctx.moveTo(x, ym);
+    ctx.bezierCurveTo(x, ym - oy, xm - ox, y, xm, y);
+    ctx.bezierCurveTo(xm + ox, y, xe, ym - oy, xe, ym);
+    ctx.bezierCurveTo(xe, ym + oy, xm + ox, ye, xm, ye);
+    ctx.bezierCurveTo(xm - ox, ye, x, ym + oy, x, ym);
+    //ctx.closePath(); // not used correctly, see comments (use to close off open path)
+    ctx.fill();
+  }
   class Tool {
     constructor(options) {
       for (var key in options) { this[key] = options[key] }
@@ -61,7 +81,7 @@ window.PAINT = window.PAINT || {};
       PAINT.current_action = action;
     }
     select() {
-      
+
     }
   }
 
@@ -262,6 +282,25 @@ window.PAINT = window.PAINT || {};
     }
   }
 
+  class CircleTool extends Tool {
+    constructor() {
+      super({name: 'circle', title: 'Ellipse', className: 'circle-button'})
+    }
+    move(e) {
+      if(!this.mouse_down){ return; }
+      super.move(e);
+      var action = PAINT.current_action;
+      var image = PAINT.current_image;
+      var context = action.context
+      var w = action.x2-action.x1;
+      var h = action.y2-action.y1;
+      context.fillStyle = action.color;
+      context.clearRect(0,0,image.WIDTH,image.HEIGHT);
+      drawEllipse(context,action.x1,action.y1,w,h)
+      PAINT.current_image.redraw();
+    }
+  }
+
   class FillTool extends Tool {
     constructor() {
       super({name: 'fill', title: 'Fill (replace color)', className: 'fill-button'});
@@ -334,7 +373,7 @@ window.PAINT = window.PAINT || {};
               }
             } else if (reach_right) { reach_right = false; }
           }
-          
+
           pixel_position += WIDTH * 4;
         }
       }
@@ -349,12 +388,6 @@ window.PAINT = window.PAINT || {};
   class SelectTool extends Tool {
     constructor() {
       super({name: 'select', title: 'Select', className: 'select-button'})
-    }
-  }
-
-  class CircleTool extends Tool {
-    constructor() {
-      super({name: 'circle', title: 'Elipse', className: 'circle-button'})
     }
   }
 
