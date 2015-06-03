@@ -11,7 +11,7 @@ window.PAINT.storage = (function (){
     if (!PAINT.current_image.name) { startSaveAs(); return; }
     PAINT.gallery[PAINT.current_image.name] = PAINT.current_image.toJSON();
     localStorage.setItem("gallery",JSON.stringify(PAINT.gallery));
-    PAINT.addMessage("image saved!")
+    PAINT.addMessage(`${name} saved!`)
   }
   function loadImage(name) {
     new PAINT.Image(PAINT.gallery[name]);

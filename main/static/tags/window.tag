@@ -35,8 +35,7 @@
     }
   }
   click(e) {
-    new PAINT.Image(e.item);
-    this.unmount();
+    PAINT.current_tool.click(e,this);
   }
   function setLastTool() {
     PAINT.changeTool(PAINT.last_tool);

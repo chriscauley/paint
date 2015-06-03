@@ -86,8 +86,9 @@ window.PAINT = window.PAINT || {};
       }
     }
     accept(tag) {
-      new PAINT.Image({w:parseInt($("#id_width").val()),h:parseInt($("#id_height").val())});
-      PAINT.addMessage("A new image has been created.")
+      var w = parseInt($("#id_width").val()), h = parseInt($("#id_height").val());
+      new PAINT.Image({w: w, h: h});
+      PAINT.addMessage(`A new ${w}x${h} image has been created.`)
       tag.unmount();
     }
   }
@@ -95,6 +96,11 @@ window.PAINT = window.PAINT || {};
   class Open extends DialogTool {
     constructor() {
       super({name: 'open', title: 'Open Image', icon: 'folder-open-o'})
+    }
+    click(e,tag) {
+      new PAINT.Image(e.item);
+      PAINT.addMessage(`${e.item.name} loaded`);
+      tag.unmount();
     }
     getWindowData() {
       var names = [];
@@ -117,7 +123,12 @@ window.PAINT = window.PAINT || {};
     accept(tag) {
       var fr = new FileReader();
       var file = $("#id_file")[0].files[0];
-      fr.onload = function() { new PAINT.Image({dataURL:fr.result}); }
+      var fname = $("#id_file")[0].value.replace("/","\\").split("\\").pop();
+      fr.onload = function() {
+        //#! TODO: this should be added to the library (saved) and a bulk uploader is needed.
+        new PAINT.Image({dataURL:fr.result,name: fname});
+        PAINT.addMessage(`Image "${fname}" uploaded successfully.`)
+      }
       fr.readAsDataURL(file);
       super.accept(tag)
     }
@@ -348,9 +359,11 @@ window.PAINT = window.PAINT || {};
       var [x,y] = [_m.x,_m.y];
       var pixel_position = 4*(y*PAINT.current_image.WIDTH + x);
       var hex_color = "#"+rgbToHex(getPixelColor(x,y));
-      var input = document.querySelector("[name="+((e.button==0)?"fg]":"bg]"));
+      var which = (e.button==0)?"fg":"bg";
+      var input = document.querySelector(`[name=${which}]`);
       input.value=hex_color;
       PAINT.changeTool(PAINT.last_tool);
+      PAINT.addMessage(`Changing ${which} color to ${hex_color}`);
     }
   }
 
