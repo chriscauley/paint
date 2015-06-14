@@ -8,9 +8,16 @@
       <li>To save to disc, select "Save Image As..."</li>
       <li>To embed in a website, select "Copy Image URL"</li>
     </div>
-    <div class="file-list" if={ opts.items }>
-      <div class="file" each={ opts.items } onclick={ parent.click }>
-        <div>
+    <div class="file-list" if={ items }>
+      <div class="file" each={ items }>
+        <div class="options">
+          <i class="fa fa-caret-square-o-down trigger" onclick={ parent.showOptions }></i>
+          <div class="inner">
+            <button class="pure-button" onclick={ parent.renameImage }>Rename</button>
+            <button class="pure-button" onclick={ parent.deleteImage }>Delete</button>
+          </div>
+        </div>
+        <div onclick={ parent.click }>
           <img src="{ dataURL }" />
           <span>{ name }</span>
         </div>
@@ -29,6 +36,11 @@
   </div>
   // this may need to be moved to the tool eventually
 
+  this.on('update', function() {
+    if (opts.getItems) {
+      this.items = opts.getItems();
+    }
+  });
   if (opts.form) {
     for (var i=0;i<opts.form.length;i++) {
       opts.form[i]._id = "id_"+opts.form[i].name;
@@ -54,5 +66,14 @@
   accept(e) {
     PAINT.current_tool.accept(this);
     setLastTool();
+  }
+  showOptions(e) {
+    var closed = !e.srcElement.classList.contains("active");
+    $(".trigger.active").removeClass("active");
+    if (closed) { e.srcElement.classList.add('active'); }
+  }
+  deleteImage(e) {
+    window.PAINT.storage.deleteImage(e.item.name);
+    this.update()
   }
 </window>

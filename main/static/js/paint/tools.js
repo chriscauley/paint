@@ -126,14 +126,17 @@ window.PAINT = window.PAINT || {};
       tag.unmount();
     }
     getWindowData() {
-      var names = [];
-      var items = [];
-      for (var n in PAINT.gallery) { names.push(n) }
-      names.sort()
-      for (var i=0;i<names.length;i++) { items.push(PAINT.gallery[names[i]]) }
+      function getItems()  {
+        var names = [];
+        var items = [];
+        for (var n in PAINT.gallery) { names.push(n) }
+        names.sort()
+        for (var i=0;i<names.length;i++) { items.push(PAINT.gallery[names[i]]) }
+        return items;
+      }
       return {
         title: "Open Image",
-        items: items,
+        getItems: getItems,
         hide_okay: true
       }
     }

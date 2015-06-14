@@ -42,12 +42,18 @@ window.PAINT.storage = (function (){
     current_image.name = undefined;
   }
 
+  function deleteImage(name) {
+    delete(PAINT.gallery[name]);
+    localStorage.setItem("gallery",JSON.stringify(PAINT.gallery));
+  }
+
   function init() {
     PAINT.gallery = JSON.parse(localStorage.getItem("gallery") || "{}");
   }
   init();
   return {
     saveImage: saveImage,
-    loadImage: loadImage
+    loadImage: loadImage,
+    deleteImage: deleteImage
   }
 })();

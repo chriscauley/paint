@@ -126,3 +126,21 @@ window .file-list {
     }
   }
 }
+
+window .file .options {
+  position: absolute;
+  right: 0;
+  top: 0;
+  .inner {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    .pure-button { width: 100%; }
+  }
+  .trigger {
+    color: white;
+    text-shadow: 0 0 3px black;
+    &.active + .inner { display: block; }
+  }
+}
