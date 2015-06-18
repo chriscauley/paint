@@ -224,6 +224,7 @@ window.PAINT = window.PAINT || {};
       this.last = false
     }
     move(e) {
+      PAINT.debug.rate('move');
       if (!this.mouse_down) { return; }
       var action = PAINT.current_action;
       var context = action.context;

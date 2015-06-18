@@ -76,4 +76,7 @@
     window.PAINT.storage.deleteImage(e.item.name);
     this.update()
   }
+  renameImage(e) {
+    alert("Not Implimented");
+  }
 </window>

@@ -19,7 +19,7 @@ window.PAINT = window.PAINT || {};
       this.canvas.width = this.WIDTH;
       this.canvas.height = this.HEIGHT;
       PAINT.changeTool('brush');
-      this._redraw_proxy = this._redraw.bind(this);
+      this._redraw_proxy = PAINT.debug.rateFunc(this._redraw,'redraw',this);
       if (!this.dataURL) {
         this.context.fillStyle = "#fff"; // should get from form
         this.context.beginPath();
