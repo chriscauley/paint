@@ -219,12 +219,12 @@ window.PAINT = window.PAINT || {};
     }
     down(e) {
       super.down(e);
+      this.drawn_until = 0;
       PAINT.current_action.coords = [];
       PAINT.current_action.size = 1; //#!TODO eventually use size selector
       this.last = false
     }
     move(e) {
-      PAINT.debug.rate('move');
       if (!this.mouse_down) { return; }
       var action = PAINT.current_action;
       var context = action.context;
@@ -252,13 +252,14 @@ window.PAINT = window.PAINT || {};
         image_data.data[i*4+2] = rgb.b;
         image_data.data[i*4+3] = 255; //#!TODO eventually use alpha selector
       }
-      for (var i=0;i<action.coords.length;i++) {
+      for (var i=this.drawn_until;i<action.coords.length;i++) {
         window._id = image_data;
         context.putImageData(
           image_data,
           Math.round(action.coords[i][0]-action.size/2),
           Math.round(action.coords[i][1]-action.size/2)
         );
+        this.drawn_until = i;
       }
       PAINT.current_image.redraw();
     }

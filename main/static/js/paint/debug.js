@@ -38,7 +38,7 @@ PAINT.debug = (function() {
       func.apply(context,arguments);
     }
   }
-  redraw = rateFunc(redraw,'debug');
+  //redraw = rateFunc(redraw,'debug');
   $(function() {
     setInterval(redraw,20);
   });
