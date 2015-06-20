@@ -2,6 +2,7 @@
 *.pyc
 static/*
 media/*
+main/settings/private.py
 
 .static/*
 .media/*
