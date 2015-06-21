@@ -397,6 +397,31 @@ window.PAINT = window.PAINT || {};
     }
     move(e) {
       if (!super.move(e)) { return; }
+      this.action.left = (this.action.w>0)?this.action.x1:this.action.x2;
+      this.action.top = (this.action.h>0)?this.action.y1:this.action.y2;
+      this.div.style.width = Math.abs(this.action.w)+"px";
+      this.div.style.height = Math.abs(this.action.h)+"px";
+      this.div.style.top = this.action.top+"px";
+      this.div.style.left = this.action.left+"px";
+      return true; // stops selectMove from executing
+    }
+    selectDown(e) {
+      this.select_down = true;
+      [this.action.x0,this.action.y0] = PAINT.getMouseXY(e);
+    }
+    selectMove(e) {
+      if (this.move(e)) { return; }
+      if (!this.select_down) { return; }
+      [this.action.x_end,this.action.y_end] = PAINT.getMouseXY(e);
+      this.action.top2 = this.action.top - (this.action.y0 - this.action.y_end);
+      this.action.left2 = this.action.left - (this.action.x0 - this.action.x_end);
+      this.div.style.top = this.action.top2+"px";
+      this.div.style.left = this.action.left2+"px";
+    }
+    selectUp(e) {
+      this.up(e);
+      this.selectMove(e);
+      this.select_down = false;
     }
   }
 

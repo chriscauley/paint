@@ -3,7 +3,7 @@
     <div class="canvas-inner active">
       <canvas width={ w } height={ h } onmousedown={ down } onmouseup={ up } onmousemove={ move } onmouseover={ over }
               onmouseout={ out } name="canvas"></canvas>
-      <div class="select" click={ selectClick }></div>
+      <div class="select" onmouseup={ selectUp } onmousedown={ selectDown } onmousemove={ selectMove }></div>
       <!--<resize></resize>-->
     </div>
   </div>
@@ -26,12 +26,16 @@
     PAINT.current_tool.out(e);
   }
 
-  selectClick(e) {
-    PAINT.current_action.selectClick(e);
+  selectUp(e) {
+    PAINT.current_tool.selectUp(e);
+  }
+
+  selectDown(e) {
+    PAINT.current_tool.selectDown(e);
   }
 
   selectMove(e) {
-    PAINT.current_action.selectMove(e);
+    PAINT.current_tool.selectMove(e);
   }
 
   this.on('mount',function(){PAINT.current_image.init(this)})
