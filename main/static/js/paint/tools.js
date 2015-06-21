@@ -26,7 +26,6 @@ window.PAINT = window.PAINT || {};
   }
   function getPixelColor(x,y) {
     var data = PAINT.current_image.context.getImageData(x,y,1,1).data;
-    console.log(data);
     return {
       r: data[0],
       g: data[1],
@@ -59,9 +58,7 @@ window.PAINT = window.PAINT || {};
       for (var key in options) { this[key] = options[key] }
     }
     move(e) {
-      var _m = PAINT.getMouseXY(e);
-      var action = PAINT.current_action;
-      [action.x2,action.y2] = [_m.x,_m.y];
+      [this.action.x2,this.action.y2] = PAINT.getMouseXY(e);
     }
     up(e) {
       window.MOUSE_DOWN = this.mouse_down = false;
@@ -71,16 +68,13 @@ window.PAINT = window.PAINT || {};
     }
     down(e) {
       window.MOUSE_DOWN = this.mouse_down = true;
-      var action = new PAINT.Action(e);
-      var _m = PAINT.getMouseXY(e);
-      [action.x1,action.y1] = [_m.x,_m.y];
-      if (PAINT.current_action) {
-        PAINT.current_action.destroy();
-      }
-      PAINT.current_image.actions.push(action);
-      PAINT.current_action = action;
+      this.action = new PAINT.Action(e);
+      [this.action.x1,this.action.y1] = [this.x,this.y] = PAINT.getMouseXY(e);
     }
     select() {
+
+    }
+    out(e) {
 
     }
   }
@@ -224,12 +218,18 @@ window.PAINT = window.PAINT || {};
       PAINT.current_action.size = 1; //#!TODO eventually use size selector
       this.last = false
     }
+    out(e) {
+      this.move(e);
+    }
+    over(e) {
+      super.over(e);
+      this.move(e);
+    }
     move(e) {
       if (!this.mouse_down) { return; }
       var action = PAINT.current_action;
       var context = action.context;
-      var _m = PAINT.getMouseXY(e);
-      var [x,y] = [_m.x,_m.y];
+      var [x,y] = PAINT.getMouseXY(e);
       if (this.last) {
         var dx = x - this.last_x;
         var dy = y - this.last_y;
@@ -318,8 +318,7 @@ window.PAINT = window.PAINT || {};
       var WIDTH = PAINT.current_image.WIDTH, HEIGHT = PAINT.current_image.HEIGHT;
       var current_pixel, pixel_position, reach_left, reach_right;
       var color_layer = PAINT.current_image.context.getImageData(0,0,WIDTH,HEIGHT);
-      var _m = PAINT.getMouseXY(e);
-      var [x,y] = [_m.x,_m.y];
+      var [x,y] = [this.x,this.y];
       var pixel_stack = [[x,y]];
       var fill_color = hexToRgb(PAINT.current_action.color);
       var alphas = [];
@@ -393,6 +392,12 @@ window.PAINT = window.PAINT || {};
   class SelectTool extends Tool {
     constructor() {
       super({name: 'select', title: 'Select', className: 'select-button'})
+      this.div = $(".canvas-wrapper .select")[0];
+    }
+    down(e) {
+      super.down(e);
+      this.div.style.display = "block";
+      this.move(e);
     }
   }
 
@@ -412,8 +417,7 @@ window.PAINT = window.PAINT || {};
     }
     down(e) {
       super.down(e);
-      var _m = PAINT.getMouseXY(e);
-      var [x,y] = [_m.x,_m.y];
+      var [x,y] = [this.x,this.y];
       var pixel_position = 4*(y*PAINT.current_image.WIDTH + x);
       var hex_color = "#"+rgbToHex(getPixelColor(x,y));
       var which = (e.button==0)?"fg":"bg";
