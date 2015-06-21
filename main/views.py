@@ -10,6 +10,9 @@ import json
 def home(request):
   return TemplateResponse(request,"index.html",{})
 
+def drive(request,template="gdrive_webview.html"):
+  return TemplateResponse(request,"drive/%s.html"%template,{})
+
 redirect = lambda request,url: HttpResponseRedirect(url)
 
 @login_required
