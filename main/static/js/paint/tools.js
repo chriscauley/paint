@@ -58,7 +58,11 @@ window.PAINT = window.PAINT || {};
       for (var key in options) { this[key] = options[key] }
     }
     move(e) {
+      if (!this.action || !this.mouse_down) { return }
       [this.action.x2,this.action.y2] = PAINT.getMouseXY(e);
+      this.action.w = this.action.x2-this.action.x1;
+      this.action.h = this.action.y2-this.action.y1;
+      return true; // some tools need this to stop propagation
     }
     up(e) {
       window.MOUSE_DOWN = this.mouse_down = false;
@@ -69,7 +73,7 @@ window.PAINT = window.PAINT || {};
     down(e) {
       window.MOUSE_DOWN = this.mouse_down = true;
       this.action = new PAINT.Action(e);
-      [this.action.x1,this.action.y1] = [this.x,this.y] = PAINT.getMouseXY(e);
+      [this.action.x1,this.action.y1] = PAINT.getMouseXY(e);
     }
     select() {
 
@@ -214,8 +218,8 @@ window.PAINT = window.PAINT || {};
     down(e) {
       super.down(e);
       this.drawn_until = 0;
-      PAINT.current_action.coords = [];
-      PAINT.current_action.size = 1; //#!TODO eventually use size selector
+      this.action.coords = [];
+      this.action.size = 1; //#!TODO eventually use size selector
       this.last = false
     }
     out(e) {
@@ -226,7 +230,7 @@ window.PAINT = window.PAINT || {};
       this.move(e);
     }
     move(e) {
-      if (!this.mouse_down) { return; }
+      if (!super.move(e)) { return; }
       var action = PAINT.current_action;
       var context = action.context;
       var [x,y] = PAINT.getMouseXY(e);
@@ -270,17 +274,13 @@ window.PAINT = window.PAINT || {};
       super({name: 'rect', title: 'Rectangle', className: 'rect-button'})
     }
     move(e) {
-      if(!this.mouse_down){ return; }
-      super.move(e);
-      var action = PAINT.current_action;
+      if (!super.move(e)) { return; }
       var image = PAINT.current_image;
-      var context = action.context
-      var w = action.x2-action.x1;
-      var h = action.y2-action.y1;
+      var context = this.action.context;
       context.clearRect(0,0,image.WIDTH,image.HEIGHT);
-      context.fillStyle = action.color;
+      context.fillStyle = this.action.color;
       context.beginPath();
-      context.rect(action.x1,action.y1,w,h);
+      context.rect(this.action.x1,this.action.y1,this.action.w,this.action.h);
       context.fill();
       context.closePath();
       PAINT.current_image.redraw();
@@ -292,16 +292,12 @@ window.PAINT = window.PAINT || {};
       super({name: 'circle', title: 'Ellipse', className: 'circle-button'})
     }
     move(e) {
-      if(!this.mouse_down){ return; }
-      super.move(e);
-      var action = PAINT.current_action;
+      if(!super.move(e)){ return; }
       var image = PAINT.current_image;
-      var context = action.context
-      var w = action.x2-action.x1;
-      var h = action.y2-action.y1;
-      context.fillStyle = action.color;
+      var context = this.action.context
+      context.fillStyle = this.action.color;
       context.clearRect(0,0,image.WIDTH,image.HEIGHT);
-      drawEllipse(context,action.x1,action.y1,w,h)
+      drawEllipse(context,this.action.x1,this.action.y1,this.action.w,this.action.h)
       PAINT.current_image.redraw();
     }
   }
@@ -318,9 +314,9 @@ window.PAINT = window.PAINT || {};
       var WIDTH = PAINT.current_image.WIDTH, HEIGHT = PAINT.current_image.HEIGHT;
       var current_pixel, pixel_position, reach_left, reach_right;
       var color_layer = PAINT.current_image.context.getImageData(0,0,WIDTH,HEIGHT);
-      var [x,y] = [this.x,this.y];
+      var [x,y] = [this.action.x1,this.action.y1];
       var pixel_stack = [[x,y]];
-      var fill_color = hexToRgb(PAINT.current_action.color);
+      var fill_color = hexToRgb(this.action.color);
       var alphas = [];
       pixel_position = 4*(y*WIDTH + x);
       var start_color = {
@@ -384,7 +380,7 @@ window.PAINT = window.PAINT || {};
       for (var i=0;i<alphas.length;i++) {
         color_layer.data[alphas[i]] = 255; //#! TODO make this alpha
       }
-      PAINT.current_action.context.putImageData(color_layer, 0, 0);
+      this.action.context.putImageData(color_layer, 0, 0);
       PAINT.current_image.redraw();
     }
   }
@@ -392,12 +388,15 @@ window.PAINT = window.PAINT || {};
   class SelectTool extends Tool {
     constructor() {
       super({name: 'select', title: 'Select', className: 'select-button'})
-      this.div = $(".canvas-wrapper .select")[0];
     }
     down(e) {
       super.down(e);
+      this.div = $(".canvas-wrapper .select")[0];
       this.div.style.display = "block";
       this.move(e);
+    }
+    move(e) {
+      if (!super.move(e)) { return; }
     }
   }
 
@@ -417,7 +416,7 @@ window.PAINT = window.PAINT || {};
     }
     down(e) {
       super.down(e);
-      var [x,y] = [this.x,this.y];
+      var [x,y] = [this.action.x1,this.action.y1];
       var pixel_position = 4*(y*PAINT.current_image.WIDTH + x);
       var hex_color = "#"+rgbToHex(getPixelColor(x,y));
       var which = (e.button==0)?"fg":"bg";
