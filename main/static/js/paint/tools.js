@@ -6,6 +6,7 @@ window.PAINT = window.PAINT || {};
     var _t = ['saveAs','save','new','open','upload','download'];
     if (PAINT.current_tool && _t.indexOf(this.current_tool.name) == -1) { PAINT.last_tool = this.current_tool.name; }
     PAINT.current_tool = PAINT.TOOLS[name];
+    if (PAINT.current_action) { PAINT.current_action.destroy(); }
     PAINT.current_tool.select();
   }
   function hexToRgb(hex) {
@@ -231,37 +232,36 @@ window.PAINT = window.PAINT || {};
     }
     move(e) {
       if (!super.move(e)) { return; }
-      var action = PAINT.current_action;
-      var context = action.context;
+      var context = this.action.context;
       var [x,y] = PAINT.getMouseXY(e);
       if (this.last) {
         var dx = x - this.last_x;
         var dy = y - this.last_y;
         var distance = Math.sqrt(dx*dx+dy*dy);
         for (var i=0;i<distance;i++) {
-          action.coords.push([
+          this.action.coords.push([
             this.last_x+i*dx/distance,
             this.last_y+i*dy/distance
           ]);
         }
       }
-      action.coords.push([x,y]);
+      this.action.coords.push([x,y]);
       [this.last_x,this.last_y,this.last] = [x,y,true];
 
-      var image_data = context.createImageData(action.size,action.size);
-      var rgb = hexToRgb(action.color);
+      var image_data = context.createImageData(this.action.size,this.action.size);
+      var rgb = hexToRgb(this.action.color);
       for (var i=0;i<image_data.data.length/4;i++) {
         image_data.data[i*4+0] = rgb.r;
         image_data.data[i*4+1] = rgb.g;
         image_data.data[i*4+2] = rgb.b;
         image_data.data[i*4+3] = 255; //#!TODO eventually use alpha selector
       }
-      for (var i=this.drawn_until;i<action.coords.length;i++) {
+      for (var i=this.drawn_until;i<this.action.coords.length;i++) {
         window._id = image_data;
         context.putImageData(
           image_data,
-          Math.round(action.coords[i][0]-action.size/2),
-          Math.round(action.coords[i][1]-action.size/2)
+          Math.round(this.action.coords[i][0]-this.action.size/2),
+          Math.round(this.action.coords[i][1]-this.action.size/2)
         );
         this.drawn_until = i;
       }
@@ -387,15 +387,23 @@ window.PAINT = window.PAINT || {};
 
   class SelectTool extends Tool {
     constructor() {
+      // this tool needs a canvas to store the selected image fragment
       super({name: 'select', title: 'Select', className: 'select-button'})
+      this.canvas = document.createElement("canvas");
+      this.context = this.canvas.getContext("2d");
     }
     down(e) {
+      // reset the selection div
       super.down(e);
       this.div = $(".canvas-wrapper .select")[0];
       this.div.style.display = "block";
+      this.div.style.backgroundImage = "";
+      this.context.clearRect(0,0,this.canvas.width,this.canvas.height)
       this.move(e);
+      this.captured = false;
     }
     move(e) {
+      // this sizes the selection window, but hasn't actually selected anything
       if (!super.move(e)) { return; }
       this.action.left = (this.action.w>0)?this.action.x1:this.action.x2;
       this.action.top = (this.action.h>0)?this.action.y1:this.action.y2;
@@ -405,23 +413,57 @@ window.PAINT = window.PAINT || {};
       this.div.style.left = this.action.left+"px";
       return true; // stops selectMove from executing
     }
+    selectDraw() {
+      // only once per selection
+      if (this.captured) { return }
+      this.captured = true;
+
+      //save the selected piece of canvas and use it as background for this.div
+      [this.canvas.width,this.canvas.height] = [this.action.w,this.action.h]
+      this.context.drawImage(PAINT.current_image.canvas,
+                             this.action.left,this.action.top,this.action.w,this.action.h,
+                             0,0,this.action.w,this.action.h)
+      this.dataURL = this.canvas.toDataURL();
+      this.div.style.backgroundImage = "url("+this.dataURL+")";
+      [this.action.top0, this.action.left0] = [this.action.top, this.action.left]
+    }
+    selectCut() {
+      //fill in the background color where the select window was
+      var context = this.action.context;
+      var image = PAINT.current_image;
+      context.clearRect(0,0,image.WIDTH,image.HEIGHT);
+      context.fillStyle = this.action.color2;
+      context.beginPath();
+      context.rect(this.action.left0,this.action.top0,this.action.w,this.action.h);
+      context.fill();
+      context.closePath();
+    }
     selectDown(e) {
       this.select_down = true;
-      [this.action.x0,this.action.y0] = PAINT.getMouseXY(e);
+      [this.action.x_start,this.action.y_start] = PAINT.getMouseXY(e);
+      this.selectDraw();
+      this.selectCut();
+      PAINT.current_image.redraw();
     }
     selectMove(e) {
+      // find the difference between the moves relative to the div position. create a temporary position
       if (this.move(e)) { return; }
       if (!this.select_down) { return; }
       [this.action.x_end,this.action.y_end] = PAINT.getMouseXY(e);
-      this.action.top2 = this.action.top - (this.action.y0 - this.action.y_end);
-      this.action.left2 = this.action.left - (this.action.x0 - this.action.x_end);
+      this.action.top2 = this.action.top - (this.action.y_start - this.action.y_end);
+      this.action.left2 = this.action.left - (this.action.x_start - this.action.x_end);
       this.div.style.top = this.action.top2+"px";
       this.div.style.left = this.action.left2+"px";
     }
     selectUp(e) {
+      // mouse released, set the div position to the temporary position
       this.up(e);
       this.selectMove(e);
+      if (this.select_down) { [this.action.left,this.action.top] = [this.action.left2,this.action.top2]; }
       this.select_down = false;
+      this.selectCut();
+      this.action.context.drawImage(this.canvas,this.action.left,this.action.top);
+      PAINT.current_image.redraw();
     }
   }
 

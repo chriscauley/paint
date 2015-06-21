@@ -27,7 +27,8 @@ window.PAINT = window.PAINT || {};
       PAINT.current_image.actions.push(this);
       PAINT.current_action = this;
     }
-    destroy(e) {
+    destroy() {
+      if (this.tool.name == "select") { this.tool.div.style.display = "none"; }
     }
   }
   PAINT.Action = Action;
