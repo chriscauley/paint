@@ -107,15 +107,17 @@
     width: 11px;
   }
 }
+@logsW: 300px;
 #logs {
   background-color: white;
   bottom: 5px;
+  box-sizing: border-box;
   overflow-y: hidden;
   padding: 3px;
   position: absolute;
-  right: 5;
+  right: 0;
   top: 5px;
-  width: 300px;
+  width: @logsW;
   &:hover { overflow-y: scroll; }
   > li {
     border-bottom: 1px lightgrey solid;
@@ -126,4 +128,12 @@
       border-bottom: 0;
     }
   }
+}
+tools #status {
+  bottom: 0;
+  height: 1em;
+  left: 60px;
+  right: @logsW;
+  position: absolute;
+  z-index: 999;
 }

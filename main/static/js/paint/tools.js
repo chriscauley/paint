@@ -59,10 +59,13 @@ window.PAINT = window.PAINT || {};
       for (var key in options) { this[key] = options[key] }
     }
     move(e) {
+      var [x,y] = PAINT.getMouseXY(e);
+      PAINT.debug.status['mouse1'] = `${x}x${y}`;
       if (!this.action || !this.mouse_down) { return }
-      [this.action.x2,this.action.y2] = PAINT.getMouseXY(e);
+      [this.action.x2,this.action.y2] = [x,y]
       this.action.w = this.action.x2-this.action.x1;
       this.action.h = this.action.y2-this.action.y1;
+      if (this.bounding) { PAINT.debug.status['mouse3'] = `w:${this.action.w} h:${this.action.h}`; }
       return true; // some tools need this to stop propagation
     }
     up(e) {
@@ -75,9 +78,10 @@ window.PAINT = window.PAINT || {};
       window.MOUSE_DOWN = this.mouse_down = true;
       this.action = new PAINT.Action(e);
       [this.action.x1,this.action.y1] = PAINT.getMouseXY(e);
+      PAINT.debug.status['mouse2'] =`click:${this.action.x1}x${this.action.y1}`;
     }
     select() {
-
+      PAINT.debug.status['mouse3'] = PAINT.debug.status['mouse2'] = '';
     }
     out(e) {
 
@@ -86,6 +90,7 @@ window.PAINT = window.PAINT || {};
 
   class DialogTool extends Tool {
     select() {
+      super.select();
       $("body").append("<window></window>");
       riot.mount("window",this.getWindowData());
     }
@@ -185,6 +190,7 @@ window.PAINT = window.PAINT || {};
       super({name: 'save', title: 'Save Image', icon: 'floppy-o'})
     }
     select() {
+      super.select();
       if (PAINT.current_image.name) {
         PAINT.storage.saveImage(PAINT.current_image.name);
         super.accept(tag);
@@ -272,6 +278,7 @@ window.PAINT = window.PAINT || {};
   class RectTool extends Tool {
     constructor() {
       super({name: 'rect', title: 'Rectangle', className: 'rect-button'})
+      this.bounding = true;
     }
     move(e) {
       if (!super.move(e)) { return; }
@@ -290,6 +297,7 @@ window.PAINT = window.PAINT || {};
   class CircleTool extends Tool {
     constructor() {
       super({name: 'circle', title: 'Ellipse', className: 'circle-button'})
+      this.bounding = true;
     }
     move(e) {
       if(!super.move(e)){ return; }
@@ -391,6 +399,7 @@ window.PAINT = window.PAINT || {};
       super({name: 'select', title: 'Select', className: 'select-button'})
       this.canvas = document.createElement("canvas");
       this.context = this.canvas.getContext("2d");
+      this.bounding = true;
     }
     down(e) {
       // reset the selection div
@@ -434,7 +443,7 @@ window.PAINT = window.PAINT || {};
       context.clearRect(0,0,image.WIDTH,image.HEIGHT);
       context.fillStyle = this.action.color2;
       context.beginPath();
-      context.rect(this.action.left0,this.action.top0,this.action.w,this.action.h);
+      context.rect(this.action.left0,this.action.top0,Math.abs(this.action.w),Math.abs(this.action.h));
       context.fill();
       context.closePath();
     }

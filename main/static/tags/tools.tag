@@ -13,6 +13,13 @@
     <div class="alpha-container">
       <input type="range" max="1" min="0" step="0.01"><span class="fg_alpha">1</span>
     </div>
+    <div id="status" class="pure-g">
+      <div class="pure-u-1-6" id="mouse1"></div>
+      <div class="pure-u-1-6" id="mouse2"></div>
+      <div class="pure-u-1-6" id="mouse3"></div>
+      <div class="pure-u-1-6"></div>
+      <div class="pure-u-1-6"></div>
+    </div>
   </div>
   var PAINT = window.PAINT
   this.left_tools = PAINT.TOOL_LIST;

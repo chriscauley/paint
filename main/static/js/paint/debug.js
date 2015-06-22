@@ -10,6 +10,18 @@ PAINT.debug = (function() {
   container.id = 'debug_rates';
   var counts = {};
   var per_second = {};
+  var times = {};
+  var status_dict = {}
+  function timeit(f) {
+    times[f.name] = [];
+    return function() {
+      var start = new Date().valueOf();
+      var out = f.apply(this,arguments);
+      var t = new Date().valueOf()-start;
+      times[f.name].push(t);
+      return out
+    }
+  }
   function rate(key) {
     per_second[key] = per_second[key] || [];
     per_second[key].push(new Date().valueOf());
@@ -29,7 +41,13 @@ PAINT.debug = (function() {
       }
       html += "<div><b>"+key+"</b> "+per_second[key].length+" ("+count+"/s)</div>";
     }
-    container.innerHTML = html
+    container.innerHTML = html;
+
+    // now the statuses
+    for (key in status_dict) {
+      document.getElementById(key).innerHTML = status_dict[key];
+    }
+    requestAnimationFrame(redraw);
   }
   function rateFunc(func,key,context) {
     context = context || this;
@@ -39,14 +57,13 @@ PAINT.debug = (function() {
     }
   }
   //redraw = rateFunc(redraw,'debug');
-  $(function() {
-    setInterval(redraw,20);
-  });
+  redraw();
   return {
     log: function(msg) {
       PAINT.addMessage(msg);
     },
     rate: rate,
     rateFunc:rateFunc,
+    status: status_dict
   }
 })();
