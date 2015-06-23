@@ -7,6 +7,8 @@ window.PAINT = window.PAINT || {};
     return [_r(e.pageX - _cr.left), _r(e.pageY - _cr.top)]
   }
   PAINT.updateZoom = function updateZoom() {
+    // This was invaluable: http://stackoverflow.com/questions/23271093/scale-images-with-canvas-without-blurring-it
+    // fiddle: http://jsfiddle.net/epistemex/VsZFb/2/
     var c = PAINT.display_canvas,ctx;
     c.width = PAINT.canvas.width*PAINT.zoom;
     c.height = PAINT.canvas.height*PAINT.zoom;
@@ -14,6 +16,8 @@ window.PAINT = window.PAINT || {};
     ctx.imageSmoothingEnabled = false;
     ctx.mozImageSmoothingEnabled = false;
     ctx.webkitImageSmoothingEnabled = false;
+    var i = document.querySelector("#tools [name=zoom]");
+    if (i) { i.dataset.level = PAINT.zoom; }
   }
   class Action {
     // A json serializable/parsable class that stores each action

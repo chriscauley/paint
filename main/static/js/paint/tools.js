@@ -487,7 +487,7 @@ window.PAINT = window.PAINT || {};
   class EyeDropperTool extends Tool {
     //#! TODO: with mouse depressed as you move it should select different colors until you release
     constructor() {
-      super({name: 'eyeDropper', title: 'select color', icon: 'eyedropper'})
+      super({name: 'eyeDropper', title: 'Select Color', icon: 'eyedropper'})
     }
     move(e) {
 
@@ -505,6 +505,12 @@ window.PAINT = window.PAINT || {};
     }
   }
 
+  class ZoomTool extends Tool {
+    constructor() {
+      super({name: 'zoom', title: 'Change Zoom', icon: 'search-plus'})
+    }
+  }
+
   PAINT.TOOL_LIST = [
     new New(),
     new Open(),
@@ -519,7 +525,8 @@ window.PAINT = window.PAINT || {};
     new RectTool(),
     new CircleTool(),
     new ResizeTool(),
-    new EyeDropperTool()
+    new EyeDropperTool(),
+    new ZoomTool(),
   ];
   PAINT.TOOLS = {}
   for (var i=0;i<PAINT.TOOL_LIST.length;i++) {

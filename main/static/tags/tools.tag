@@ -1,7 +1,7 @@
 <tools>
   <div id="tools" class="border-box">
     <div each={ left_tools }>
-      <button class={ className } title={ title } name={ name } if={ name } onclick={ parent.click }>
+      <button class="pure-button { className }" title={ title } name={ name } if={ name } onclick={ parent.click }>
         <i class="fa fa-{ icon }" if={ icon }></i></button>
       <hr style="clear:both;" if={ !name }/>
     </div>
