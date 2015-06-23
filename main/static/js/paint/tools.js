@@ -227,7 +227,8 @@ window.PAINT = window.PAINT || {};
       this.drawn_until = 0;
       this.action.coords = [];
       this.action.size = 1; //#!TODO eventually use size selector
-      this.last = false
+      this.last = false;
+      this.move(e);
     }
     out(e) {
       this.move(e);
@@ -416,10 +417,10 @@ window.PAINT = window.PAINT || {};
       if (!super.move(e)) { return; }
       this.action.left = (this.action.w>0)?this.action.x1:this.action.x2;
       this.action.top = (this.action.h>0)?this.action.y1:this.action.y2;
-      this.div.style.width = Math.abs(this.action.w)+"px";
-      this.div.style.height = Math.abs(this.action.h)+"px";
-      this.div.style.top = this.action.top+"px";
-      this.div.style.left = this.action.left+"px";
+      this.div.style.width = Math.abs(PAINT.zoom*this.action.w)+"px";
+      this.div.style.height = Math.abs(PAINT.zoom*this.action.h)+"px";
+      this.div.style.top = PAINT.zoom*this.action.top+"px";
+      this.div.style.left = PAINT.zoom*this.action.left+"px";
       return true; // stops selectMove from executing
     }
     selectDraw() {
@@ -432,8 +433,9 @@ window.PAINT = window.PAINT || {};
       this.context.drawImage(PAINT.current_image.canvas,
                              this.action.left,this.action.top,this.action.w,this.action.h,
                              0,0,this.action.w,this.action.h)
-      this.dataURL = this.canvas.toDataURL();
+      this.dataURL = PAINT.display_canvas.toDataURL();
       this.div.style.backgroundImage = "url("+this.dataURL+")";
+      this.div.style.backgroundPosition = `-${PAINT.zoom*this.action.left}px -${PAINT.zoom*this.action.top}px`;
       [this.action.top0, this.action.left0] = [this.action.top, this.action.left]
     }
     selectCut() {
@@ -461,8 +463,8 @@ window.PAINT = window.PAINT || {};
       [this.action.x_end,this.action.y_end] = PAINT.getMouseXY(e);
       this.action.top2 = this.action.top - (this.action.y_start - this.action.y_end);
       this.action.left2 = this.action.left - (this.action.x_start - this.action.x_end);
-      this.div.style.top = this.action.top2+"px";
-      this.div.style.left = this.action.left2+"px";
+      this.div.style.top = PAINT.zoom*this.action.top2+"px";
+      this.div.style.left = PAINT.zoom*this.action.left2+"px";
     }
     selectUp(e) {
       // mouse released, set the div position to the temporary position

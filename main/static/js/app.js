@@ -7,4 +7,4 @@ var d_data = {// testing dialog
   accept: function() {alert("accepted")},
 };
 riot.mount("tools",{});
-$(function() { new PAINT.Image({w:500,h:400}); } )
+$(function() { new PAINT.Image({w:75,h:72}); } )

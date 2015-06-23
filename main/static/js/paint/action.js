@@ -1,10 +1,20 @@
 window.PAINT = window.PAINT || {};
 (function() {
-  function getMouseXY(e) {
-    var _cr = PAINT.canvas.getBoundingClientRect();
-    return [e.pageX - _cr.left, e.pageY - _cr.top]
+  PAINT.zoom = 10;
+  function _r(number) { return Math.floor(number/PAINT.zoom) }
+  PAINT.getMouseXY = function getMouseXY(e) {
+    var _cr = PAINT.display_canvas.getBoundingClientRect();
+    return [_r(e.pageX - _cr.left), _r(e.pageY - _cr.top)]
   }
-  PAINT.getMouseXY = getMouseXY;
+  PAINT.updateZoom = function updateZoom() {
+    var c = PAINT.display_canvas,ctx;
+    c.width = PAINT.canvas.width*PAINT.zoom;
+    c.height = PAINT.canvas.height*PAINT.zoom;
+    ctx = PAINT.display_context = PAINT.display_canvas.getContext("2d");
+    ctx.imageSmoothingEnabled = false;
+    ctx.mozImageSmoothingEnabled = false;
+    ctx.webkitImageSmoothingEnabled = false;
+  }
   class Action {
     // A json serializable/parsable class that stores each action
     constructor(data,previous_action) {

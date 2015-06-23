@@ -1,8 +1,7 @@
 <paint>
   <div class="canvas-wrapper">
     <div class="canvas-inner active">
-      <canvas width={ w } height={ h } onmousedown={ down } onmouseup={ up } onmousemove={ move } onmouseover={ over }
-              onmouseout={ out } name="canvas"></canvas>
+      <canvas onmousedown={ down } onmouseup={ up } onmousemove={ move } onmouseover={ over } onmouseout={ out } name="display"></canvas>
       <div class="select" onmouseup={ selectUp } onmousedown={ selectDown } onmousemove={ selectMove }></div>
       <!--<resize></resize>-->
     </div>
