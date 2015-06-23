@@ -11,17 +11,19 @@
   position:absolute;
   text-align: center;
   top: 0;
-  width: 100px;
+  width: 104px;
   z-index: 1;
-  button {
+  .pure-button {
     cursor: pointer;
+    font-size: @buttonFontSize;
     float: left;
-    height: 30px;
-    margin: 5px;
+    height: @buttonWidth;
+    line-height: @buttonWidth;
+    margin: @buttonSeparation/2;
     padding: 0;
     text-align: center;
     vertical-align: middle;
-    width: 30px;
+    width: @buttonWidth;
     &.active { -webkit-filter: invert(0.95); }
   }
   .select-button:before,
@@ -30,8 +32,8 @@
   .fill-button:before {
     content: "";
     display: inline-block;
-    height: 17px;
-    width: 17px;
+    height: @buttonFontSize;
+    width: @buttonFontSize;
   }
   button.fill-button:before {
     background-image: url(/static/img/fill.png);
@@ -50,6 +52,22 @@
 }
 #tools_bot [type=range] {
   width: 100%;
+}
+[data-level] {
+  position: relative;
+  &:before {
+    content: attr(data-level);
+    font-size: @buttonFontSize/2.5;
+    position: absolute;
+    top: 0;
+    right: 2px;
+    background-color: @brand-secondary;
+    border-radius: 100%;
+    width: @buttonFontSize/2+3;
+    height: @buttonFontSize/2+3;
+    line-height: @buttonFontSize/2+3;
+    text-align: center;
+  }
 }
 .alpha-container {
   bottom: 0;
@@ -93,18 +111,14 @@
 /* storage.js styles*/
 #tools button.save-as-new {
   position: relative;
-  &:after {
-    background: black;
+  i:after {
+    background:white;
     border-radius: 100%;
-    bottom: 0px;
-    color: white;
-    content: "+";
-    height: 11px;
-    line-height: 11px;
+    bottom: 3px;
+    font-size: @buttonFontSize/1.5;
+    content: "\f055";
     position: absolute;
-    right: 0px;
-    text-align: center;
-    width: 11px;
+    right: 3px;
   }
 }
 @logsW: 300px;
