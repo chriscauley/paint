@@ -44,8 +44,10 @@ window.PAINT = window.PAINT || {};
         this.imageObj.src = this.dataURL;
       }
       this._img = document.getElementById("_img");
+      this.redraw();
     }
     redraw() {
+      if (!this._redraw_proxy) { return }
       cancelAnimationFrame(this.active_frame);
       this.active_frame = requestAnimationFrame(this._redraw_proxy);
     }

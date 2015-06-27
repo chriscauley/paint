@@ -1,6 +1,6 @@
 window.PAINT = window.PAINT || {};
 (function() {
-  PAINT.zoom = 10;
+  PAINT.zoom = 1;
   function _r(number) { return Math.floor(number/PAINT.zoom) }
   PAINT.getMouseXY = function getMouseXY(e) {
     var _cr = PAINT.display_canvas.getBoundingClientRect();
@@ -18,6 +18,7 @@ window.PAINT = window.PAINT || {};
     ctx.webkitImageSmoothingEnabled = false;
     var i = document.querySelector("#tools [name=zoom]");
     if (i) { i.dataset.level = PAINT.zoom; }
+    PAINT.current_image.redraw();
   }
   class Action {
     // A json serializable/parsable class that stores each action

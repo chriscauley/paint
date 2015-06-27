@@ -508,6 +508,14 @@ window.PAINT = window.PAINT || {};
   class ZoomTool extends Tool {
     constructor() {
       super({name: 'zoom', title: 'Change Zoom', icon: 'search-plus'})
+      this.zooms = [1,2,3,4,5]
+    }
+    select(e) {
+      var i = this.zooms.indexOf(PAINT.zoom)+1;
+      if (i == this.zooms.length) { i = 0 }
+      PAINT.zoom = this.zooms[i];
+      PAINT.updateZoom();
+      PAINT.changeTool(PAINT.last_tool);      
     }
   }
 
