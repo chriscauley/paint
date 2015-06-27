@@ -74,6 +74,7 @@
   left: 0;
   position: absolute;
   width: 60px;
+  @media (max-width: @screen-md-max) { display: none; }
 }
 .fg_alpha {
   display: block;
@@ -142,12 +143,14 @@
       border-bottom: 0;
     }
   }
+  @media (max-width:@screen-md-max) { display: none; }
 }
 tools #status {
-  bottom: 0;
+  bottom: 2px;
   height: 1em;
   left: 60px;
   right: @logsW;
   position: absolute;
   z-index: 999;
+  @media (max-width:@screen-md-max) { right: 0; }
 }
