@@ -12,18 +12,17 @@
 }
 paint {
   bottom: 110px;
+  left: 110px;
+  overflow: hidden;
   position: absolute;
-  left: 100px;
-  overflow: scroll;
   right: 0;
-  top: 0;
+  top: 5px;
   .canvas-wrapper {
-    padding-top: 25px;
-    position: relative;
+    height: 100%;
+    overflow: scroll;
+    width: 100%;
     .canvas-inner {
       display: inline-block;
-      margin: 5px;
-      position: relative;
       resize {
         bottom: 0;
         left: 0;
@@ -71,8 +70,10 @@ paint {
     }
   }
   canvas {
-    border: 1px black solid;
     cursor: crosshair;
+    left: 0;
+    position: absolute;
+    top: 0;
   }
 }
 

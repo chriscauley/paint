@@ -22,6 +22,7 @@ window.PAINT = window.PAINT || {};
       PAINT.updateZoom();
       PAINT.changeTool('brush');
       this._redraw_proxy = this._redraw.bind(this);
+      this.scroll();
       if (!this.dataURL) {
         this.context.fillStyle = "#fff"; // should get from form
         this.context.beginPath();
@@ -66,7 +67,16 @@ window.PAINT = window.PAINT || {};
       var context = PAINT.display_context;
       context.clearRect( 0, 0, canvas.width, canvas.height );
       var scale = PAINT.zoom;
-      context.drawImage(PAINT.canvas, 0, 0, (this.WIDTH * scale)|0, (this.HEIGHT * scale)|0 );
+      context.drawImage(PAINT.canvas,
+                        this.scrollX/scale, this.scrollY/scale, this.WIDTH, this.HEIGHT, //sx,xy,sw,sh
+                        0, 0, (this.WIDTH * scale)|0, (this.HEIGHT * scale)|0 //dx,dy,dw,dh
+                       );
+    }
+    scroll() {
+      var w = $(".canvas-wrapper");
+      this.scrollX = w.scrollLeft();
+      this.scrollY = w.scrollTop();
+      this.redraw();
     }
     toJSON() {
       return {

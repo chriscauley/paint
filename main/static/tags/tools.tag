@@ -1,9 +1,14 @@
 <tools>
   <div id="tools" class="border-box">
-    <div each={ left_tools }>
+    <div each={ left_tools } class={clear:!name}>
       <button class="pure-button { className }" title={ title } name={ name } if={ name } onclick={ parent.click }>
         <i class="fa fa-{ icon }" if={ icon }></i></button>
-      <hr style="clear:both;" if={ !name }/>
+    </div>
+    <div class="options">
+      <div each={ PAINT.current_tool.options() }>
+        <button class="pure-button" title={ title } name={ name } if={ name } onclick={ click }>
+          <i class="fa fa-{ icon }" if={ icon }></i></button>
+      </div>
     </div>
   </div>
   <div id="tools_bot">
@@ -28,6 +33,7 @@
   }
 
   click(e) {
-    PAINT.changeTool(e.item.name)
+    PAINT.changeTool(e.item.name);
+    this.update();
   }
 </tools>
