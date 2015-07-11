@@ -417,7 +417,7 @@ window.PAINT = window.PAINT || {};
       this.div.style.backgroundImage = "";
       this.context.clearRect(0,0,this.canvas.width,this.canvas.height)
       this.move(e);
-      this.captured = false;
+      this.drawn = false;
     }
     move(e) {
       // this sizes the selection window, but hasn't actually selected anything
@@ -433,18 +433,17 @@ window.PAINT = window.PAINT || {};
     redraw(zoom_change) {
       // calculate the position and size of the select, this funciton is global for scroll/zoom
       var i = PAINT.current_image;
-      console.log('redraw');
       this.div.style.display = "block";
       this.div.style.width = Math.abs(PAINT.zoom*this.action.w)+"px";
       this.div.style.height = Math.abs(PAINT.zoom*this.action.h)+"px";
       this.div.style.top = PAINT.zoom*this.action.top-i.scrollY+"px";
       this.div.style.left = PAINT.zoom*this.action.left-i.scrollX+"px";
-      if (zoom_change) { this.captured = false; this.selectDraw() }
+      this.selectDraw();
     }
     selectDraw() {
       // only once per selection
-      if (this.captured) { return }
-      this.captured = true;
+      if (this.drawn) { return }
+      this.drawn = true;
 
       //save the selected piece of canvas and use it as background for this.div
       var i = PAINT.current_image;

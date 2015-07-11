@@ -71,6 +71,7 @@ window.PAINT = window.PAINT || {};
                         this.scrollX/scale, this.scrollY/scale, this.WIDTH, this.HEIGHT, //sx,xy,sw,sh
                         0, 0, (this.WIDTH * scale)|0, (this.HEIGHT * scale)|0 //dx,dy,dw,dh
                        );
+      if (PAINT.current_tool) { PAINT.current_tool.redraw(); }
     }
     scroll() {
       var w = $(".canvas-wrapper");
