@@ -1,12 +1,12 @@
 window.PAINT = window.PAINT || {};
 (function() {
-  PAINT.changeTool = function(name) {
+  PAINT.changeTool = function(name,back) {
     $("#tools .active").removeClass("active");
     $("[name="+name+"]").addClass("active");
     var _t = ['saveAs','save','new','open','upload','download'];
     if (PAINT.current_tool && _t.indexOf(this.current_tool.name) == -1) { PAINT.last_tool = this.current_tool.name; }
     PAINT.current_tool = PAINT.TOOLS[name];
-    if (PAINT.current_action) { PAINT.current_action.destroy(); }
+    if (PAINT.current_action && name != "zoom" && ! back) { PAINT.current_action.destroy(); }
     PAINT.current_tool.select();
   }
   function hexToRgb(hex) {
@@ -85,6 +85,12 @@ window.PAINT = window.PAINT || {};
     }
     out(e) {
 
+    }
+    options(e) {
+
+    }
+    redraw() {
+      
     }
   }
 
@@ -221,6 +227,8 @@ window.PAINT = window.PAINT || {};
   class BrushTool extends Tool {
     constructor() {
       super({name: 'brush', title: 'Paint Brush', icon: 'paint-brush'})
+    }
+    options() {
     }
     down(e) {
       super.down(e);
@@ -406,7 +414,6 @@ window.PAINT = window.PAINT || {};
       // reset the selection div
       super.down(e);
       this.div = $(".canvas-wrapper .select")[0];
-      this.div.style.display = "block";
       this.div.style.backgroundImage = "";
       this.context.clearRect(0,0,this.canvas.width,this.canvas.height)
       this.move(e);
@@ -414,14 +421,25 @@ window.PAINT = window.PAINT || {};
     }
     move(e) {
       // this sizes the selection window, but hasn't actually selected anything
+      // action.top/left : top left corner of select relative to image canvas
+      // this action.x1/y1 mouse down when drawing select
+      // this.action.x2/y2 mouse up when drawing select
       if (!super.move(e)) { return; }
       this.action.left = (this.action.w>0)?this.action.x1:this.action.x2;
       this.action.top = (this.action.h>0)?this.action.y1:this.action.y2;
+      this.redraw();
+      return true; // stops selectMove from executing
+    }
+    redraw(zoom_change) {
+      // calculate the position and size of the select, this funciton is global for scroll/zoom
+      var i = PAINT.current_image;
+      console.log('redraw');
+      this.div.style.display = "block";
       this.div.style.width = Math.abs(PAINT.zoom*this.action.w)+"px";
       this.div.style.height = Math.abs(PAINT.zoom*this.action.h)+"px";
-      this.div.style.top = PAINT.zoom*this.action.top+"px";
-      this.div.style.left = PAINT.zoom*this.action.left+"px";
-      return true; // stops selectMove from executing
+      this.div.style.top = PAINT.zoom*this.action.top-i.scrollY+"px";
+      this.div.style.left = PAINT.zoom*this.action.left-i.scrollX+"px";
+      if (zoom_change) { this.captured = false; this.selectDraw() }
     }
     selectDraw() {
       // only once per selection
@@ -429,13 +447,14 @@ window.PAINT = window.PAINT || {};
       this.captured = true;
 
       //save the selected piece of canvas and use it as background for this.div
+      var i = PAINT.current_image;
       [this.canvas.width,this.canvas.height] = [this.action.w,this.action.h]
-      this.context.drawImage(PAINT.current_image.canvas,
+      this.context.drawImage(i.canvas,
                              this.action.left,this.action.top,this.action.w,this.action.h,
                              0,0,this.action.w,this.action.h)
       this.dataURL = PAINT.display_canvas.toDataURL();
       this.div.style.backgroundImage = "url("+this.dataURL+")";
-      this.div.style.backgroundPosition = `-${PAINT.zoom*this.action.left}px -${PAINT.zoom*this.action.top}px`;
+      this.div.style.backgroundPosition = `-${PAINT.zoom*(this.action.left-i.scrollX)}px -${PAINT.zoom*this.action.top-i.scrollY}px`;
       [this.action.top0, this.action.left0] = [this.action.top, this.action.left]
     }
     selectCut() {
@@ -448,6 +467,21 @@ window.PAINT = window.PAINT || {};
       context.rect(this.action.left0,this.action.top0,Math.abs(this.action.w),Math.abs(this.action.h));
       context.fill();
       context.closePath();
+      //this.autocrop();
+    }
+    autocrop() {
+      var context = this.action.context;
+      var data = context.createImageData(this.action.w,this.action.h).data;
+      // there's no such thing as data.slice :(
+      console.log(data)
+      var tl = data.slice(0,4);
+      var tr = data.slice(this.action.w*4,this.action.w*4+4);
+      var bl = data.slice(data.length - this.action.w*4,data.length - this.action.w*4 + 4);
+      var br = data.slice(data.length - 4);
+      if (tl == tr) {console.log('top')}
+      if (tl == bl) {console.log('left')}
+      if (tr == br) {console.log('right')}
+      if (bl == br) {console.log('bottom')}
     }
     selectDown(e) {
       this.select_down = true;
@@ -458,13 +492,17 @@ window.PAINT = window.PAINT || {};
     }
     selectMove(e) {
       // find the difference between the moves relative to the div position. create a temporary position
+      // this.action.x_start/y_start mouse click to start moving select re:this.div
+      // this.action.x_end/y_end mouse click where mouse currently is re:this.div
+      // this.action.top2/left2  current, temporary position of div re:image.canvas
       if (this.move(e)) { return; }
       if (!this.select_down) { return; }
+      var i = PAINT.current_image;
       [this.action.x_end,this.action.y_end] = PAINT.getMouseXY(e);
       this.action.top2 = this.action.top - (this.action.y_start - this.action.y_end);
       this.action.left2 = this.action.left - (this.action.x_start - this.action.x_end);
-      this.div.style.top = PAINT.zoom*this.action.top2+"px";
-      this.div.style.left = PAINT.zoom*this.action.left2+"px";
+      this.div.style.top = PAINT.zoom*this.action.top2-i.scrollY+"px";
+      this.div.style.left = PAINT.zoom*this.action.left2-i.scrollX+"px";
     }
     selectUp(e) {
       // mouse released, set the div position to the temporary position
@@ -500,7 +538,7 @@ window.PAINT = window.PAINT || {};
       var which = (e.button==0)?"fg":"bg";
       var input = document.querySelector(`[name=${which}]`);
       input.value=hex_color;
-      PAINT.changeTool(PAINT.last_tool);
+      PAINT.changeTool(PAINT.last_tool,true);
       PAINT.addMessage(`Changing ${which} color to ${hex_color}`);
     }
   }
@@ -508,14 +546,14 @@ window.PAINT = window.PAINT || {};
   class ZoomTool extends Tool {
     constructor() {
       super({name: 'zoom', title: 'Change Zoom', icon: 'search-plus'})
-      this.zooms = [1,2,3,4,5]
+      this.zooms = [1,2,3,4,5];
     }
     select(e) {
       var i = this.zooms.indexOf(PAINT.zoom)+1;
       if (i == this.zooms.length) { i = 0 }
       PAINT.zoom = this.zooms[i];
+      PAINT.changeTool(PAINT.last_tool,true);
       PAINT.updateZoom();
-      PAINT.changeTool(PAINT.last_tool);      
     }
   }
 
@@ -535,6 +573,8 @@ window.PAINT = window.PAINT || {};
     new ResizeTool(),
     new EyeDropperTool(),
     new ZoomTool(),
+    {},
+    {},
   ];
   PAINT.TOOLS = {}
   for (var i=0;i<PAINT.TOOL_LIST.length;i++) {

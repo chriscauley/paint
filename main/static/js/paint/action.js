@@ -22,7 +22,8 @@ window.PAINT = window.PAINT || {};
     ctx.webkitImageSmoothingEnabled = false;
     var i = document.querySelector("#tools [name=zoom]");
     if (i) { i.dataset.level = PAINT.zoom; }
-    PAINT.current_image.redraw();
+    PAINT.current_image._redraw();
+    if (PAINT.current_tool) { PAINT.current_tool.redraw(true); }//currently only for select
   }
   class Action {
     // A json serializable/parsable class that stores each action

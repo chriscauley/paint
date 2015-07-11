@@ -86,4 +86,5 @@ window.PAINT = window.PAINT || {};
     }
   }
   PAINT.Image = Image;
+  $(window).resize(function() { PAINT.updateZoom(); } );
 })()
