@@ -22,7 +22,6 @@ window.PAINT = window.PAINT || {};
     ctx.webkitImageSmoothingEnabled = false;
     var i = document.querySelector("#tools [name=zoom]");
     if (i) { i.dataset.level = PAINT.zoom; }
-    if (PAINT.current_tool) { PAINT.current_tool.drawn = false; }//currently only for select
     PAINT.current_image.redraw();
   }
   class Action {

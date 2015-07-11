@@ -410,10 +410,12 @@ window.PAINT = window.PAINT || {};
       this.context = this.canvas.getContext("2d");
       this.bounding = true;
     }
+    select() {
+      this.div = $(".canvas-wrapper .select")[0];
+    }
     down(e) {
       // reset the selection div
       super.down(e);
-      this.div = $(".canvas-wrapper .select")[0];
       this.div.style.backgroundImage = "";
       this.context.clearRect(0,0,this.canvas.width,this.canvas.height)
       this.move(e);
@@ -430,15 +432,15 @@ window.PAINT = window.PAINT || {};
       this.redraw();
       return true; // stops selectMove from executing
     }
-    redraw(zoom_change) {
+    redraw() {
       // calculate the position and size of the select, this funciton is global for scroll/zoom
       var i = PAINT.current_image;
+      if (!this.action) { return }
       this.div.style.display = "block";
       this.div.style.width = Math.abs(PAINT.zoom*this.action.w)+"px";
       this.div.style.height = Math.abs(PAINT.zoom*this.action.h)+"px";
       this.div.style.top = PAINT.zoom*this.action.top-i.scrollY+"px";
       this.div.style.left = PAINT.zoom*this.action.left-i.scrollX+"px";
-      this.selectDraw();
     }
     selectDraw() {
       // only once per selection
@@ -451,9 +453,8 @@ window.PAINT = window.PAINT || {};
       this.context.drawImage(i.canvas,
                              this.action.left,this.action.top,this.action.w,this.action.h,
                              0,0,this.action.w,this.action.h)
-      this.dataURL = PAINT.display_canvas.toDataURL();
+      this.dataURL = this.canvas.toDataURL();
       this.div.style.backgroundImage = "url("+this.dataURL+")";
-      this.div.style.backgroundPosition = `-${PAINT.zoom*(this.action.left-i.scrollX)}px -${PAINT.zoom*this.action.top-i.scrollY}px`;
       [this.action.top0, this.action.left0] = [this.action.top, this.action.left]
     }
     selectCut() {
