@@ -7,15 +7,21 @@ window.PAINT = window.PAINT || {};
     var i = PAINT.current_image;
     return [_r(e.pageX - _cr.left + i.scrollX), _r(e.pageY - _cr.top + i.scrollY)]
   }
-  PAINT.updateZoom = function updateZoom() {
+  PAINT.updateZoom = function updateZoom(new_zoom) {
     // This was invaluable: http://stackoverflow.com/questions/23271093/scale-images-with-canvas-without-blurring-it
     // fiddle: http://jsfiddle.net/epistemex/VsZFb/2/
     var c = PAINT.display_canvas,ctx;
+    var wrapper = $(".canvas-wrapper");
     var h = $("paint").height() - 17;
     var w = $("paint").width() - 17;
+    var px = (wrapper.scrollLeft()+w/2)/PAINT.zoom;
+    var py = (wrapper.scrollTop()+h/2)/PAINT.zoom;
+    PAINT.zoom = new_zoom || PAINT.zoom;
     c.width = Math.min(w,PAINT.canvas.width*PAINT.zoom);
     c.height = Math.min(h,PAINT.canvas.height*PAINT.zoom);
     $(".canvas-inner .resizer").css({height: PAINT.canvas.height*PAINT.zoom,width:PAINT.canvas.width*PAINT.zoom});
+    wrapper.scrollLeft(px*PAINT.zoom-w/2)
+    wrapper.scrollTop(py*PAINT.zoom-h/2)
     ctx = PAINT.display_context = PAINT.display_canvas.getContext("2d");
     ctx.imageSmoothingEnabled = false;
     ctx.mozImageSmoothingEnabled = false;

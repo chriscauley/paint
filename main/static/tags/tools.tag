@@ -5,7 +5,7 @@
         <i class="fa fa-{ icon }" if={ icon }></i></button>
     </div>
     <div class="options">
-      <div each={ PAINT.current_tool.options() }>
+      <div each={ options }>
         <button class="pure-button" title={ title } name={ name } if={ name } onclick={ click }>
           <i class="fa fa-{ icon }" if={ icon }></i></button>
       </div>
@@ -34,6 +34,7 @@
 
   click(e) {
     PAINT.changeTool(e.item.name);
+    this.options = PAINT.current_tool.options();
     this.update();
   }
 </tools>

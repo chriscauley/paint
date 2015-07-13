@@ -87,7 +87,7 @@ window.PAINT = window.PAINT || {};
 
     }
     options(e) {
-
+      return [];
     }
     redraw() {
       
@@ -409,6 +409,7 @@ window.PAINT = window.PAINT || {};
       this.canvas = document.createElement("canvas");
       this.context = this.canvas.getContext("2d");
       this.bounding = true;
+      document.addEventListener("cut",this.cut.bind(this));
     }
     select() {
       this.div = $(".canvas-wrapper .select")[0];
@@ -514,6 +515,22 @@ window.PAINT = window.PAINT || {};
       this.action.context.drawImage(this.canvas,this.action.left,this.action.top);
       PAINT.current_image.redraw();
     }
+    cut(e) {
+      console.log("cut")
+    }
+    copy(e) {
+      
+    }
+    paste(e) {
+      
+    }
+    options(e) {
+      return [
+        { name: 'cut', icon: 'cut', click: this.cut },
+        { name: 'copy',  icon: 'copy', click: this.copy },
+        { name: 'paste',  icon: 'paste', click: this.paste }
+      ]
+    }
   }
 
   class ResizeTool extends Tool {
@@ -551,9 +568,8 @@ window.PAINT = window.PAINT || {};
     select(e) {
       var i = this.zooms.indexOf(PAINT.zoom)+1;
       if (i == this.zooms.length) { i = 0 }
-      PAINT.zoom = this.zooms[i];
       PAINT.changeTool(PAINT.last_tool,true);
-      PAINT.updateZoom();
+      PAINT.updateZoom(this.zooms[i]);
     }
   }
 
