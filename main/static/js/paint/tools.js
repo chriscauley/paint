@@ -545,18 +545,18 @@ window.PAINT = window.PAINT || {};
       super({name: 'eyeDropper', title: 'Select Color', icon: 'eyedropper'})
     }
     move(e) {
-
+      super.move(e);
+      var [x,y] = PAINT.getMouseXY(e);
+      PAINT.debug.status['mouse2'] = this.hex_color = "#"+rgbToHex(getPixelColor(x,y));
     }
     down(e) {
       super.down(e);
-      var [x,y] = [this.action.x1,this.action.y1];
-      var pixel_position = 4*(y*PAINT.current_image.WIDTH + x);
-      var hex_color = "#"+rgbToHex(getPixelColor(x,y));
       var which = (e.button==0)?"fg":"bg";
       var input = document.querySelector(`[name=${which}]`);
-      input.value=hex_color;
+      input.value = this.hex_color;
       PAINT.changeTool(PAINT.last_tool,true);
-      PAINT.addMessage(`Changing ${which} color to ${hex_color}`);
+      delete PAINT.current_image.actions.pop();
+      PAINT.addMessage(`Changing ${which} color to ${this.hex_color}`);
     }
   }
 
