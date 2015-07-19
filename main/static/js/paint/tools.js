@@ -164,6 +164,7 @@ window.PAINT = window.PAINT || {};
         //#! TODO: this should be added to the library (saved) and a bulk uploader is needed.
         new PAINT.Image({dataURL:fr.result,name: fname});
         PAINT.addMessage(`Image "${fname}" uploaded successfully.`)
+        PAINT.storage.autoSave(fr.result);
       }
       fr.readAsDataURL(file);
       super.accept(tag)
@@ -282,6 +283,10 @@ window.PAINT = window.PAINT || {};
       }
       PAINT.current_image.redraw();
     }
+    up(e) {
+      super.up(e);
+      PAINT.storage.autosave();
+    }
   }
 
   class RectTool extends Tool {
@@ -301,6 +306,10 @@ window.PAINT = window.PAINT || {};
       context.closePath();
       PAINT.current_image.redraw();
     }
+    up(e) {
+      super.up(e);
+      PAINT.storage.autosave();
+    }
   }
 
   class CircleTool extends Tool {
@@ -316,6 +325,10 @@ window.PAINT = window.PAINT || {};
       context.clearRect(0,0,image.WIDTH,image.HEIGHT);
       drawEllipse(context,this.action.x1,this.action.y1,this.action.w,this.action.h)
       PAINT.current_image.redraw();
+    }
+    up(e) {
+      super.up(e);
+      PAINT.storage.autosave();
     }
   }
 
@@ -399,6 +412,10 @@ window.PAINT = window.PAINT || {};
       }
       this.action.context.putImageData(color_layer, 0, 0);
       PAINT.current_image.redraw();
+    }
+    up(e) {
+      super.up(e);
+      PAINT.storage.autosave();
     }
   }
 
@@ -514,6 +531,7 @@ window.PAINT = window.PAINT || {};
       this.selectCut();
       this.action.context.drawImage(this.canvas,this.action.left,this.action.top);
       PAINT.current_image.redraw();
+      PAINT.storage.autosave();
     }
     cut(e) {
       console.log("cut")

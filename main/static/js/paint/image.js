@@ -23,6 +23,9 @@ window.PAINT = window.PAINT || {};
       PAINT.changeTool('brush');
       this._redraw_proxy = this._redraw.bind(this);
       this.scroll();
+      if (PAINT.gallery && PAINT.gallery.__autosave) { //load autosave if it exists
+        this.dataURL = this.dataURL || PAINT.gallery.__autosave.dataURL;
+      }
       if (!this.dataURL) {
         this.context.fillStyle = "#fff"; // should get from form
         this.context.beginPath();

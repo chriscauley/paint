@@ -13,6 +13,13 @@ window.PAINT.storage = (function (){
     localStorage.setItem("gallery",JSON.stringify(PAINT.gallery));
     PAINT.addMessage(`${name} saved!`)
   }
+  function autoSave(dataURL) {
+    var name = "__autosave";
+    PAINT.gallery[name] = PAINT.current_image.toJSON();
+    PAINT.gallery[name].dataURL = dataURL || PAINT.gallery[name].dataURL;
+    localStorage.setItem("gallery",JSON.stringify(PAINT.gallery));
+    PAINT.addMessage(`${name} saved!`)
+  }
   function loadImage(name) {
     new PAINT.Image(PAINT.gallery[name]);
     addMessage("Image loaded!");
@@ -54,6 +61,7 @@ window.PAINT.storage = (function (){
   return {
     saveImage: saveImage,
     loadImage: loadImage,
+    autoSave: autoSave,
     deleteImage: deleteImage
   }
 })();
