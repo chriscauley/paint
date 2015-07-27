@@ -83,12 +83,32 @@ window.PAINT = window.PAINT || {};
       this.redraw();
     }
     toJSON() {
+      var actions = [];
+      for (var i=0;i<this.actions.length;i++) {
+        actions.push(this.actions[i].toJSON());
+      }
       return {
         'name': this.name,
         'dataURL': this.canvas.toDataURL(),
+        'actions': actions,
       }
     }
   }
   PAINT.Image = Image;
   $(window).resize(function() { PAINT.updateZoom(); } );
+  document.addEventListener("keydown",function(e) {
+    if (e.ctrlKey) {
+      if (e.keyCode == 90) { // ctrl+z = undo
+        PAINT.current_image.actions.pop();
+        PAINT.current_action.destroy();
+        PAINT.current_image.redraw();
+        return false;
+      }
+      if (e.keyCode == 65) { // ctrl+a = select all
+        PAINT.changeTool("select")
+        PAINT.current_tool.selectAll();
+        return false;
+      }
+    }
+  });
 })()

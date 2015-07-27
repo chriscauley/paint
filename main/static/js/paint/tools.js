@@ -285,7 +285,7 @@ window.PAINT = window.PAINT || {};
     }
     up(e) {
       super.up(e);
-      PAINT.storage.autosave();
+      PAINT.storage.autoSave();
     }
   }
 
@@ -427,6 +427,14 @@ window.PAINT = window.PAINT || {};
       this.context = this.canvas.getContext("2d");
       this.bounding = true;
       document.addEventListener("cut",this.cut.bind(this));
+    }
+    selectAll() {
+      this.down({button:0});
+      this.up(); //release mouse
+      this.action.left = this.action.top = 0;
+      this.action.w = PAINT.current_image.WIDTH;
+      this.action.h = PAINT.current_image.HEIGHT;
+      this.redraw();
     }
     select() {
       this.div = $(".canvas-wrapper .select")[0];
