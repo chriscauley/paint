@@ -293,19 +293,24 @@ window.PAINT = window.PAINT || {};
       if (!super.move(e)) { return; }
       var image = PAINT.current_image;
       var context = this.action.context;
-      var do_stroke = (this.thickness != 0);
       context.clearRect(0,0,image.WIDTH,image.HEIGHT);
-      context.fillStyle = this.action[do_stroke?"color2":"color"];
       context.beginPath();
-      var off = (do_stroke)?0.5:0; // anti-aliasing correction needed with stroke
-      this.drawShape(context,Math.round(this.action.x1)-off,Math.round(this.action.y1)-off,this.action.w,this.action.h);
+      context.fillStyle = this.action.color;
+      this.drawShape(context,this.action.x1,this.action.y1,this.action.w,this.action.h);
       context.fill();
-      if (do_stroke) {
-        context.lineWidth = this.thickness;
-        context.strokeStyle = this.action.color;
-        context.stroke();
-      }
       context.closePath();
+      var t = parseInt(this.thickness);
+      if (t != 0 && (Math.abs(this.action.w)) > 2*t && Math.abs(this.action.h) > 2*t) {
+        context.beginPath();
+        context.fillStyle = this.action.color2;
+        var w = this.action.w + 2*t*((this.action.w>0)?-1:1);
+        var h = this.action.h + 2*t*((this.action.h>0)?-1:1);
+        var x = this.action.x1 + t*((this.action.w<0)?-1:1);
+        var y = this.action.y1 + t*((this.action.h<0)?-1:1);
+        this.drawShape(context,x,y,w,h)
+        context.fill();
+        context.closePath();
+      }
       PAINT.current_image.redraw();
     }
   }
