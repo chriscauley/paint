@@ -8,6 +8,7 @@ window.PAINT = window.PAINT || {};
     PAINT.current_tool = PAINT.TOOLS[name];
     if (PAINT.current_action && name != "zoom" && ! back) { PAINT.current_action.destroy(); }
     PAINT.current_tool.select();
+    riot.update("tool");
   }
   function hexToRgb(hex) {
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -335,6 +336,10 @@ window.PAINT = window.PAINT || {};
   class FillTool extends Tool {
     constructor() {
       super({name: 'fill', title: 'Fill (replace color)', className: 'fill-button'});
+      PAINT.color_distance = 0;
+    }
+    options(e) {
+      return [{is_number: true, value:PAINT.color_distance, min: 0, max:50, step: 1, id: "color_distance",label:"Distance"}]
     }
     move(e) {
 
@@ -348,7 +353,8 @@ window.PAINT = window.PAINT || {};
       var pixel_stack = [[x,y]];
       var fill_color = hexToRgb(this.action.color);
       var alphas = [];
-      var ds2 = Math.pow(0.3*256,2); // color threshold distance (squared)
+      PAINT.color_distance = $("#color_distance").val();
+      var ds2 = Math.pow(PAINT.color_distance/100*256,2); // color threshold distance (squared)
       pixel_position = 4*(y*WIDTH + x);
       var start_color = {
         r: color_layer.data[pixel_position + 0],
@@ -374,7 +380,7 @@ window.PAINT = window.PAINT || {};
 
         // ds1: magintude difference between two target color and pixel color (squared)
         var ds1 = Math.pow(Math.pow((a-c1.a),2) + Math.pow(r-c1.r,2) + Math.pow(g-c1.g,2) + Math.pow(b-c1.b,2),2);
-        return ds1 < ds2;
+        return ds1 <= ds2;
       }
       function colorPixel(pixel_position) {
         color_layer.data[pixel_position] = fill_color.r;
@@ -563,9 +569,9 @@ window.PAINT = window.PAINT || {};
     }
     options(e) {
       return [
-        { name: 'cut', icon: 'cut', click: this.cut },
-        { name: 'copy',  icon: 'copy', click: this.copy },
-        { name: 'paste',  icon: 'paste', click: this.paste }
+        { name: 'cut', icon: 'cut', click: this.cut, is_button: true },
+        { name: 'copy',  icon: 'copy', click: this.copy, is_button: true },
+        { name: 'paste',  icon: 'paste', click: this.paste, is_button: true },
       ]
     }
   }

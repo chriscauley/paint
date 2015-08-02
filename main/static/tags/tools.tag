@@ -6,8 +6,10 @@
     </div>
     <div class="options">
       <div each={ options }>
-        <button class="pure-button" title={ title } name={ name } if={ name } onclick={ click }>
+        <label if={ label } for="{ id }">{ label }</label>
+        <button class="pure-button" title={ title } name={ name } if={ is_button } onclick={ click }>
           <i class="fa fa-{ icon }" if={ icon }></i></button>
+        <input if={ is_number} type="number" value={ value } max={ max } min={ min } id={ id }/>
       </div>
     </div>
   </div>
@@ -34,7 +36,8 @@
 
   click(e) {
     PAINT.changeTool(e.item.name);
-    this.options = PAINT.current_tool.options();
-    this.update();
   }
+  this.on("update",function() {
+    this.options = PAINT.current_tool.options();
+  });
 </tools>
