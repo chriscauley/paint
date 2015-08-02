@@ -308,7 +308,7 @@ window.PAINT = window.PAINT || {};
     }
     up(e) {
       super.up(e);
-      PAINT.storage.autosave();
+      PAINT.storage.autoSave();
     }
   }
 
@@ -328,7 +328,7 @@ window.PAINT = window.PAINT || {};
     }
     up(e) {
       super.up(e);
-      PAINT.storage.autosave();
+      PAINT.storage.autoSave();
     }
   }
 
@@ -348,6 +348,7 @@ window.PAINT = window.PAINT || {};
       var pixel_stack = [[x,y]];
       var fill_color = hexToRgb(this.action.color);
       var alphas = [];
+      var ds2 = Math.pow(0.3*256,2); // color threshold distance (squared)
       pixel_position = 4*(y*WIDTH + x);
       var start_color = {
         r: color_layer.data[pixel_position + 0],
@@ -364,7 +365,17 @@ window.PAINT = window.PAINT || {};
 
         return (a == start_color.a && r == start_color.r && g == start_color.g && b == start_color.b);
       }
+      function matchColorDistance(pixel_position) {
+        var r = color_layer.data[pixel_position];
+        var g = color_layer.data[pixel_position+1];
+        var b = color_layer.data[pixel_position+2];
+        var a = color_layer.data[pixel_position+3];
+        var c1 = start_color;
 
+        // ds1: magintude difference between two target color and pixel color (squared)
+        var ds1 = Math.pow(Math.pow((a-c1.a),2) + Math.pow(r-c1.r,2) + Math.pow(g-c1.g,2) + Math.pow(b-c1.b,2),2);
+        return ds1 < ds2;
+      }
       function colorPixel(pixel_position) {
         color_layer.data[pixel_position] = fill_color.r;
         color_layer.data[pixel_position+1] = fill_color.g;
@@ -376,18 +387,18 @@ window.PAINT = window.PAINT || {};
         current_pixel = pixel_stack.pop();
         x = current_pixel[0], y = current_pixel[1];
         pixel_position = 4*(y*WIDTH + x);
-        while (y-- >= 0 && matchStartColor(pixel_position)) {
+        while (y-- >= 0 && matchColorDistance(pixel_position)) {
           pixel_position -= 4*WIDTH;
         }
         pixel_position += 4*WIDTH;
         y++;
         reach_left = false;
         reach_right = false;
-        while (y++ < HEIGHT-1 && matchStartColor(pixel_position)) {
+        while (y++ < HEIGHT-1 && matchColorDistance(pixel_position)) {
           colorPixel(pixel_position);
 
           if (x > 0) {
-            if (matchStartColor(pixel_position - 4)) {
+            if (matchColorDistance(pixel_position - 4)) {
               if (!reach_left) {
                 pixel_stack.push([x - 1, y]);
                 reach_left = true;
@@ -396,7 +407,7 @@ window.PAINT = window.PAINT || {};
           }
 
           if (x < WIDTH-1) {
-            if (matchStartColor(pixel_position + 4)) {
+            if (matchColorDistance(pixel_position + 4)) {
               if (!reach_right) {
                 pixel_stack.push([x + 1, y]);
                 reach_right = true;
@@ -415,7 +426,7 @@ window.PAINT = window.PAINT || {};
     }
     up(e) {
       super.up(e);
-      PAINT.storage.autosave();
+      PAINT.storage.autoSave();
     }
   }
 
@@ -539,7 +550,7 @@ window.PAINT = window.PAINT || {};
       this.selectCut();
       this.action.context.drawImage(this.canvas,this.action.left,this.action.top);
       PAINT.current_image.redraw();
-      PAINT.storage.autosave();
+      PAINT.storage.autoSave();
     }
     cut(e) {
       console.log("cut")
