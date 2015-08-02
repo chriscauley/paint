@@ -36,25 +36,6 @@ window.PAINT = window.PAINT || {};
     }
   }
 
-  function drawEllipse(ctx, x, y, w, h) {
-    // from http://stackoverflow.com/questions/2172798/how-to-draw-an-oval-in-html5-canvas
-    var kappa = .5522848,
-    ox = (w / 2) * kappa, // control point offset horizontal
-    oy = (h / 2) * kappa, // control point offset vertical
-    xe = x + w,           // x-end
-    ye = y + h,           // y-end
-    xm = x + w / 2,       // x-middle
-    ym = y + h / 2;       // y-middle
-
-    ctx.beginPath();
-    ctx.moveTo(x, ym);
-    ctx.bezierCurveTo(x, ym - oy, xm - ox, y, xm, y);
-    ctx.bezierCurveTo(xm + ox, y, xe, ym - oy, xe, ym);
-    ctx.bezierCurveTo(xe, ym + oy, xm + ox, ye, xm, ye);
-    ctx.bezierCurveTo(xm - ox, ye, x, ym + oy, x, ym);
-    //ctx.closePath(); // not used correctly, see comments (use to close off open path)
-    ctx.fill();
-  }
   class Tool {
     constructor(options) {
       for (var key in options) { this[key] = options[key] }
@@ -290,46 +271,78 @@ window.PAINT = window.PAINT || {};
     }
   }
 
-  class RectTool extends Tool {
-    constructor() {
-      super({name: 'rect', title: 'Rectangle', className: 'rect-button'})
-      this.bounding = true;
+  class ShapeTool extends Tool {
+    constructor(o) {
+      super(o);
+      this.thickness = 0;
+    }
+    options(e) {
+      return [
+        {is_number: true, name: "thickness", min: 0, step: 1, value: this.thickness, label: "Border"},
+      ]
+    }
+    down(e) {
+      this.thickness = $("#id_thickness").val();
+      super.down(e);
+    }
+    up(e) {
+      super.up(e);
+      PAINT.storage.autoSave();
     }
     move(e) {
       if (!super.move(e)) { return; }
       var image = PAINT.current_image;
       var context = this.action.context;
+      var do_stroke = (this.thickness != 0);
       context.clearRect(0,0,image.WIDTH,image.HEIGHT);
-      context.fillStyle = this.action.color;
+      context.fillStyle = this.action[do_stroke?"color2":"color"];
       context.beginPath();
-      context.rect(this.action.x1,this.action.y1,this.action.w,this.action.h);
+      var off = (do_stroke)?0.5:0; // anti-aliasing correction needed with stroke
+      this.drawShape(context,Math.round(this.action.x1)-off,Math.round(this.action.y1)-off,this.action.w,this.action.h);
       context.fill();
+      if (do_stroke) {
+        context.lineWidth = this.thickness;
+        context.strokeStyle = this.action.color;
+        context.stroke();
+      }
       context.closePath();
       PAINT.current_image.redraw();
     }
-    up(e) {
-      super.up(e);
-      PAINT.storage.autoSave();
+  }
+
+  class RectTool extends ShapeTool {
+    constructor() {
+      super({name: 'rect', title: 'Rectangle', className: 'rect-button'})
+      this.bounding = true;
+    }
+    drawShape(ctx,x,y,w,h) {
+      ctx.rect(x,y,w,h)
     }
   }
 
-  class CircleTool extends Tool {
+  class CircleTool extends ShapeTool {
     constructor() {
       super({name: 'circle', title: 'Ellipse', className: 'circle-button'})
       this.bounding = true;
     }
-    move(e) {
-      if(!super.move(e)){ return; }
-      var image = PAINT.current_image;
-      var context = this.action.context
-      context.fillStyle = this.action.color;
-      context.clearRect(0,0,image.WIDTH,image.HEIGHT);
-      drawEllipse(context,this.action.x1,this.action.y1,this.action.w,this.action.h)
-      PAINT.current_image.redraw();
-    }
-    up(e) {
-      super.up(e);
-      PAINT.storage.autoSave();
+    drawShape(ctx, x, y, w, h) {
+      // from http://stackoverflow.com/questions/2172798/how-to-draw-an-oval-in-html5-canvas
+      var kappa = .5522848,
+      ox = (w / 2) * kappa, // control point offset horizontal
+      oy = (h / 2) * kappa, // control point offset vertical
+      xe = x + w,           // x-end
+      ye = y + h,           // y-end
+      xm = x + w / 2,       // x-middle
+      ym = y + h / 2;       // y-middle
+
+      ctx.beginPath();
+      ctx.moveTo(x, ym);
+      ctx.bezierCurveTo(x, ym - oy, xm - ox, y, xm, y);
+      ctx.bezierCurveTo(xm + ox, y, xe, ym - oy, xe, ym);
+      ctx.bezierCurveTo(xe, ym + oy, xm + ox, ye, xm, ye);
+      ctx.bezierCurveTo(xm - ox, ye, x, ym + oy, x, ym);
+      //ctx.closePath(); // not used correctly, see comments (use to close off open path)
+      ctx.fill();
     }
   }
 
@@ -339,10 +352,7 @@ window.PAINT = window.PAINT || {};
       PAINT.color_distance = 0;
     }
     options(e) {
-      return [{is_number: true, value:PAINT.color_distance, min: 0, max:50, step: 1, id: "color_distance",label:"Distance"}]
-    }
-    move(e) {
-
+      return [{is_number: true, value:PAINT.color_distance, min: 0, max:50, step: 1, label:"Distance", name: "color_distance"}]
     }
     down(e) {
       super.down(e)
@@ -353,7 +363,7 @@ window.PAINT = window.PAINT || {};
       var pixel_stack = [[x,y]];
       var fill_color = hexToRgb(this.action.color);
       var alphas = [];
-      PAINT.color_distance = $("#color_distance").val();
+      PAINT.color_distance = $("#id_color_distance").val();
       var ds2 = Math.pow(PAINT.color_distance/100*256,2); // color threshold distance (squared)
       pixel_position = 4*(y*WIDTH + x);
       var start_color = {

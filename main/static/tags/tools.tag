@@ -6,10 +6,10 @@
     </div>
     <div class="options">
       <div each={ options }>
-        <label if={ label } for="{ id }">{ label }</label>
+        <label if={ label } for="id_{ name }">{ label }</label>
         <button class="pure-button" title={ title } name={ name } if={ is_button } onclick={ click }>
           <i class="fa fa-{ icon }" if={ icon }></i></button>
-        <input if={ is_number} type="number" value={ value } max={ max } min={ min } id={ id }/>
+        <input if={ is_number} type="number" value={ value } max={ max } min={ min } id="id_{ name }" />
       </div>
     </div>
   </div>
