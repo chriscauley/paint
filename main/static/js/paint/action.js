@@ -5,12 +5,13 @@ window.PAINT = window.PAINT || {};
   PAINT.getMouseXY = function getMouseXY(e) {
     var _cr = PAINT.display_canvas.getBoundingClientRect();
     var i = PAINT.current_image;
+    if (!e.pageX) { return [0,0] } //fake click
     return [_r(e.pageX - _cr.left + i.scrollX), _r(e.pageY - _cr.top + i.scrollY)]
   }
   PAINT.updateZoom = function updateZoom(new_zoom) {
     // This was invaluable: http://stackoverflow.com/questions/23271093/scale-images-with-canvas-without-blurring-it
     // fiddle: http://jsfiddle.net/epistemex/VsZFb/2/
-    var c = PAINT.display_canvas,ctx;
+    var c = PAINT.display_canvas;
     var wrapper = $(".canvas-wrapper");
     var h = $("paint").height() - 17;
     var w = $("paint").width() - 17;
@@ -22,7 +23,7 @@ window.PAINT = window.PAINT || {};
     $(".canvas-inner .resizer").css({height: PAINT.canvas.height*PAINT.zoom,width:PAINT.canvas.width*PAINT.zoom});
     wrapper.scrollLeft(px*PAINT.zoom-w/2)
     wrapper.scrollTop(py*PAINT.zoom-h/2)
-    ctx = PAINT.display_context = PAINT.display_canvas.getContext("2d");
+    var ctx = PAINT.display_context = PAINT.display_canvas.getContext("2d");
     ctx.imageSmoothingEnabled = false;
     ctx.mozImageSmoothingEnabled = false;
     ctx.webkitImageSmoothingEnabled = false;
@@ -32,11 +33,11 @@ window.PAINT = window.PAINT || {};
   }
   class Action {
     // A json serializable/parsable class that stores each action
-    constructor(data,previous_action) {
-      this.x0 = this.y0 = 0;
-      if ('tool' in data) { //restoring old action from json
-        this.data = data;
-        this.tool = Paint.tools[this.data.tool];
+    constructor(data) {
+      this.x0 = data.x0 || 0
+      this.y0 = data.y0 || 0;
+      if ('tool_name' in data) { //restoring old action from json
+        this.tool_name = data.tool_name;
       } else { // new action, data is mouse click
         var fg = $('tools [name=fg]').val();
         var bg = $('tools [name=bg]').val();
@@ -47,13 +48,28 @@ window.PAINT = window.PAINT || {};
       this.canvas.width = PAINT.current_image.WIDTH;
       this.canvas.height = PAINT.current_image.HEIGHT;
       this.context = this.canvas.getContext('2d');
+      this.context.imageSmoothingEnabled = false;
+      this.context.mozImageSmoothingEnabled = false;
+      this.context.webkitImageSmoothingEnabled = false;
+      if (this.dataURL) {
+        var img = document.createElement('img');
+        img.src = this.dataURL;
+        context.drawImage(img);
+      }
       //$(".canvas-wrapper").append(this.canvas);
       if (PAINT.current_action) { PAINT.current_action.destroy(); }
       PAINT.current_image.actions.push(this);
       PAINT.current_action = this;
     }
     destroy() {
-      if (this.tool.name == "select") { this.tool.div.style.display = "none"; }
+      if (this.tool && this.tool.name == "select") { this.tool.div.style.display = "none"; }
+    }
+    toJSON() {
+      return {
+        dataURL: this.canvas.toDataURL(),
+        x0: this.x0,
+        y0: this.y0
+      }
     }
   }
   PAINT.Action = Action;

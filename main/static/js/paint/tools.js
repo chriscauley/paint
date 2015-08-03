@@ -331,15 +331,18 @@ window.PAINT = window.PAINT || {};
       this.bounding = true;
     }
     drawShape(ctx, x, y, w, h) {
+      function clog() {
+        console.log(Array.prototype.slice.call(arguments).join(","));
+      }
       // from http://stackoverflow.com/questions/2172798/how-to-draw-an-oval-in-html5-canvas
       var kappa = .5522848,
-      ox = (w / 2) * kappa, // control point offset horizontal
-      oy = (h / 2) * kappa, // control point offset vertical
+      ox = Math.round((w / 2) * kappa), // control point offset horizontal
+      oy = Math.round((h / 2) * kappa), // control point offset vertical
       xe = x + w,           // x-end
       ye = y + h,           // y-end
-      xm = x + w / 2,       // x-middle
-      ym = y + h / 2;       // y-middle
-
+      xm = Math.round(x + w / 2),       // x-middle
+      ym = Math.round(y + h / 2);       // y-middle
+      clog(x,y,w,h,ox,oy,xe,ye,xm,ym)
       ctx.beginPath();
       ctx.moveTo(x, ym);
       ctx.bezierCurveTo(x, ym - oy, xm - ox, y, xm, y);

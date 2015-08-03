@@ -6,7 +6,9 @@ window.PAINT = window.PAINT || {};
       if (PAINT.current_image) { PAINT.current_image.tag.unmount(); }
       PAINT.current_image = this;
       this.dataURL = options.dataURL;
-      this.actions = options.actions || [];
+      this.actions = [];
+      // if this is loaded from a json, stash the actions so they can be loaded
+      this._actions = options.actions || [];
       this.WIDTH = options.w;
       this.HEIGHT = options.h;
       $("body").append("<paint></paint>");
@@ -19,14 +21,14 @@ window.PAINT = window.PAINT || {};
       this.canvas.width = this.WIDTH;
       this.canvas.height = this.HEIGHT;
       PAINT.display_canvas = tag.display;
-      PAINT.updateZoom();
+      PAINT.updateZoom(); // update display canvas
+      for (var i=0;i<this._actions.length;i++) {
+        this.actions.push(new PAINT.Action(this._actions[i]));
+      }
       PAINT.changeTool('brush');
       this._redraw_proxy = this._redraw.bind(this);
       this.scroll();
-      if (PAINT.gallery && PAINT.gallery.__autosave) { //load autosave if it exists
-        this.dataURL = this.dataURL || PAINT.gallery.__autosave.dataURL;
-      }
-      if (!this.dataURL) {
+      if (!this.dataURL) { // new image
         this.context.fillStyle = "#fff"; // should get from form
         this.context.beginPath();
         this.context.rect(0,0,this.WIDTH,this.HEIGHT);
@@ -34,8 +36,7 @@ window.PAINT = window.PAINT || {};
         this.context.closePath();
         this.dataURL = this.canvas.toDataURL();
       }
-      if (this.dataURL) {
-        // load image from data url
+      if (this.dataURL) { // autosave, upload, or loaded image
         var that = this;
         this.imageObj = document.createElement("img");
         this.imageObj.onload = function() {
@@ -47,7 +48,6 @@ window.PAINT = window.PAINT || {};
         };
         this.imageObj.src = this.dataURL;
       }
-      this._img = document.getElementById("_img");
       this.redraw();
     }
     redraw() {
@@ -95,12 +95,15 @@ window.PAINT = window.PAINT || {};
     }
   }
   PAINT.Image = Image;
+  PAINT.loadNewOrAutoSave = function() {
+    new PAINT.Image(PAINT.gallery.__autosave || {w:75,h:75});
+  }
   $(window).resize(function() { PAINT.updateZoom(); } );
   document.addEventListener("keydown",function(e) {
     if (e.ctrlKey) {
       if (e.keyCode == 90) { // ctrl+z = undo
         PAINT.current_image.actions.pop();
-        PAINT.current_action.destroy();
+        PAINT.current_action && PAINT.current_action.destroy();
         PAINT.current_image.redraw();
         return false;
       }

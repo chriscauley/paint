@@ -13,7 +13,7 @@
 
   riot.mount("resize",{})
   down(e) {
-    document.addEventListener(PAINT.current_tool.move(e));
+    document.addEventListener(PAINT.current_tool.move(e));// what oes this do?
     PAINT.current_tool.down(e);
   }
   move(e) {
@@ -44,6 +44,6 @@
     return e
   }
 
-  this.on('mount',function(){PAINT.current_image.init(this)})
+  this.on('mount',function(){PAINT.current_image.init(this);})
   this.root.oncontextmenu = function() { return false; }
 </paint>
