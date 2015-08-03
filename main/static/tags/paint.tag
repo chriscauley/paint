@@ -40,7 +40,8 @@
     PAINT.current_tool.selectMove(e);
   }
   scroll(e) {
-    PAINT.current_image.scroll(e)
+    PAINT.current_image.scroll(e);
+    PAINT.current_image.redraw();
     return e
   }
 

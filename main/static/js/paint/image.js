@@ -11,6 +11,7 @@ window.PAINT = window.PAINT || {};
       this._actions = options.actions || [];
       this.WIDTH = options.w;
       this.HEIGHT = options.h;
+      this._redraw_proxy = this._redraw.bind(this);
       $("body").append("<paint></paint>");
       riot.mount("paint");
     }
@@ -21,13 +22,11 @@ window.PAINT = window.PAINT || {};
       this.canvas.width = this.WIDTH;
       this.canvas.height = this.HEIGHT;
       PAINT.display_canvas = tag.display;
-      PAINT.updateZoom(); // update display canvas
+      //PAINT.updateZoom(); // update display canvas
       for (var i=0;i<this._actions.length;i++) {
         this.actions.push(new PAINT.Action(this._actions[i]));
       }
       PAINT.changeTool('brush');
-      this._redraw_proxy = this._redraw.bind(this);
-      this.scroll();
       if (!this.dataURL) { // new image
         this.context.fillStyle = "#fff"; // should get from form
         this.context.beginPath();
@@ -38,15 +37,17 @@ window.PAINT = window.PAINT || {};
       }
       var that = this;
       this.imageObj = document.createElement("img");
+      this.imageObj.src = this.dataURL;
       this.imageObj.onload = function() {
         var i = PAINT.current_image;
         i.canvas.width = i.WIDTH = this.width;
         i.canvas.height = i.HEIGHT = this.height;
-        PAINT.updateZoom();
-        that.redraw();
+        PAINT.current_image.scroll();
+
+        // lame hack to make sure it draws properly on load.
+        // I think this is because this event is firing before the image actually loads
+        setTimeout(function() { PAINT.updateZoom(); },100)
       };
-      this.imageObj.src = this.dataURL;
-      this.redraw();
     }
     redraw() {
       if (!this._redraw_proxy) { return }
@@ -68,7 +69,7 @@ window.PAINT = window.PAINT || {};
       var context = PAINT.display_context;
       context.clearRect( 0, 0, canvas.width, canvas.height );
       var scale = PAINT.zoom;
-      context.drawImage(PAINT.canvas,
+      context.drawImage(this.canvas,
                         this.scrollX/scale, this.scrollY/scale, this.WIDTH, this.HEIGHT, //sx,xy,sw,sh
                         0, 0, (this.WIDTH * scale)|0, (this.HEIGHT * scale)|0 //dx,dy,dw,dh
                        );
@@ -78,7 +79,6 @@ window.PAINT = window.PAINT || {};
       var w = $(".canvas-wrapper");
       this.scrollX = w.scrollLeft();
       this.scrollY = w.scrollTop();
-      this.redraw();
     }
     toJSON() {
       var actions = [];

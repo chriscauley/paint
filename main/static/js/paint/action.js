@@ -1,5 +1,5 @@
 window.PAINT = window.PAINT || {};
-(function() {
+(function() { //zoom stuff probably doesn't belong in this file
   PAINT.zoom = 1;
   function _r(number) { return Math.floor(number/PAINT.zoom) }
   PAINT.getMouseXY = function getMouseXY(e) {
@@ -31,6 +31,9 @@ window.PAINT = window.PAINT || {};
     if (i) { i.dataset.level = PAINT.zoom; }
     PAINT.current_image.redraw();
   }
+})();
+
+(function() {
   class Action {
     // A json serializable/parsable class that stores each action
     constructor(data) {
