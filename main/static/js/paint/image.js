@@ -36,18 +36,16 @@ window.PAINT = window.PAINT || {};
         this.context.closePath();
         this.dataURL = this.canvas.toDataURL();
       }
-      if (this.dataURL) { // autosave, upload, or loaded image
-        var that = this;
-        this.imageObj = document.createElement("img");
-        this.imageObj.onload = function() {
-          var i = PAINT.current_image;
-          i.canvas.width = i.WIDTH = this.width;
-          i.canvas.height = i.HEIGHT = this.height;
-          PAINT.updateZoom();
-          that.redraw();
-        };
-        this.imageObj.src = this.dataURL;
-      }
+      var that = this;
+      this.imageObj = document.createElement("img");
+      this.imageObj.onload = function() {
+        var i = PAINT.current_image;
+        i.canvas.width = i.WIDTH = this.width;
+        i.canvas.height = i.HEIGHT = this.height;
+        PAINT.updateZoom();
+        that.redraw();
+      };
+      this.imageObj.src = this.dataURL;
       this.redraw();
     }
     redraw() {

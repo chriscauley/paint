@@ -123,7 +123,10 @@ window.PAINT = window.PAINT || {};
         var items = [];
         for (var n in PAINT.gallery) { names.push(n) }
         names.sort()
-        for (var i=0;i<names.length;i++) { items.push(PAINT.gallery[names[i]]) }
+        for (var i=0;i<names.length;i++) {
+          if (names[i] == "__autosave") { continue }
+          items.push(PAINT.gallery[names[i]]);
+        }
         return items;
       }
       return {

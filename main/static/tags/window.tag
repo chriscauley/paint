@@ -18,7 +18,7 @@
           </div>
         </div>
         <div onclick={ parent.click }>
-          <img src="{ dataURL }" />
+          <div class="img" style="background-image: url({ dataURL })"></div>
           <span>{ name }</span>
         </div>
       </div>
@@ -73,7 +73,7 @@
     if (closed) { e.srcElement.classList.add('active'); }
   }
   deleteImage(e) {
-    window.PAINT.storage.deleteImage(e.item.name);
+    delete(PAINT.gallery[e.item.name]);
     this.update()
   }
   renameImage(e) {
