@@ -10,3 +10,5 @@ db.sqlite3
 
 env/*
 .environ/*
+node_modules/*
+src/*
