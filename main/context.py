@@ -22,12 +22,6 @@ def nav(request):
       n['current'] = True
   nav.insert(0,{'name': 'Home', 'url': '/', 'current': request.path == "/",})
 
-  social_links = [
-    {'url': 'http://facebook.com/', 'img': 'f.png'},
-    {'url': 'http://twitter.com/', 'img': 't.png'},
-    {'url': 'http://linkedin.com/', 'img': 'i.png'},
-  ]
   return {
     'nav': nav,
-    'social_links': social_links,
   }
