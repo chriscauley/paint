@@ -30,6 +30,7 @@ PAINT.debug = (function() {
     if (!$('#debug_rates').length) { $('#tools_bot').append(container); }
     var now = new Date().valueOf();
     var html = '';
+    var key;
     for (key in counts) {
       html += "<div><b>"+key+":</b> "+counts[key]+"</div>";
     }

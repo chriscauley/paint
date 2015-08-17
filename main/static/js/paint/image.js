@@ -82,9 +82,9 @@ window.PAINT = window.PAINT || {};
     }
     toJSON() {
       var actions = [];
-      for (var i=0;i<this.actions.length;i++) {
-        actions.push(this.actions[i].toJSON());
-      }
+      //for (var i=0;i<this.actions.length;i++) {
+      //  actions.push(this.actions[i].toJSON());
+      //}
       return {
         'name': this.name,
         'dataURL': this.canvas.toDataURL(),

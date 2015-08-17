@@ -46,6 +46,6 @@ SUIT_CONFIG = {
 }
 
 COMPRESS_PRECOMPILERS = (
-  ('text/less', 'lessc {infile} {outfile}'),
+  ('text/less', 'lessc {infile} {outfile} --rootpath=/static/'),
   ('text/babel', 'babel'),
 )
