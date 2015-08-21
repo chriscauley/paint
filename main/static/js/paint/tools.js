@@ -638,12 +638,12 @@ window.PAINT = window.PAINT || {};
   }
 
   PAINT.TOOL_LIST = [
-    new New(),
-    new Open(),
-    new Save(),
-    new SaveAs(),
+    //new Open(),
+    //new Save(),
+    //new SaveAs(),
     new Upload(),
     new Download(),
+    new New(),
     {},
     new BrushTool(),
     new FillTool(),

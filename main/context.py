@@ -5,9 +5,9 @@ import os
 def _settings(request):
   return {
     'DEBUG': settings.DEBUG,
-    'GOOGLE_CLIENT_ID': getattr(settings,'GOOGLE_CLIENT_ID'),
-    'GOOGLE_APP_ID': getattr(settings,'GOOGLE_APP_ID'),
-    'GOOGLE_DEVELOPER_KEY': getattr(settings,'GOOGLE_DEVELOPER_KEY'),
+    'GOOGLE_CLIENT_ID': getattr(settings,'GOOGLE_CLIENT_ID',''),
+    'GOOGLE_APP_ID': getattr(settings,'GOOGLE_APP_ID',''),
+    'GOOGLE_DEVELOPER_KEY': getattr(settings,'GOOGLE_DEVELOPER_KEY',''),
   }
 
 def nav(request):
