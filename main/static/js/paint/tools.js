@@ -370,6 +370,9 @@ window.PAINT = window.PAINT || {};
       var WIDTH = PAINT.current_image.WIDTH, HEIGHT = PAINT.current_image.HEIGHT;
       var current_pixel, pixel_position, reach_left, reach_right;
       var color_layer = PAINT.current_image.context.getImageData(0,0,WIDTH,HEIGHT);
+      var final_layer = PAINT.current_image.context.getImageData(0,0,WIDTH,HEIGHT);
+      var i = final_layer.data.length;
+      while (i--) { final_layer.data[i] = 0 }
       var [x,y] = [this.action.x1,this.action.y1];
       var pixel_stack = [[x,y]];
       var fill_color = hexToRgb(this.action.color);
@@ -408,9 +411,16 @@ window.PAINT = window.PAINT || {};
         color_layer.data[pixel_position+1] = fill_color.g;
         color_layer.data[pixel_position+2] = fill_color.b;
         color_layer.data[pixel_position+3] = 'a'; // this is so there's no way we can hit the same pixel twice
+        final_layer.data[pixel_position] = fill_color.r;
+        final_layer.data[pixel_position+1] = fill_color.g;
+        final_layer.data[pixel_position+2] = fill_color.b;
+        final_layer.data[pixel_position+3] = 'a'; // this is so there's no way we can hit the same pixel twice
         alphas.push(pixel_position+3);
       }
+      var c=0;
       while (pixel_stack.length) {
+        if (c>10000) { break }
+        c++
         current_pixel = pixel_stack.pop();
         x = current_pixel[0], y = current_pixel[1];
         pixel_position = 4*(y*WIDTH + x);
@@ -446,9 +456,10 @@ window.PAINT = window.PAINT || {};
         }
       }
       for (var i=0;i<alphas.length;i++) {
-        color_layer.data[alphas[i]] = 255; //#! TODO make this alpha
+        final_layer.data[alphas[i]] = 255; //#! TODO make this alpha
       }
-      this.action.context.putImageData(color_layer, 0, 0);
+      this.action.context.clearRect(0,0,WIDTH,HEIGHT);
+      this.action.context.putImageData(final_layer, 0, 0);
       PAINT.current_image.redraw();
     }
     up(e) {
