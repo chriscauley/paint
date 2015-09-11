@@ -26,7 +26,6 @@ window.PAINT = window.PAINT || {};
     var ctx = PAINT.display_context = PAINT.display_canvas.getContext("2d");
     ctx.imageSmoothingEnabled = false;
     ctx.mozImageSmoothingEnabled = false;
-    ctx.webkitImageSmoothingEnabled = false;
     var i = document.querySelector("#tools [name=zoom]");
     if (i) { i.dataset.level = PAINT.zoom; }
     PAINT.current_image.redraw();
@@ -53,7 +52,6 @@ window.PAINT = window.PAINT || {};
       this.context = this.canvas.getContext('2d');
       this.context.imageSmoothingEnabled = false;
       this.context.mozImageSmoothingEnabled = false;
-      this.context.webkitImageSmoothingEnabled = false;
       if (this.dataURL) {
         var img = document.createElement('img');
         img.src = this.dataURL;

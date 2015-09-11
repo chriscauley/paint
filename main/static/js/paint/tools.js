@@ -137,30 +137,29 @@ window.PAINT = window.PAINT || {};
     }
   }
 
-  class Upload extends DialogTool {
+  class Upload extends Tool {
     constructor() {
       super({name: 'upload', title: 'Upload Image', icon: 'upload'})
+      this.input = document.createElement('input');
+      this.input.type = 'file';
+      var that = this;
+      this.input.addEventListener('change',function() {
+        var fr = new FileReader();
+        var file = that.input.files[0];
+        if (!that.input.value) { return }
+        var fname = that.input.value.replace("/","\\").split("\\").pop();
+        fr.onload = function() {
+          //#! TODO: this should be added to the library (saved) and a bulk uploader is needed.
+          new PAINT.Image({dataURL:fr.result,name: fname});
+          PAINT.addMessage(`Image "${fname}" uploaded successfully.`)
+          PAINT.storage.autoSave(fr.result);
+          that.input.value = '';
+        }
+        fr.readAsDataURL(file);
+      });
     }
-    accept(tag) {
-      var fr = new FileReader();
-      var file = $("#id_file")[0].files[0];
-      var fname = $("#id_file")[0].value.replace("/","\\").split("\\").pop();
-      fr.onload = function() {
-        //#! TODO: this should be added to the library (saved) and a bulk uploader is needed.
-        new PAINT.Image({dataURL:fr.result,name: fname});
-        PAINT.addMessage(`Image "${fname}" uploaded successfully.`)
-        PAINT.storage.autoSave(fr.result);
-      }
-      fr.readAsDataURL(file);
-      super.accept(tag)
-    }
-    getWindowData() {
-      return {
-        title: "Upload Image",
-        form: [
-          {name: 'file', title: 'File', type: 'file'},
-        ],
-      }
+    select() {
+      this.input.click();
     }
   }
 

@@ -3,7 +3,7 @@
   <div class="content" onkeyup={ press }>
     <div class="title-bar border-box">{ opts.title }</div>
     <div class="download-image" if={ opts.src }>
-      <img src="{ opts.src }" />
+      <a href={ opts.src } download="img.png"><img src="{ opts.src }" /></a>
       <div>Right click the above image and...</div>
       <li>To save to disc, select "Save Image As..."</li>
       <li>To embed in a website, select "Copy Image URL"</li>
@@ -25,7 +25,7 @@
     </div>
     <div class="pure-form pure-form-aligned" if={ opts.form }>
       <div class="pure-control-group" each={ opts.form }>
-        <label>{ title }</label>
+        <label for={ _id } class=>{ title }</label>
         <input id={ _id } type={ type } value={ value } placeholder={ placeholder }>
       </div>
     </div>
