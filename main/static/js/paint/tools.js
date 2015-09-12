@@ -166,13 +166,15 @@ window.PAINT = window.PAINT || {};
   class Download extends DialogTool {
     constructor() {
       super({name: 'download', title: 'Download Image', icon: 'download'})
+      this.anchor = document.createElement('a');
     }
-    getWindowData() {
-      return {
-        title: "Download Image",
-        src: PAINT.current_image.canvas.toDataURL(),
-        hide_cancel: true
-      }
+    select() {
+      this.anchor.download = PAINT.current_image.name || 'changeme.png';
+      var href = PAINT.current_image.canvas.toDataURL('img/png');
+      href = href.replace("image/png", "image/octet-stream");
+      console.log(href);
+      this.anchor.href = href;
+      this.anchor.click();
     }
   }
 
