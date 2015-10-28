@@ -15,14 +15,15 @@
 <script src="{{ STATIC_URL }}tags/resize.tag" type="riot/tag"></script>
 <script src="{{ STATIC_URL }}b/unrest/modal.tag" type="riot/tag"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/riot/2.2.4/riot+compiler.min.js"></script>
-{% compress js %}
+{% comment %}
 <script src="{{ STATIC_URL }}js/paint/tools.js" type="text/babel"></script>
 <script src="{{ STATIC_URL }}js/paint/image.js" type="text/babel"></script>
 <script src="{{ STATIC_URL }}js/paint/action.js" type="text/babel"></script>
 <script src="{{ STATIC_URL }}js/paint/storage.js" type="text/babel"></script>
+{% endcomment %}
+<script src="{{ STATIC_URL }}js/bundle.js"></script>
 {#<script src="{{ STATIC_URL }}js/hueShiftCanvas.js"></script>#}
 <script src="{{ STATIC_URL }}js/paint/debug.js"></script>
 <script src="{{ STATIC_URL }}js/app.js"></script>
-{% endcompress %}
 </body>
 </html>

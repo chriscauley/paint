@@ -12,4 +12,5 @@ env/*
 .environ/*
 .build/*
 node_modules/*
+bundle/*
 src/*

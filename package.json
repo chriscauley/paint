@@ -1,0 +1,24 @@
+{
+  "name": "paint",
+  "version": "1.0.0",
+  "description": "yet another paint clone",
+  "main": "index.js",
+  "dependencies": {
+    "babel-core": "*",
+    "babel-loader": "*"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chriscauley/paint.git"
+  },
+  "author": "chriscauley <chris@lablackey.com>",
+  "license": "(MIT)",
+  "bugs": {
+    "url": "https://github.com/chriscauley/paint/issues"
+  },
+  "homepage": "https://github.com/chriscauley/paint"
+}
