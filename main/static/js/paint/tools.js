@@ -166,15 +166,13 @@ window.PAINT = window.PAINT || {};
   class Download extends DialogTool {
     constructor() {
       super({name: 'download', title: 'Download Image', icon: 'download'})
-      this.anchor = document.createElement('a');
     }
-    select() {
-      this.anchor.download = PAINT.current_image.name || 'changeme.png';
-      var href = PAINT.current_image.canvas.toDataURL('img/png');
-      href = href.replace("image/png", "image/octet-stream");
-      console.log(href);
-      this.anchor.href = href;
-      this.anchor.click();
+    getWindowData() {
+      return {
+        title: "Download Image",
+        src: PAINT.current_image.canvas.toDataURL(),
+        hide_cancel: true
+      }
     }
   }
 
@@ -368,7 +366,6 @@ window.PAINT = window.PAINT || {};
     }
     down(e) {
       super.down(e);
-      var start = new Date().valueOf();
       var WIDTH = PAINT.current_image.WIDTH, HEIGHT = PAINT.current_image.HEIGHT;
       PAINT.color_distance = $("#id_color_distance").val();
       var [x,y] = [this.action.x1,this.action.y1];
@@ -404,7 +401,6 @@ window.PAINT = window.PAINT || {};
         // if we're not measuring color distance, diffColor is ~5% faster
         matchColorDistance = function(c1,c2) { return !diffColor(c1,c2); }
       }
-      var filled = 0;
       while (pixel_stack.length) {
         [x,y] = pixel_stack.pop();
         pixel_position = 4*(y*WIDTH + x);
@@ -420,7 +416,6 @@ window.PAINT = window.PAINT || {};
         fld[pixel_position+1] = fill_color[1];
         fld[pixel_position+2] = fill_color[2];
         fld[pixel_position+3] = fill_color[3];
-        filled ++;
 
         if (x != 0) { pixel_stack.push([x-1,y]); }
         if (x != WIDTH) { pixel_stack.push([x+1,y]); }
@@ -430,12 +425,10 @@ window.PAINT = window.PAINT || {};
       this.action.context.clearRect(0,0,WIDTH,HEIGHT);
       this.action.context.putImageData(final_layer, 0, 0);
       PAINT.current_image.redraw();
-      console.log("Filled " + filled +" pixels in " + (new Date().valueOf()-start) + "ms");
     }
     down2(e) {
       // first attempt at alorightm. Left here for later reference
       super.down(e)
-      var start = new Date().valueOf();
       var WIDTH = PAINT.current_image.WIDTH, HEIGHT = PAINT.current_image.HEIGHT;
       var current_pixel, pixel_position, reach_left, reach_right;
       var color_layer = PAINT.current_image.context.getImageData(0,0,WIDTH,HEIGHT);
@@ -478,7 +471,6 @@ window.PAINT = window.PAINT || {};
         var ds1 = Math.pow((a-c1.a),2) + Math.pow(r-c1.r,2) + Math.pow(g-c1.g,2) + Math.pow(b-c1.b,2);
         return !isNaN(ds1) && ds1 <= ds2;
       }
-      var filled = 0;
       function colorPixel(pixel_position) {
         cld[pixel_position] = fill_color.r;
         cld[pixel_position+1] = fill_color.g;
@@ -489,7 +481,6 @@ window.PAINT = window.PAINT || {};
         fld[pixel_position+2] = fill_color.b;
         fld[pixel_position+3] = 'a'; // this is so there's no way we can hit the same pixel twice
         alphas.push(pixel_position+3); // this is so we can correct the above later
-        filled ++;
       }
       while (pixel_stack.length) {
         current_pixel = pixel_stack.pop();
@@ -532,8 +523,6 @@ window.PAINT = window.PAINT || {};
       this.action.context.clearRect(0,0,WIDTH,HEIGHT);
       this.action.context.putImageData(final_layer, 0, 0);
       PAINT.current_image.redraw();
-      console.log(filled);
-      console.log(new Date().valueOf()-start);
     }
     up(e) {
       super.up(e);
