@@ -1,0 +1,99 @@
+#debug_rates {
+  bottom: 0;
+  left: 100px;
+  position: absolute;
+}
+
+.makeResize(@position) {
+  .@{position} {
+    border-@{position}-style: solid;
+    @{position}: -5px;
+  }
+}
+paint {
+  bottom: 110px;
+  left: 110px;
+  overflow: hidden;
+  position: absolute;
+  right: 0;
+  top: 5px;
+  .canvas-wrapper {
+    height: 100%;
+    overflow: scroll;
+    width: 100%;
+    .canvas-inner {
+      display: inline-block;
+      resize {
+        bottom: 0;
+        left: 0;
+        outline: 1px dotted red;
+        position: absolute;
+        right: 0;
+        top: 0;
+        &[data-size]:before {
+          background: #FCFFDE;
+          content: attr(data-size);
+          display: block;
+          margin: -15px 0 0 -60px;
+          height: 30px;
+          left: 50%;
+          line-height: 25px;
+          position: absolute;
+          text-align: center;
+          top: 50%;
+          width: 120px;
+        }
+        .spot {
+          box-sizing: border-box;
+          border: 5px black;
+          cursor: pointer;
+          height: 20px;
+          max-height: 45%;
+          position: absolute;
+          width: 20px;
+          max-width: 30%;
+          &:hover { border-color: red; }
+        }
+        .center-h {
+          left: 50%;
+          margin-left: -10px;
+        }
+        .center-v {
+          top: 50%;
+          margin-top: -10px;
+        }
+        .makeResize(left);
+        .makeResize(right);
+        .makeResize(top);
+        .makeResize(bottom);
+      }
+    }
+  }
+  .canvas {
+    cursor: crosshair;
+    left: 0;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+  }
+}
+
+paint .select {
+  // the select box used to cut, copy, paste, and move selections
+  box-sizing: border-box;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  border: 1px white dashed;
+  cursor: pointer;
+  display: none;
+  margin: -1px;
+  outline: black 1px dashed;
+  position: absolute;
+  image-rendering: optimizeSpeed;             /* STOP SMOOTHING, GIVE ME SPEED  */
+  image-rendering: -moz-crisp-edges;          /* Firefox                        */
+  image-rendering: -o-crisp-edges;            /* Opera                          */
+  image-rendering: -webkit-optimize-contrast; /* Chrome (and eventually Safari) */
+  image-rendering: pixelated; /* Chrome */
+  image-rendering: optimize-contrast;         /* CSS3 Proposed                  */
+  -ms-interpolation-mode: nearest-neighbor;   /* IE8+                           */
+}

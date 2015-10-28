@@ -1,0 +1,150 @@
+window, window .mask {
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 999;
+}
+
+window .mask {
+  background: rgba(0,0,0,0.5);
+}
+window .content {
+  background: @gray;
+  left: 50%;
+  margin: -250px 0 0 -250px;
+  padding: 75px 0;
+  position: absolute;
+  top: 50%;
+  width: 535px;
+  z-index: 1000;
+  .title-bar {
+    background-color: @blue;
+    color: white;
+    font-weight: bold;
+    left: 0;
+    padding: 10px 20px;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+  .buttons {
+    bottom: 0;
+    left: 0;
+    padding: 20px;
+    position: absolute;
+    text-align: right;
+    width: 100%;
+    button { margin-right: 10px; }
+  }
+  .form-row {
+    padding: 5px 10px;
+    label { display: inline-block; width: 100px; }
+    [type=number] { width: 60px; }
+  }
+}
+
+window .download-image {
+  padding: 0 30px;
+  img {
+    display: block;
+    margin: 0 auto 20px;
+    max-height: 500px;
+    max-width: 100%;
+  }
+}
+
+.pure-button {
+  &.button-success,
+  &.button-error,
+  &.button-warning,
+  &.button-secondary {
+    color: white;
+    border-radius: 4px;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  }
+
+  &.button-success {
+    background-color: rgb(28, 184, 65); /* this is a green */
+  }
+
+  &.button-error {
+    background-color: rgb(202, 60, 60); /* this is a maroon */
+  }
+
+  &.button-warning {
+    background-color: rgb(223, 117, 20); /* this is an orange */
+  }
+
+  &.button-secondary {
+    background-color: rgb(66, 184, 221); /* this is a light blue */
+  }
+}
+
+//These were used previously but need to be reintegrated
+
+window .file-list {
+  background: white;
+  box-sizing: border-box;
+  height: 340px;
+  margin: 0 auto;
+  padding: 10px 10px 50px;
+  overflow-y: scroll;
+  width: 90%;
+  .file {
+    background-repeat: no-repeat;
+    background-size: contain;
+    box-shadow: 0 0 2px black;
+    display: inline-block;
+    cursor: pointer;
+    height: 100px;
+    margin: 5px 5px 25px;
+    position: relative;
+    width: 100px;
+    .img {
+      background-position: center;
+      background-size: cover;
+      height: 100px;
+      width: 100px;
+    }
+    span {
+      content: attr(name);
+      display: block;
+      left: 0;
+      overflow: hidden;
+      position: absolute;
+      text-align: center;
+      text-overflow: ellipsis;
+      top: 102%;
+      white-space: nowrap;
+      width: 100%;
+    }
+    &:hover {
+      box-shadow: 0 0 5px black;
+      span {
+        background: white;
+        overflow: visible;
+        white-space: normal
+      }
+    }
+  }
+}
+
+window .file .options {
+  position: absolute;
+  right: 0;
+  top: 0;
+  .inner {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    .pure-button { width: 100%; }
+  }
+  .trigger {
+    color: white;
+    text-shadow: 0 0 3px black;
+    &.active + .inner { display: block; }
+  }
+}
