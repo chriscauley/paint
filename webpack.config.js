@@ -1,10 +1,11 @@
 var LessPluginCleanCSS = require('less-plugin-clean-css');
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
 module.exports = {
   entry: './entry.js',
   output: {
-    path: 'bundle/',
-    filename: 'bundle.js',
-    publicPath: 'bundle/',
+    path: '.static/',
+    filename: 'paint.min.js',
+    publicPath: '.static/',
   },
   resolve: {
     riot: require.resolve('./node_modules/riot/riot.js')
@@ -12,13 +13,16 @@ module.exports = {
   module: {
     loaders: [
       { test: /\.(tag)$/, loader: "tag" },
-      { test: /\.(png|woff|ttf|svg|eot|jpg)$/, loader: "file" },
+      { test: /\.(png|woff|ttf|svg|eot|jpg)$/, loader: "file?name=[name].[hash:8].[ext]" },
       { test: /\.css$/, loader: "style!css" },
       { test: /\.coffee$/, loader: "coffee-loader" },
       { test: /\.js$/, loader: 'babel-loader' },
-      { test: /\.less$/, loader: "style!css?minimize!less?config=lessLoaderCustom" }
+      { test: /\.less$/, loader: ExtractTextPlugin.extract("css?minimize!less?config=lessLoaderCustom") }
     ]
   },
+  plugins: [
+    new ExtractTextPlugin("styles.css")
+  ],
   lessLoader: {
     lessPlugins: [
       new LessPluginCleanCSS({advanced: true})
