@@ -1,3 +1,18 @@
+<download-image>
+  <modal title="Download mofo" src={ opts.src }>
+    <div class="download-image">
+      <a href={ opts.src } download="img.png" class="download"><img src="{ opts.src }" /></a>
+      <div>Right click the above image and...</div>
+      <li>To save to disc, select "Save Image As..."</li>
+      <li>To embed in a website, select "Copy Image URL"</li>
+    </div>
+  </modal>
+
+  <style>
+    .download img { max-height: 500px; }
+  </style>
+</download-image>
+
 <window>
   <div class="mask" onclick={ cancel }></div>
   <div class="content" onkeyup={ press }>

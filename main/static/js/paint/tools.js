@@ -79,8 +79,9 @@ window.PAINT = window.PAINT || {};
   class DialogTool extends Tool {
     select() {
       super.select();
-      $("body").append("<window></window>");
-      riot.mount("window",this.getWindowData());
+      var element = document.createElement(this.tagName);
+      document.body.appendChild(element);
+      riot.mount(element,this.getWindowData());
     }
     accept(tag) {
       tag.unmount()
@@ -165,7 +166,8 @@ window.PAINT = window.PAINT || {};
 
   class Download extends DialogTool {
     constructor() {
-      super({name: 'download', title: 'Download Image', icon: 'download'})
+      super({name: 'download', title: 'Download Image', icon: 'download'});
+      this.tagName = "download-image";
     }
     getWindowData() {
       return {
