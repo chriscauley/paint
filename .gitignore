@@ -1,16 +1,2 @@
 *~
-*.pyc
-static/*
-media/*
-main/settings/private.py
-
-.static/*
-.media/*
-db.sqlite3
-
-env/*
-.environ/*
-.build/*
 node_modules/*
-bundle/*
-src/*
