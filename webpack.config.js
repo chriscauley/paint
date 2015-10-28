@@ -5,7 +5,7 @@ module.exports = {
   output: {
     path: '.static/',
     filename: 'paint.min.js',
-    publicPath: '.static/',
+    publicPath: '/.static/',
   },
   resolve: {
     riot: require.resolve('./node_modules/riot/riot.js')
