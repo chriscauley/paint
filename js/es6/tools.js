@@ -380,7 +380,7 @@ window.PAINT = window.PAINT || {};
       var i = fld.length;
       while (i--) { fld[i] = 0 }
       var _c = hexToRgb(this.action.color);
-      var fill_color = [_c.r, _c.g, _c.b, 255]; //#! TODO how to handle alpha
+      var fill_color = [_c.r, _c.g, _c.b, 255]; // Alpha is handled when image is redrawn
       var pixel_position = 4*(y*WIDTH + x);
       function getColor(data, p) { return [data[p],data[p+1],data[p+2],data[p+3]] }
       var target_color = getColor(cld,pixel_position);

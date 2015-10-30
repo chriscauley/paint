@@ -18,7 +18,7 @@
     <input type="color" class="color-picker" name="fg" value={ colors.fg }>
     <input type="color" class="color-picker" name="bg" value={ colors.bg }>
     <div class="alpha-container">
-      <input type="range" max="1" min="0" step="0.01"><span class="fg_alpha">1</span>
+      Alpha: <input type="number" max="1" min="0" step="0.01" id="alpha" value="1">
     </div>
     <div id="status" class="pure-g">
       <div class="pure-u-1-4" id="mouse1"></div>

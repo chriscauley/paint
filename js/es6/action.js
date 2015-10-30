@@ -52,6 +52,7 @@ window.PAINT = window.PAINT || {};
       this.context = this.canvas.getContext('2d');
       this.context.imageSmoothingEnabled = false;
       this.context.mozImageSmoothingEnabled = false;
+      this.alpha = document.getElementById("alpha").value;
       if (this.dataURL) {
         var img = document.createElement('img');
         img.src = this.dataURL;

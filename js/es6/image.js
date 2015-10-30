@@ -59,9 +59,16 @@ window.PAINT = window.PAINT || {};
       if (this.imageObj) { this.context.drawImage(this.imageObj,0,0); }
       for (var i=0; i < this.actions.length; i++) {
         var action = this.actions[i];
+        if (action.tool.name == "fill") {
+          this.context.globalAlpha = 1;
+          this.context.globalCompositeOperation = "xor";
+          this.context.drawImage(action.canvas,action.x0,action.y0);
+          this.context.globalCompositeOperation = "source-over";
+        }
         this.context.globalAlpha = (action.tool == "eraser")?1:action.alpha;
         this.context.drawImage(action.canvas,action.x0,action.y0);
       }
+      this.context.globalAlpha = 1;
       // Save last actions canvas for future load
       /*if (current_action) { current_action.dataURL = canvases[canvases.length-1].toDataURL(); }*/
       var z = PAINT.zoom;
