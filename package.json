@@ -8,6 +8,7 @@
     "babel-loader": "*",
     "css-loader": "^0.21.0",
     "file-loader": "^0.8.4",
+    "karma": "^0.13.14",
     "less": "^2.5.3",
     "less-loader": "^2.2.1",
     "less-plugin-clean-css": "^1.5.1",

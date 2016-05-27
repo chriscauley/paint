@@ -13,7 +13,6 @@
 
   riot.mount("resize",{})
   down(e) {
-    document.addEventListener(PAINT.current_tool.move(e));// what oes this do?
     PAINT.current_tool.down(e);
   }
   move(e) {

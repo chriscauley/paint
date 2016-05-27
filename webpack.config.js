@@ -15,8 +15,7 @@ module.exports = {
       { test: /\.(tag)$/, loader: "tag" },
       { test: /\.(png|woff|ttf|svg|eot|jpg)$/, loader: "file?name=[name].[hash:8].[ext]" },
       { test: /\.css$/, loader: "style!css" },
-      { test: /\.coffee$/, loader: "coffee-loader" },
-      { test: /\.js$/, loader: 'babel-loader' },
+      { test: /\.js$/, loader: "babel-loader" },
       { test: /\.less$/, loader: ExtractTextPlugin.extract("css?minimize!less?config=lessLoaderCustom") }
     ]
   },
