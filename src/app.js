@@ -6,7 +6,7 @@ var d_data = {// testing dialog
   ],
   accept: function() {alert("accepted")},
 };
-riot.mount("tools",{});
-$(function() {
+uR.ready(function() {
+  riot.mount("tools",{});
   PAINT.loadNewOrAutoSave();
-})
+});

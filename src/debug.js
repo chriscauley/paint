@@ -1,11 +1,6 @@
 window.PAINT = window.PAINT || {}
-
-PAINT.debug = (function() {
-  /* return {
-     log: function() {},
-     count: function() {},
-     rate: function() {}
-  */
+PAINT.debug = {status: {}};
+uR.ready(function() {
   var container = document.createElement('div');
   container.id = 'debug_rates';
   var counts = {};
@@ -59,7 +54,7 @@ PAINT.debug = (function() {
   }
   //redraw = rateFunc(redraw,'debug');
   redraw();
-  return {
+  window.PAINT.debug = {
     log: function(msg) {
       PAINT.addMessage(msg);
     },
@@ -67,4 +62,4 @@ PAINT.debug = (function() {
     rateFunc:rateFunc,
     status: status_dict
   }
-})();
+});

@@ -38,6 +38,6 @@
     PAINT.changeTool(e.item.name);
   }
   this.on("update",function() {
-    this.options = PAINT.current_tool.options();
+    this.options = PAINT.current_tool && PAINT.current_tool.options();
   });
 </tools>
