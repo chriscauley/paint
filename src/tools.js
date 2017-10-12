@@ -77,14 +77,15 @@ window.PAINT = window.PAINT || {};
   }
 
   class DialogTool extends Tool {
+    constructor(options) {
+      super(options)
+      this.tagName = "ur-form";
+    }
     select() {
       super.select();
-      var element = document.createElement(this.tagName);
-      document.body.appendChild(element);
-      riot.mount(element,this.getWindowData());
+      uR.alertElement(this.tagName,this.getOpts());
     }
     accept(tag) {
-      tag.unmount()
     }
   }
 
@@ -92,20 +93,22 @@ window.PAINT = window.PAINT || {};
     constructor() {
       super({name: 'new', title: 'New Image', icon: 'file-o'});
     }
-    getWindowData() {
+    getOpts() {
       return {
         title: "Create New Image",
-        form: [
-          {name: 'width', title: 'Width', value: PAINT.current_image.WIDTH, type: 'number'},
-          {name: 'height', title: 'Height', value: PAINT.current_image.HEIGHT, type: 'number'}
-        ]
+        schema: [
+          { name: 'width', initial: PAINT.current_image.WIDTH, type: 'number'},
+          { name: 'height', initial: PAINT.current_image.HEIGHT, type: 'number'}
+        ],
+        submit: function(tag) {
+          var w = parseInt($("#id_width").val()), h = parseInt($("#id_height").val());
+          new PAINT.Image({w: w, h: h});
+          PAINT.addMessage(`A new ${w}x${h} image has been created.`)
+          tag.unmount();
+        }
       }
     }
     accept(tag) {
-      var w = parseInt($("#id_width").val()), h = parseInt($("#id_height").val());
-      new PAINT.Image({w: w, h: h});
-      PAINT.addMessage(`A new ${w}x${h} image has been created.`)
-      tag.unmount();
     }
   }
 
