@@ -97,8 +97,8 @@ window.PAINT = window.PAINT || {};
       return {
         title: "Create New Image",
         schema: [
-          { name: 'width', initial: PAINT.current_image.WIDTH, type: 'number'},
-          { name: 'height', initial: PAINT.current_image.HEIGHT, type: 'number'}
+          { name: 'width', value: PAINT.current_image.WIDTH, type: 'number'},
+          { name: 'height', value: PAINT.current_image.HEIGHT, type: 'number'}
         ],
         submit: function(tag) {
           var w = parseInt($("#id_width").val()), h = parseInt($("#id_height").val());
