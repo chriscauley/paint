@@ -29,6 +29,7 @@ function testNew() {
     .wait("tools [name=new]")
     .click()
     .wait("#alert-div ur-form").checkResults()
+    .click("#alert-div #submit_button")
     .checkResults("canvas[name=display]")
     .done("new button worked")
 }

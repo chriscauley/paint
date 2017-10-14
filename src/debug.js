@@ -22,7 +22,7 @@ uR.ready(function() {
     per_second[key].push(new Date().valueOf());
   }
   function redraw() {
-    if (!$('#debug_rates').length) { $('#tools_bot').append(container); }
+    if (!document.getElementById('debug_rates')) { document.querySelector('#tools_bot').append(container); }
     var now = new Date().valueOf();
     var html = '';
     var key;

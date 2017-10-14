@@ -1,8 +1,11 @@
 window.PAINT = window.PAINT || {};
 PAINT.gallery = JSON.parse(localStorage.getItem("gallery") || "{}");
 PAINT.addMessage = function(text) {
-  $("#logs").append($("<li>"+text+"</li>"));
-  $("#logs").scrollTop($("#logs")[0].scrollHeight);
+  var logs = document.getElementById("logs");
+  var e = document.createElement("li");
+  e.innerText = text;
+  logs.appendChild(e);
+  logs.scrollTop = logs.scrollHeight;
 }
 window.PAINT.storage = (function (){
   function startSaveAs() { alert("startSaveAs Not Implimented!"); }

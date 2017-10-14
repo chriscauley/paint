@@ -12,7 +12,7 @@ window.PAINT = window.PAINT || {};
       this.WIDTH = options.w;
       this.HEIGHT = options.h;
       this._redraw_proxy = this._redraw.bind(this);
-      $("body").append("<paint></paint>");
+      document.body.appendChild(document.createElement("paint"));
       riot.mount("paint");
     }
     init(tag) {// called after riot renders templates
@@ -83,9 +83,9 @@ window.PAINT = window.PAINT || {};
       if (PAINT.current_tool) { PAINT.current_tool.redraw(); }
     }
     scroll() {
-      var w = $(".canvas-wrapper");
-      this.scrollX = w.scrollLeft();
-      this.scrollY = w.scrollTop();
+      var w = document.querySelector(".canvas-wrapper");
+      this.scrollX = w.scrollLeft;
+      this.scrollY = w.scrollTop;
     }
     toJSON() {
       var actions = [];
@@ -103,7 +103,7 @@ window.PAINT = window.PAINT || {};
   PAINT.loadNewOrAutoSave = function() {
     new PAINT.Image(PAINT.gallery.__autosave || {w:75,h:75});
   }
-  $(window).resize(function() { PAINT.updateZoom(); } );
+  window.addEventListener("resize",function() { PAINT.updateZoom(); } );
   document.addEventListener("keydown",function(e) {
     if (e.ctrlKey) {
       if (e.keyCode == 90) { // ctrl+z = undo

@@ -1,8 +1,8 @@
 window.PAINT = window.PAINT || {};
 (function() {
   PAINT.changeTool = function(name,back) {
-    $("#tools .active").removeClass("active");
-    $("[name="+name+"]").addClass("active");
+    document.querySelector("#tools .active") && document.querySelector("#tools .active").classList.remove("active");
+    document.querySelector("[name="+name+"]").classList.add("active");
     var _t = ['saveAs','save','new','open','upload','download'];
     if (PAINT.current_tool && _t.indexOf(this.current_tool.name) == -1) { PAINT.last_tool = this.current_tool.name; }
     PAINT.current_tool = PAINT.TOOLS[name];
@@ -101,7 +101,8 @@ window.PAINT = window.PAINT || {};
           { name: 'height', value: PAINT.current_image.HEIGHT, type: 'number'}
         ],
         submit: function(tag) {
-          var w = parseInt($("#id_width").val()), h = parseInt($("#id_height").val());
+          var w = parseInt(document.getElementById("id_width").value);
+          var h = parseInt(document.getElementById("id_height").value);
           new PAINT.Image({w: w, h: h});
           PAINT.addMessage(`A new ${w}x${h} image has been created.`)
           tag.unmount();
@@ -191,7 +192,7 @@ window.PAINT = window.PAINT || {};
         PAINT.storage.saveImage(PAINT.current_image.name);
         super.accept(tag);
       } else {
-        $("[name=saveAs]").click();
+        document.querySelector("[name=saveAs]").click();
       }
     }
   }
@@ -209,7 +210,7 @@ window.PAINT = window.PAINT || {};
       }
     }
     accept(tag) {
-      PAINT.storage.saveImage($("#id_filename").val());
+      PAINT.storage.saveImage(document.getElementById("id_filename").value);
       super.accept(tag);
     }
   }
@@ -289,7 +290,7 @@ window.PAINT = window.PAINT || {};
       ]
     }
     down(e) {
-      this.thickness = $("#id_thickness").val();
+      this.thickness = document.getElementById("id_thickness").value;
       super.down(e);
     }
     up(e) {
@@ -372,7 +373,7 @@ window.PAINT = window.PAINT || {};
     down(e) {
       super.down(e);
       var WIDTH = PAINT.current_image.WIDTH, HEIGHT = PAINT.current_image.HEIGHT;
-      PAINT.color_distance = $("#id_color_distance").val();
+      PAINT.color_distance = document.getElementById("id_color_distance").value;
       var [x,y] = [this.action.x1,this.action.y1];
       var pixel_stack = [[x,y]];
       var fill_color = hexToRgb(this.action.color);
@@ -446,7 +447,7 @@ window.PAINT = window.PAINT || {};
       var pixel_stack = [[x,y]];
       var fill_color = hexToRgb(this.action.color);
       var alphas = [];
-      PAINT.color_distance = $("#id_color_distance").val();
+      PAINT.color_distance = document.getElementById("id_color_distance").value;
       var ds2 = Math.pow(PAINT.color_distance/100*256,2); // color threshold distance (squared)
       pixel_position = 4*(y*WIDTH + x);
       var start_color = {
@@ -553,7 +554,7 @@ window.PAINT = window.PAINT || {};
       this.redraw();
     }
     select() {
-      this.div = $(".canvas-wrapper .select")[0];
+      this.div = document.querySelector(".canvas-wrapper .select");
     }
     down(e) {
       // reset the selection div
