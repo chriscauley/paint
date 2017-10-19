@@ -578,12 +578,13 @@ window.PAINT = window.PAINT || {};
     redraw() {
       // calculate the position and size of the select, this funciton is global for scroll/zoom
       var i = PAINT.current_image;
-      if (!this.action) { return }
-      this.div.style.display = "block";
-      this.div.style.width = Math.abs(PAINT.zoom*this.action.w)+"px";
-      this.div.style.height = Math.abs(PAINT.zoom*this.action.h)+"px";
-      this.div.style.top = PAINT.zoom*this.action.top-i.scrollY+"px";
-      this.div.style.left = PAINT.zoom*this.action.left-i.scrollX+"px";
+      var a = this.action;
+      if (!a) { return }
+      this.div.style.display = (a.x1 == a.x2 && a.y1 == a.y2)?"none":"block";
+      this.div.style.width = Math.abs(PAINT.zoom*a.w)+"px";
+      this.div.style.height = Math.abs(PAINT.zoom*a.h)+"px";
+      this.div.style.top = PAINT.zoom*a.top-i.scrollY+"px";
+      this.div.style.left = PAINT.zoom*a.left-i.scrollX+"px";
     }
     selectDraw() {
       // only once per selection
