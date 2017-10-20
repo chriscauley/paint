@@ -13,7 +13,6 @@ var PROJECT_NAME = "paint";
 var JS_FILES = [
   ".dist/_tags.js",
   "src/app.js",
-  "src/tools.js",
   "src/image.js",
   "src/action.js",
   "src/storage.js",
@@ -31,10 +30,26 @@ gulp.task('build-js', ['build-tag'], function () {
 });
 
 var TAG_FILES = [
+  "src/tools/abstract.js",
+  "src/tools/menu.tag",
+
+  // these open dialogs
+  "src/tools/new-image.js",
+  "src/tools/download.tag",
+  "src/tools/upload.tag",
+
+  // other tools
+  "src/tools/brush.js",
+  "src/tools/circle.js",
+  "src/tools/eye-dropper.js",
+  "src/tools/fill.js",
+  "src/tools/rect.js",
+  "src/tools/resize.tag",
+  "src/tools/select.js",
+  "src/tools/zoom.js",
+
   "src/tools.tag",
   "src/paint.tag",
-  "src/window.tag",
-  "src/resize.tag",
 ]
 
 gulp.task('build-tag', function() {

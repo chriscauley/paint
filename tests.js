@@ -26,7 +26,7 @@ function testNew() {
     "#id_width": 200,
     "#id_height": 200
   })
-    .wait("tools [name=new]")
+    .wait("tools [name=new-image]")
     .click()
     .wait("#alert-div ur-form").checkResults()
     .click("#alert-div #submit_button")
@@ -86,6 +86,9 @@ function testSelect() {
     .select("select")
     .clickCanvas([[50,50],[150,150]])
     .checkResults(".canvas .select")
+    .mouseClick(".canvas .select",[[2,2],[-5,-5]])
+    .mouseClick(".canvas .select",[[2,2],[-5,-5]])
+    .mouseClick(".canvas .select",[[2,2],[-5,-5]])
     .mouseClick(".canvas .select",[[2,2],[-5,-5]])
     .checkResults(".canvas .select")
     .clickCanvas([[150,150]])
