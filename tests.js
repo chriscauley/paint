@@ -3,6 +3,13 @@ var brush = {
   circle2: [],
   mouth: [],
 }
+
+var u$ = {
+  fg: "#tools_bot [name=fg]",
+  bg: "#tools_bot [name=bg]",
+  thickness: "#id_thickness",
+}
+
 for (var i = 0; i <2*Math.PI;i += 0.05) {
   brush.circle.push([50+20*Math.cos(i),50+20*Math.sin(i)]);
   brush.circle2.push([100+20*Math.cos(i),50+20*Math.sin(i)]);
@@ -10,15 +17,18 @@ for (var i = 0; i <2*Math.PI;i += 0.05) {
 }
 
 uC.Test.prototype.select = function (name) { return this.click("#tools [name="+name+"]"); }
-uC.Test.prototype.clickCanvas = function (coords) { return this.mouseClick("canvas[name=display]",coords); }
+uC.Test.prototype.clickCanvas = function (coords,opts) { return this.mouseClick("canvas[name=display]",coords,opts); }
 uC.Test.prototype.clearImage = function() {
-  var neio = "neoi"
   // Eventually do this function should be replace with
   // this.test(testNew,{#id_width: 200, #id_height: 200})
   return this.wait("#tools [name=rect]").click()
-    .changeValue("#tools_bot [name=fg]","#FFFFFF")
+    .changeValue(u$.fg,"#FFFFFF")
+    .then(function resetZoom() {
+      while (!document.querySelector('[name=zoom][data-level="1"]')) { document.querySelector("[name=zoom]").click() }
+    })
+    .changeValue("#tools_bot [name=bg]","#FFFFFF")
     .clickCanvas([[0,0],[200,200]])
-    .changeValue("#tools_bot [name=fg]","#cb3594")
+    .changeValue(u$.fg,"#cb3594")
 }
 
 function testNew() {
@@ -58,24 +68,23 @@ function testFill() {
     .clearImage()
     .select("fill")
     .clickCanvas([[0,0]])
-    .changeValue("#tools_bot [name=fg]","#00FFFF")
+    .changeValue(u$.fg,"#00FFFF")
     .select("brush")
     .clickCanvas(brush.circle)
     .clickCanvas(open_circle2)
     .clickCanvas(brush.mouth)
     .checkResults()
     .select("fill")
-    .changeValue("#tools_bot [name=fg]","#FFFF00")
+    .changeValue(u$.fg,"#FFFF00")
     .clickCanvas([[60,60]])
     .checkResults()
-    .changeValue("#tools_bot [name=fg]","#FFFFFF")
+    .changeValue(u$.fg,"#FFFFFF")
     .clickCanvas([[110,60]])
     .checkResults()
     .done()
 }
 
 function testSelect() {
-  var arst = 0;
   this.do()
     .clearImage()
     //.test(testFill)
@@ -96,4 +105,40 @@ function testSelect() {
     .done()
 }
 
-konsole.addCommands(testNew, testBasePage, testBrush, testFill, testSelect)
+function testRect() {
+  this.do()
+    .clearImage()
+    .select("rect")
+    .changeValue(u$.thickness,0)
+    .clickCanvas([[25,25],[75,75]])
+    .changeValue(u$.thickness,2)
+    .clickCanvas([[35,35],[85,85]])
+    .changeValue(u$.thickness,4)
+    .clickCanvas([[45,45],[95,95]])
+    .changeValue(u$.thickness,8)
+    .clickCanvas([[55,55],[105,105]])
+    .changeValue(u$.thickness,16)
+    .clickCanvas([[65,65],[115,115]])
+    .done()
+}
+
+function testCircle() {
+  this.do()
+    .clearImage()
+    .select("circle")
+    .clickCanvas([[0,0],[200,200]])
+    .changeValue(u$.fg,"#FFFF00")
+    .clickCanvas([[51,36],[88,72]])
+    .changeValue(u$.fg,"#FFFFFF")
+    .clickCanvas([[111,3],[138,71]])
+    .changeValue(u$.thickness,5)
+    .changeValue(u$.bg,"#000000")
+    .clickCanvas([[111,36],[138,71]])
+    .changeValue(u$.thickness,0)
+    .clickCanvas([[29,102],[170,152]],{button: 2})
+    .changeValue(u$.fg,"#FF0000")
+    .clickCanvas([[65,128],[127,173]])
+    .done()
+}
+
+konsole.addCommands(testNew, testBasePage, testBrush, testFill, testSelect, testRect, testCircle)
