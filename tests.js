@@ -8,6 +8,9 @@ var u$ = {
   fg: "#tools_bot [name=fg]",
   bg: "#tools_bot [name=bg]",
   thickness: "#id_thickness",
+  rect: "#tools [name=rect]",
+  display: "canvas[name=display]",
+  select_div: ".canvas .select",
 }
 
 for (var i = 0; i <2*Math.PI;i += 0.05) {
@@ -17,16 +20,16 @@ for (var i = 0; i <2*Math.PI;i += 0.05) {
 }
 
 uC.Test.prototype.select = function (name) { return this.click("#tools [name="+name+"]"); }
-uC.Test.prototype.clickCanvas = function (coords,opts) { return this.mouseClick("canvas[name=display]",coords,opts); }
+uC.Test.prototype.clickCanvas = function (coords,opts) { return this.mouseClick(u$.display,coords,opts); }
 uC.Test.prototype.clearImage = function() {
   // Eventually do this function should be replace with
   // this.test(testNew,{#id_width: 200, #id_height: 200})
-  return this.wait("#tools [name=rect]").click()
+  return this.wait(u$.rect).click()
     .changeValue(u$.fg,"#FFFFFF")
     .then(function resetZoom() {
       while (!document.querySelector('[name=zoom][data-level="1"]')) { document.querySelector("[name=zoom]").click() }
     })
-    .changeValue("#tools_bot [name=bg]","#FFFFFF")
+    .changeValue(u$.bg,"#FFFFFF")
     .clickCanvas([[0,0],[200,200]])
     .changeValue(u$.fg,"#cb3594")
 }
@@ -38,9 +41,11 @@ function testNew() {
   })
     .wait("tools [name=new-image]")
     .click()
-    .wait("#alert-div ur-form").checkResults()
+    .wait("#alert-div ur-form")
+    .changeForm()
+    .checkResults("#alert-div ur-form")
     .click("#alert-div #submit_button")
-    .checkResults("canvas[name=display]")
+    .checkResults(u$.display)
     .done("new button worked")
 }
 
@@ -58,7 +63,7 @@ function testBrush() {
     .clickCanvas(brush.mouth)
     .clickCanvas(brush.circle)
     .clickCanvas(brush.circle2)
-    .checkResults("canvas[name=display]")
+    .checkResults(u$.display)
     .done()
 }
 
@@ -94,14 +99,14 @@ function testSelect() {
     .clickCanvas(brush.mouth)
     .select("select")
     .clickCanvas([[50,50],[150,150]])
-    .checkResults(".canvas .select")
-    .mouseClick(".canvas .select",[[2,2],[-5,-5]])
-    .mouseClick(".canvas .select",[[2,2],[-5,-5]])
-    .mouseClick(".canvas .select",[[2,2],[-5,-5]])
-    .mouseClick(".canvas .select",[[2,2],[-5,-5]])
-    .checkResults(".canvas .select")
+    .checkResults(u$.select_div)
+    .mouseClick(u$.select_div,[[2,2],[-5,-5]])
+    .mouseClick(u$.select_div,[[2,2],[-5,-5]])
+    .mouseClick(u$.select_div,[[2,2],[-5,-5]])
+    .mouseClick(u$.select_div,[[2,2],[-5,-5]])
+    .checkResults(u$.select_div)
     .clickCanvas([[150,150]])
-    .checkResults("canvas[name=display]")
+    .checkResults(u$.display)
     .done()
 }
 
