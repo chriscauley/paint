@@ -1,6 +1,9 @@
 window.PAINT = window.PAINT || {};
 
 (function () {
+  PAINT.between = function(min,num,max) {
+    return Math.min(max,Math.max(min,num))
+  }
   class Image {
     constructor(options) {
       if (PAINT.current_image) { PAINT.current_image.tag.unmount(); }
@@ -38,11 +41,11 @@ window.PAINT = window.PAINT || {};
       var that = this;
       this.imageObj = document.createElement("img");
       this.imageObj.src = this.dataURL;
+      this.scrollX = this.scrollY = 0;
       this.imageObj.onload = function() {
         var i = PAINT.current_image;
         i.canvas.width = i.WIDTH = this.width;
         i.canvas.height = i.HEIGHT = this.height;
-        PAINT.current_image.scroll();
 
         // lame hack to make sure it draws properly on load.
         // I think this is because this event is firing before the image actually loads
@@ -76,16 +79,20 @@ window.PAINT = window.PAINT || {};
       var context = PAINT.display_context;
       context.clearRect( 0, 0, canvas.width, canvas.height );
       var scale = PAINT.zoom;
+      var W = Math.max(this.WIDTH,canvas.width);
+      var H = Math.max(this.HEIGHT,canvas.height);
       context.drawImage(this.canvas,
-                        this.scrollX/scale, this.scrollY/scale, this.WIDTH, this.HEIGHT, //sx,xy,sw,sh
-                        0, 0, (this.WIDTH * scale)|0, (this.HEIGHT * scale)|0 //dx,dy,dw,dh
+                        this.scrollX/scale, this.scrollY/scale, W, H, //sx,xy,sw,sh
+                        0, 0, (W * scale)|0, (H * scale)|0 //dx,dy,dw,dh
                        );
       if (PAINT.current_tool) { PAINT.current_tool.redraw(); }
     }
-    scroll() {
-      var w = document.querySelector(".canvas-wrapper");
-      this.scrollX = w.scrollLeft;
-      this.scrollY = w.scrollTop;
+    scroll(e) {
+      this.scrollX += e.deltaX;
+      this.scrollY += e.deltaY;
+      var canvas = PAINT.display_canvas;
+      this.scrollX = PAINT.between(-canvas.width+20,this.scrollX,PAINT.zoom*this.WIDTH-20);
+      this.scrollY = PAINT.between(-canvas.height+20,this.scrollY,PAINT.zoom*this.HEIGHT-20);
     }
     toJSON() {
       var actions = [];

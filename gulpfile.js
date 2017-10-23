@@ -44,7 +44,6 @@ var TAG_FILES = [
   "src/tools/eye-dropper.js",
   "src/tools/fill.js",
   "src/tools/rect.js",
-  "src/tools/resize.tag",
   "src/tools/select.js",
   "src/tools/zoom.js",
 

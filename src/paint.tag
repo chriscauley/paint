@@ -3,15 +3,12 @@
     <div class="canvas-inner active">
       <div class="canvas">
         <canvas onmousedown={ down } onmouseup={ up } onmousemove={ move } onmouseover={ over } onmouseout={ out }
-                name="display"></canvas>
+                name="display" onmousewheel={ scroll }></canvas>
         <div class="select" onmouseup={ selectUp } onmousedown={ selectDown } onmousemove={ selectMove }></div>
       </div>
-      <div class="resizer"></div>
-      <!--<resize></resize>-->
     </div>
   </div>
 
-  riot.mount("resize",{})
   down(e) {
     PAINT.current_tool.down(e);
   }
