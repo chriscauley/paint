@@ -11,6 +11,7 @@ var u$ = {
   rect: "#tools [name=rect]",
   display: "canvas[name=display]",
   select_div: ".canvas .select",
+  colors: "#tools_bot .color-picker",
 }
 
 for (var i = 0; i <2*Math.PI;i += 0.05) {
@@ -20,7 +21,13 @@ for (var i = 0; i <2*Math.PI;i += 0.05) {
 }
 
 uC.Test.prototype.select = function (name) { return this.click("#tools [name="+name+"]"); }
-uC.Test.prototype.clickCanvas = function (coords,opts) { return this.mouseClick(u$.display,coords,opts); }
+uC.Test.prototype.clickCanvas = function (coords,opts) {
+  for (var i=0;i<coords.length;i++) {
+    coords[i][0] = coords[i][0]*PAINT.zoom - PAINT.current_image.scrollX;
+    coords[i][1] = coords[i][1]*PAINT.zoom - PAINT.current_image.scrollY;
+  }
+  return this.mouseClick(u$.display,coords,opts);
+}
 uC.Test.prototype.clearImage = function() {
   // Eventually do this function should be replace with
   // this.test(testNew,{#id_width: 200, #id_height: 200})
@@ -146,4 +153,21 @@ function testCircle() {
     .done()
 }
 
-konsole.addCommands(testNew, testBasePage, testBrush, testFill, testSelect, testRect, testCircle)
+function testDropper() {
+  this.do()
+    .clearImage()
+    .select("fill")
+    .clickCanvas([[50,50]])
+    .select("rect")
+    .clickCanvas([[20,20],[80,80]], { button: 2 })
+    .changeValue(u$.fg,"#000000")
+    .changeValue(u$.bg,"#000000")
+    .select("eye-dropper")
+    .clickCanvas([[0,0]])
+    .select("eye-dropper")
+    .clickCanvas([[50,50]],{ button: 2 })
+    .checkResults(u$.colors)
+    .done()
+}
+
+konsole.addCommands(testNew, testBasePage, testBrush, testFill, testSelect, testRect, testCircle, testDropper)

@@ -41,7 +41,7 @@ window.PAINT = window.PAINT || {};
       var that = this;
       this.imageObj = document.createElement("img");
       this.imageObj.src = this.dataURL;
-      this.scrollX = this.scrollY = 0;
+      this.scrollX = this.scrollY = -10;
       this.imageObj.onload = function() {
         var i = PAINT.current_image;
         i.canvas.width = i.WIDTH = this.width;

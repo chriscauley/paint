@@ -137,7 +137,7 @@ PAINT.ShapeTool = class ShapeTool extends PAINT.Tool {
 uR.ready(function() {
   PAINT.TOOL_LIST = [];
   uR.forEach(["Upload","Download","NewImage","",
-              "BrushTool","FillTool","SelectTool",/*"RectTool",*/"CircleTool","ResizeTool","EyeDropperTool","ZoomTool"],
+              "BrushTool","FillTool","SelectTool","RectTool","CircleTool",/*"ResizeTool"*/,"EyeDropperTool","ZoomTool"],
              function(s) {
                if (!s) { PAINT.TOOL_LIST.push({}) }
                else { PAINT.TOOL_LIST.push(new PAINT[s]()) }

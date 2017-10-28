@@ -3,13 +3,11 @@ PAINT.EyeDropperTool = class EyeDropperTool extends PAINT.Tool {
   constructor() {
     super({name: 'eye-dropper', title: 'Select Color', icon: 'eyedropper'})
   }
-  move(e) {
-    super.move(e);
-    var [x,y] = PAINT.getMouseXY(e);
-    PAINT.debug.status['mouse2'] = this.hex_color = "#"+rgbToHex(getPixelColor(x,y));
-  }
+
   down(e) {
     super.down(e);
+    var [x,y] = PAINT.getMouseXY(e);
+    PAINT.debug.status['mouse2'] = this.hex_color = "#"+rgbToHex(getPixelColor(x,y));
     var which = (e.button==0)?"fg":"bg";
     var input = document.querySelector(`[name=${which}]`);
     input.value = this.hex_color;
