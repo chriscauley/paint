@@ -1,5 +1,3 @@
-
-
 PAINT.RectTool = class RectTool extends PAINT.ShapeTool {
   constructor() {
     super({name: 'rect', title: 'Rectangle', className: 'rect-button'})

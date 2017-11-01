@@ -20,7 +20,6 @@ PAINT.SelectTool = class SelectTool extends PAINT.Tool {
   }
   down(e) {
     // reset the selection div
-    super.down(e);
     this.div.style.backgroundImage = "";
     this.context.clearRect(0,0,this.canvas.width,this.canvas.height)
     this.move(e);
@@ -31,7 +30,6 @@ PAINT.SelectTool = class SelectTool extends PAINT.Tool {
     // action.top/left : top left corner of select relative to image canvas
     // this action.x1/y1 mouse down when drawing select
     // this.action.x2/y2 mouse up when drawing select
-    if (!super.move(e)) { return; }
     this.action.left = (this.action.w>0)?this.action.x1:this.action.x2;
     this.action.top = (this.action.h>0)?this.action.y1:this.action.y2;
     this.redraw();

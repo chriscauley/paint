@@ -5,7 +5,6 @@ PAINT.BrushTool = class BrushTool extends PAINT.Tool {
   options() {
   }
   down(e) {
-    super.down(e);
     this.drawn_until = 0;
     this.action.coords = [];
     this.action.size = 1; //#!TODO eventually use size selector
@@ -20,7 +19,6 @@ PAINT.BrushTool = class BrushTool extends PAINT.Tool {
     this.move(e);
   }
   move(e) {
-    if (!super.move(e)) { return; }
     var context = this.action.context;
     var [x,y] = PAINT.getMouseXY(e);
     if (this.last) {

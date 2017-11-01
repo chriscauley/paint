@@ -21,7 +21,6 @@ window.PAINT = window.PAINT || {};
     PAINT.zoom = new_zoom || PAINT.zoom;
     c.width = w; //Math.min(w,PAINT.canvas.width*PAINT.zoom);
     c.height = h; //Math.min(h,PAINT.canvas.height*PAINT.zoom);
-    console.log(1);
     wrapper.scrollLeft = px*PAINT.zoom-w/2;
     wrapper.scrollTop = py*PAINT.zoom-h/2;
     var ctx = PAINT.display_context = PAINT.display_canvas.getContext("2d");

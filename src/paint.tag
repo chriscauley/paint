@@ -9,20 +9,20 @@
     </div>
   </div>
 
+  over(e) {
+    PAINT.current_tool.mouseover(e);
+  }
   down(e) {
-    PAINT.current_tool.down(e);
+    PAINT.current_tool.mousedown(e);
   }
   move(e) {
-    PAINT.current_tool.move(e)
+    PAINT.current_tool.mousemove(e)
   }
   up(e) {
-    PAINT.current_tool.up(e);
-  }
-  over(e) {
-    PAINT.current_tool.over(e);
+    PAINT.current_tool.mouseup(e);
   }
   out(e) {
-    PAINT.current_tool.out(e);
+    PAINT.current_tool.mouseout(e);
   }
   selectUp(e) {
     PAINT.current_tool.selectUp(e);

@@ -4,10 +4,11 @@ PAINT.FillTool = class FillTool extends PAINT.Tool {
     PAINT.color_distance = 0;
   }
   options(e) {
-    return [{is_number: true, value:PAINT.color_distance, min: 0, max:50, step: 1, label:"Distance", name: "color_distance"}]
+    return [
+      {is_number: true, value:PAINT.color_distance, min: 0, max:50, step: 1, label:"Distance", name: "color_distance"},
+    ]
   }
   down(e) {
-    super.down(e);
     var WIDTH = PAINT.current_image.WIDTH, HEIGHT = PAINT.current_image.HEIGHT;
     PAINT.color_distance = document.getElementById("id_color_distance").value;
     var [x,y] = [this.action.x1,this.action.y1];
@@ -43,7 +44,10 @@ PAINT.FillTool = class FillTool extends PAINT.Tool {
       // if we're not measuring color distance, diffColor is ~5% faster
       matchColorDistance = function(c1,c2) { return !diffColor(c1,c2); }
     }
+    var count = 0;
+    var start_time = new Date().valueOf();
     while (pixel_stack.length) {
+      count++;
       [x,y] = pixel_stack.pop();
       pixel_position = 4*(y*WIDTH + x);
       var node_color = getColor(cld,pixel_position);
@@ -64,13 +68,14 @@ PAINT.FillTool = class FillTool extends PAINT.Tool {
       if (y != 0) { pixel_stack.push([x,y-1]); }
       if (y != HEIGHT) { pixel_stack.push([x,y+1]); }
     }
+    var ms = new Date().valueOf()-start_time;
+    PAINT.addMessage(`Fill took ${count} steps and ${ms} ms`);
     this.action.context.clearRect(0,0,WIDTH,HEIGHT);
     this.action.context.putImageData(final_layer, 0, 0);
     PAINT.current_image.redraw();
   }
   down2(e) {
     // first attempt at alorightm. Left here for later reference
-    super.down(e)
     var WIDTH = PAINT.current_image.WIDTH, HEIGHT = PAINT.current_image.HEIGHT;
     var current_pixel, pixel_position, reach_left, reach_right;
     var color_layer = PAINT.current_image.context.getImageData(0,0,WIDTH,HEIGHT);
@@ -167,7 +172,6 @@ PAINT.FillTool = class FillTool extends PAINT.Tool {
     PAINT.current_image.redraw();
   }
   up(e) {
-    super.up(e);
     PAINT.storage.autoSave();
   }
 }

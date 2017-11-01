@@ -39,7 +39,25 @@ PAINT.Tool = class Tool {
   constructor(options) {
     for (var key in options) { this[key] = options[key] }
   }
-  move(e) {
+  mouseover(e) {
+    this.mouse_down = window.MOUSE_DOWN;
+    this.action && this.over(e);
+  }
+  mousedown(e) {
+    window.MOUSE_DOWN = this.mouse_down = true;
+    var xy = PAINT.getMouseXY(e);
+    if (PAINT.between(0,xy[0],PAINT.current_image.WIDTH) != xy[0] ||
+        PAINT.between(0,xy[1],PAINT.current_image.HEIGHT) != xy[1]) {
+      this.action = undefined;
+      return
+    }
+    this.action = new PAINT.Action(e);
+    this.action.x1 = xy[0];
+    this.action.y1 = xy[1];
+    PAINT.debug.status['mouse2'] =`click:${this.action.x1}x${this.action.y1}`;
+    this.down(e);
+  }
+  mousemove(e) {
     var [x,y] = PAINT.getMouseXY(e);
     PAINT.debug.status['mouse1'] = `${x}x${y}`;
     if (!this.action || !this.mouse_down) { return }
@@ -47,25 +65,22 @@ PAINT.Tool = class Tool {
     this.action.w = this.action.x2-this.action.x1;
     this.action.h = this.action.y2-this.action.y1;
     if (this.bounding) { PAINT.debug.status['mouse3'] = `w:${this.action.w} h:${this.action.h}`; }
-    return true; // some tools need this to stop propagation
+    this.action && this.move(e);
   }
-  up(e) {
+  mouseup(e) {
     window.MOUSE_DOWN = this.mouse_down = false;
+    this.action && this.up(e);
   }
-  over(e) {
-    this.mouse_down = window.MOUSE_DOWN;
+  mouseout(e) {
+    this.action && this.out(e);
   }
-  down(e) {
-    window.MOUSE_DOWN = this.mouse_down = true;
-    this.action = new PAINT.Action(e);
-    [this.action.x1,this.action.y1] = PAINT.getMouseXY(e);
-    PAINT.debug.status['mouse2'] =`click:${this.action.x1}x${this.action.y1}`;
-  }
+  over(e) { }
+  down(e) {}
+  move(e) {}
+  up(e) {}
+  out(e) {}
   select() {
     PAINT.debug.status['mouse3'] = PAINT.debug.status['mouse2'] = '';
-  }
-  out(e) {
-
   }
   options(e) {
     return [];
@@ -100,14 +115,11 @@ PAINT.ShapeTool = class ShapeTool extends PAINT.Tool {
   }
   down(e) {
     this.thickness = document.getElementById("id_thickness").value;
-    super.down(e);
   }
   up(e) {
-    super.up(e);
     PAINT.storage.autoSave();
   }
   move(e) {
-    if (!super.move(e)) { return; }
     var image = PAINT.current_image;
     var context = this.action.context;
     var t = parseInt(this.thickness);
