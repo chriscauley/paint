@@ -4,7 +4,8 @@
       <div class="canvas">
         <canvas onmousedown={ down } onmouseup={ up } onmousemove={ move } onmouseover={ over } onmouseout={ out }
                 name="display" onmousewheel={ scroll }></canvas>
-        <div class="select" onmouseup={ selectUp } onmousedown={ selectDown } onmousemove={ selectMove }></div>
+        <div class="select" onmouseup={ selectUp } onmousedown={ selectDown } onmousemove={ selectMove }
+             onmousewheel={ scroll }></div>
       </div>
     </div>
   </div>

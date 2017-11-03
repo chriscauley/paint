@@ -15,10 +15,10 @@ PAINT.BrushTool = class BrushTool extends PAINT.Tool {
     this.move(e);
   }
   over(e) {
-    super.over(e);
     this.move(e);
   }
   move(e) {
+    if (!this.mouse_down) { return }
     var context = this.action.context;
     var [x,y] = PAINT.getMouseXY(e);
     if (this.last) {

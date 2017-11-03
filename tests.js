@@ -22,6 +22,7 @@ for (var i = 0; i <2*Math.PI;i += 0.05) {
 
 uC.Test.prototype.select = function (name) { return this.click("#tools [name="+name+"]"); }
 uC.Test.prototype.clickCanvas = function (coords,opts) {
+  coords = coords.slice();
   for (var i=0;i<coords.length;i++) {
     coords[i][0] = coords[i][0]*PAINT.zoom - PAINT.current_image.scrollX;
     coords[i][1] = coords[i][1]*PAINT.zoom - PAINT.current_image.scrollY;
@@ -35,6 +36,7 @@ uC.Test.prototype.clearImage = function() {
     .changeValue(u$.fg,"#FFFFFF")
     .then(function resetZoom() {
       while (!document.querySelector('[name=zoom][data-level="1"]')) { document.querySelector("[name=zoom]").click() }
+      return true;
     })
     .changeValue(u$.bg,"#FFFFFF")
     .clickCanvas([[0,0],[200,200]])
@@ -170,4 +172,25 @@ function testDropper() {
     .done()
 }
 
-konsole.addCommands(testNew, testBasePage, testBrush, testFill, testSelect, testRect, testCircle, testDropper)
+function testZoom() {
+  this.do()
+    .clearImage()
+    .test(testCircle)
+    .select("zoom").select("zoom")
+    .checkResults(u$.display,"[name-zoom]")
+    .select("zoom").select("zoom").select("zoom")
+    .checkResults(u$.display,"[name-zoom]")
+    .done()
+}
+
+konsole.addCommands(
+  testNew,
+  testBasePage,
+  testBrush,
+  testFill,
+  testSelect,
+  testRect,
+  testCircle,
+  testDropper,
+  testZoom
+)

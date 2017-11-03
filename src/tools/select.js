@@ -21,6 +21,7 @@ PAINT.SelectTool = class SelectTool extends PAINT.Tool {
   down(e) {
     // reset the selection div
     this.div.style.backgroundImage = "";
+    this.div.style.display = "none";
     this.context.clearRect(0,0,this.canvas.width,this.canvas.height)
     this.move(e);
     this.drawn = false;
@@ -40,7 +41,7 @@ PAINT.SelectTool = class SelectTool extends PAINT.Tool {
     var i = PAINT.current_image;
     var a = this.action;
     if (!a) { return }
-    this.div.style.display = (a.x1 == a.x2 && a.y1 == a.y2)?"none":"block";
+    this.div.style.display = (a.x1 - a.x2 && a.y1 - a.y2)?"block":"none";// hide on x2 == x1 or x2 === undefined
     this.div.style.width = Math.abs(PAINT.zoom*a.w)+"px";
     this.div.style.height = Math.abs(PAINT.zoom*a.h)+"px";
     this.div.style.top = PAINT.zoom*a.top-i.scrollY+"px";
@@ -99,8 +100,8 @@ PAINT.SelectTool = class SelectTool extends PAINT.Tool {
     // this.action.x_start/y_start mouse click to start moving select re:this.div
     // this.action.x_end/y_end mouse click where mouse currently is re:this.div
     // this.action.top2/left2  current, temporary position of div re:image.canvas
-    if (this.move(e)) { return; }
-    if (!this.select_down) { return; }
+    this.mousemove(e);
+    if (!this.action || !this.select_down) { return; }
     var i = PAINT.current_image;
     [this.action.x_end,this.action.y_end] = PAINT.getMouseXY(e);
     this.action.top2 = this.action.top - (this.action.y_start - this.action.y_end);
