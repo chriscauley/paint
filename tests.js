@@ -1,3 +1,4 @@
+//window.USE_KEY_LOGGER = true;
 var brush = {
   circle: [],
   circle2: [],
@@ -34,9 +35,9 @@ uC.Test.prototype.clearImage = function() {
   // this.test(testNew,{#id_width: 200, #id_height: 200})
   return this.wait(u$.rect).click()
     .changeValue(u$.fg,"#FFFFFF")
-    .then(function resetZoom() {
+    .then(function resetZoom(pass,fail) {
       while (!document.querySelector('[name=zoom][data-level="1"]')) { document.querySelector("[name=zoom]").click() }
-      return true;
+      pass("resetZoomed")
     })
     .changeValue(u$.bg,"#FFFFFF")
     .clickCanvas([[0,0],[200,200]])
