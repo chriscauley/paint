@@ -64,9 +64,9 @@ PAINT.FillTool = class FillTool extends PAINT.Tool {
       fld[pixel_position+3] = fill_color[3];
 
       if (x != 0) { pixel_stack.push([x-1,y]); }
-      if (x != WIDTH) { pixel_stack.push([x+1,y]); }
+      if (x != WIDTH-1) { pixel_stack.push([x+1,y]); }
       if (y != 0) { pixel_stack.push([x,y-1]); }
-      if (y != HEIGHT) { pixel_stack.push([x,y+1]); }
+      if (y != HEIGHT-1) { pixel_stack.push([x,y+1]); }
     }
     var ms = new Date().valueOf()-start_time;
     PAINT.addMessage(`Fill took ${count} steps and ${ms} ms`);
