@@ -1,9 +1,6 @@
 window.PAINT = window.PAINT || {};
 
 (function () {
-  PAINT.between = function(min,num,max) {
-    return Math.min(max,Math.max(min,num))
-  }
   class Image {
     constructor(options) {
       if (PAINT.current_image) { PAINT.current_image.tag.unmount(); }
@@ -24,7 +21,7 @@ window.PAINT = window.PAINT || {};
       this.context = this.canvas.getContext('2d');
       this.canvas.width = this.WIDTH;
       this.canvas.height = this.HEIGHT;
-      PAINT.display_canvas = tag.display;
+      PAINT.display_canvas = tag.refs.display;
       //PAINT.updateZoom(); // update display canvas
       for (var i=0;i<this._actions.length;i++) {
         this.actions.push(new PAINT.Action(this._actions[i]));
@@ -91,8 +88,8 @@ window.PAINT = window.PAINT || {};
       this.scrollX += e.deltaX;
       this.scrollY += e.deltaY;
       var canvas = PAINT.display_canvas;
-      this.scrollX = PAINT.between(-canvas.width+20,this.scrollX,PAINT.zoom*this.WIDTH-20);
-      this.scrollY = PAINT.between(-canvas.height+20,this.scrollY,PAINT.zoom*this.HEIGHT-20);
+      this.scrollX = uR.math.between(-canvas.width+20,this.scrollX,PAINT.zoom*this.WIDTH-20);
+      this.scrollY = uR.math.between(-canvas.height+20,this.scrollY,PAINT.zoom*this.HEIGHT-20);
     }
     toJSON() {
       var actions = [];

@@ -46,8 +46,8 @@ PAINT.Tool = class Tool {
   mousedown(e) {
     window.MOUSE_DOWN = this.mouse_down = true;
     var xy = PAINT.getMouseXY(e);
-    if (PAINT.between(0,xy[0],PAINT.current_image.WIDTH) != xy[0] ||
-        PAINT.between(0,xy[1],PAINT.current_image.HEIGHT) != xy[1]) {
+    if (uR.math.between(0,xy[0],PAINT.current_image.WIDTH) != xy[0] ||
+        uR.math.between(0,xy[1],PAINT.current_image.HEIGHT) != xy[1]) {
       this.action = undefined;
       return
     }
