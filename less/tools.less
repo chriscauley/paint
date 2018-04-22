@@ -35,22 +35,24 @@
     width: @buttonWidth;
     &.active { -webkit-filter: invert(0.95); }
   }
-  .select-button:before,
-  .rect-button:before,
-  .circle-button:before,
-  .fill-button:before {
-    content: "";
-    display: inline-block;
-    height: @buttonFontSize;
-    width: @buttonFontSize;
+  .select-button,
+  .rect-button,
+  .circle-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &:before {
+      content: "";
+      display: inline-block;
+      height: @buttonFontSize;
+      width: @buttonFontSize;
+    }
   }
-  button.fill-button:before {
+  button.fill-button {
     background-image: url(/img/fill.png);
     background-position: center;
     background-repeat: no-repeat;
     background-size: auto 100%;
-    height: 100%;
-    width: 100%;
   }
   .select-button:before { border: 1px dashed; }
   .rect-button:before { background: black; }
