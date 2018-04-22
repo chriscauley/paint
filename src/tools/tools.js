@@ -11,16 +11,11 @@ window.PAINT = window.PAINT || {};
     }
     getWindowData() {
       function getItems()  {
-        var names = [];
-        var items = [];
-        for (var n in PAINT.gallery) { names.push(n) }
-        names.sort()
-        for (var i=0;i<names.length;i++) {
-          if (names[i] == "__autosave") { continue }
-          items.push(PAINT.gallery[names[i]]);
-        }
-        return items;
+        var names = PAINT.storage.keys.filter((n) n != "__autosave");
+        names.sort();
+        return names.map((name) => PAINT.storage.get(name))
       }
+      console.log(getItems();
       return {
         title: "Open Image",
         getItems: getItems,

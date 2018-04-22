@@ -10,7 +10,7 @@ var u$ = {
   bg: "#tools_bot [name=bg]",
   thickness: "#id_thickness",
   rect: "#tools [name=rect]",
-  display: "canvas[name=display]",
+  display: 'canvas[ref="display"]',
   select_div: ".canvas .select",
   colors: "#tools_bot .color-picker",
 }
@@ -61,6 +61,7 @@ function testNew() {
 
 function testBasePage() {
   this.do("Testing that the HTML comes out the same after page is reset")
+    .reloadWindow()
     .checkResults("#tools")
     .checkResults("#tools_bot")
     .done("Tools has not changed.")

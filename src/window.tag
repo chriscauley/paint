@@ -73,7 +73,7 @@
     if (closed) { e.srcElement.classList.add('active'); }
   }
   deleteImage(e) {
-    delete(PAINT.gallery[e.item.name]);
+    uR.storage.(e.item.name);
     this.update()
   }
   renameImage(e) {

@@ -105,7 +105,7 @@ window.PAINT = window.PAINT || {};
   }
   PAINT.Image = Image;
   PAINT.loadNewOrAutoSave = function() {
-    new PAINT.Image(PAINT.gallery.__autosave || {w:75,h:75});
+    new PAINT.Image(PAINT.storage.get("__autosave") || {w:75,h:75});
   }
   window.addEventListener("resize",function() { PAINT.updateZoom(); } );
   document.addEventListener("keydown",function(e) {
