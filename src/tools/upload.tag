@@ -13,7 +13,7 @@ PAINT.Upload = class Upload extends PAINT.Tool {
           //#! TODO: this should be added to the library (saved) and a bulk uploader is needed.
           new PAINT.Image({dataURL:fr.result,name: fname});
           PAINT.addMessage(`Image "${fname}" uploaded successfully.`)
-          PAINT.storage.autoSave(fr.result);
+          PAINT.gallery.autoSave(fr.result);
           that.input.value = '';
         }
         fr.readAsDataURL(file);

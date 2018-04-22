@@ -11,9 +11,9 @@ window.PAINT = window.PAINT || {};
     }
     getWindowData() {
       function getItems()  {
-        var names = PAINT.storage.keys.filter((n) n != "__autosave");
+        var names = PAINT.gallery.keys.filter((n) n != "__autosave");
         names.sort();
-        return names.map((name) => PAINT.storage.get(name))
+        return names.map((name) => PAINT.gallery.get(name))
       }
       console.log(getItems();
       return {
@@ -31,7 +31,7 @@ window.PAINT = window.PAINT || {};
     select() {
       super.select();
       if (PAINT.current_image.name) {
-        PAINT.storage.saveImage(PAINT.current_image.name);
+        PAINT.gallery.saveImage(PAINT.current_image.name);
         super.accept(tag);
       } else {
         document.querySelector("[name=saveAs]").click();
@@ -52,7 +52,7 @@ window.PAINT = window.PAINT || {};
       }
     }
     accept(tag) {
-      PAINT.storage.saveImage(document.getElementById("id_filename").value);
+      PAINT.gallery.saveImage(document.getElementById("id_filename").value);
       super.accept(tag);
     }
   }

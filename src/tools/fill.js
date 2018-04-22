@@ -172,6 +172,6 @@ PAINT.FillTool = class FillTool extends PAINT.Tool {
     PAINT.current_image.redraw();
   }
   up(e) {
-    PAINT.storage.autoSave();
+    PAINT.gallery.autoSave();
   }
 }

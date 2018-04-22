@@ -118,7 +118,7 @@ PAINT.SelectTool = class SelectTool extends PAINT.Tool {
     this.selectCut();
     this.action.context.drawImage(this.canvas,this.action.left,this.action.top);
     PAINT.current_image.redraw();
-    PAINT.storage.autoSave();
+    PAINT.gallery.autoSave();
   }
   cut(e) {
     console.log("cut")

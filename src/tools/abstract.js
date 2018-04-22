@@ -117,7 +117,7 @@ PAINT.ShapeTool = class ShapeTool extends PAINT.Tool {
     this.thickness = document.getElementById("id_thickness").value;
   }
   up(e) {
-    PAINT.storage.autoSave();
+    PAINT.gallery.autoSave();
   }
   move(e) {
     var image = PAINT.current_image;

@@ -56,6 +56,6 @@ PAINT.BrushTool = class BrushTool extends PAINT.Tool {
   }
   up(e) {
     super.up(e);
-    PAINT.storage.autoSave();
+    PAINT.gallery.autoSave();
   }
 }
